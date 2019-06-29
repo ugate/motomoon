@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Motomoon WiFi LED control">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Motomoon">
+  <link rel="apple-touch-icon-precomposed" href="/favicon.png">
+  <meta name="msapplication-TileImage" content="/favicon.png">
+  <meta name="msapplication-TileColor" content="#3372DF">
+  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="manifest" href="/manifest.json">
+  <title>MotoMoon</title>
+  <style>
+    .row {margin-left: auto;margin-right: auto;margin-bottom: 20px;} .row:after {content: "";display: table;clear: both;}
+    .row .col {float: left;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 0 0.75rem;text-align: left;}
+    .row .col.s1 {width: 8.33333%;margin-left: 0;} .row .col.s2 {width: 16.66667%;margin-left: 0;} .row .col.s3 {width: 25%;margin-left: 0;} .row .col.s4 {width: 33.33333%;margin-left: 0;} .row .col.s5 {width: 41.66667%;margin-left: 0;}
+    .row .col.s6 {width: 50%;margin-left: 0;} .row .col.s7 {width: 58.33333%;margin-left: 0;} .row .col.s8 {width: 66.66667%;margin-left: 0;} .row .col.s9 {width: 75%;margin-left: 0;} .row .col.s10 {width: 83.33333%;margin-left: 0;}
+    .row .col.s11 {width: 91.66667%;margin-left: 0;} .row .col.s12 {width: 100%;margin-left: 0;} .row .col.offset-s1 {margin-left: 8.33333%;} .row .col.offset-s2 {margin-left: 16.66667%;} .row .col.offset-s3 {margin-left: 25%;}
+    .row .col.offset-s4 {margin-left: 33.33333%;} .row .col.offset-s5 {margin-left: 41.66667%;} .row .col.offset-s6 {margin-left: 50%;} .row .col.offset-s7 {margin-left: 58.33333%;} .row .col.offset-s8 {margin-left: 66.66667%;}
+    .row .col.offset-s9 {margin-left: 75%;} .row .col.offset-s10 {margin-left: 83.33333%;} .row .col.offset-s11 {margin-left: 91.66667%;} .row .col.offset-s12 {margin-left: 100%;}
+    @media only screen and (min-width : 601px) {
+      .row .col.m1 {width: 8.33333%;margin-left: 0;} .row .col.m2 {width: 16.66667%;margin-left: 0;} .row .col.m3 {width: 25%;margin-left: 0;} .row .col.m4 {width: 33.33333%;margin-left: 0;} .row .col.m5 {width: 41.66667%;margin-left: 0;}
+      .row .col.m6 {width: 50%;margin-left: 0;} .row .col.m7 {width: 58.33333%;margin-left: 0;} .row .col.m8 {width: 66.66667%;margin-left: 0;} .row .col.m9 {width: 75%;margin-left: 0;}.row .col.m10 {width: 83.33333%;margin-left: 0;}
+      .row .col.m11 {width: 91.66667%;margin-left: 0;} .row .col.m12 {width: 100%;margin-left: 0;} .row .col.offset-m1 {margin-left: 8.33333%;} .row .col.offset-m2 {margin-left: 16.66667%;} .row .col.offset-m3 {margin-left: 25%;}
+      .row .col.offset-m4 {margin-left: 33.33333%;} .row .col.offset-m5 {margin-left: 41.66667%;} .row .col.offset-m6 {margin-left: 50%;} .row .col.offset-m7 {margin-left: 58.33333%;} .row .col.offset-m8 {margin-left: 66.66667%;}
+      .row .col.offset-m9 {margin-left: 75%;} .row .col.offset-m10 {margin-left: 83.33333%;} .row .col.offset-m11 {margin-left: 91.66667%;} .row .col.offset-m12 {margin-left: 100%;}
+    }
+    @media only screen and (min-width : 993px) {
+      .row .col.l1 {width: 8.33333%;margin-left: 0;} .row .col.l2 {width: 16.66667%;margin-left: 0;} .row .col.l3 {width: 25%;margin-left: 0;} .row .col.l4 {width: 33.33333%;margin-left: 0;} .row .col.l5 {width: 41.66667%;margin-left: 0;}
+      .row .col.l6 {width: 50%;margin-left: 0;} .row .col.l7 {width: 58.33333%;margin-left: 0;} .row .col.l8 {width: 66.66667%;margin-left: 0;} .row .col.l9 {width: 75%;margin-left: 0;} .row .col.l10 {width: 83.33333%;margin-left: 0;}
+      .row .col.l11 {width: 91.66667%;margin-left: 0;} .row .col.l12 {width: 100%;margin-left: 0;} .row .col.offset-l1 {margin-left: 8.33333%;} .row .col.offset-l2 {margin-left: 16.66667%;} .row .col.offset-l3 {margin-left: 25%;}
+      .row .col.offset-l4 {margin-left: 33.33333%;} .row .col.offset-l5 {margin-left: 41.66667%;} .row .col.offset-l6 {margin-left: 50%;} .row .col.offset-l7 {margin-left: 58.33333%;} .row .col.offset-l8 {margin-left: 66.66667%;}
+      .row .col.offset-l9 {margin-left: 75%;} .row .col.offset-l10 {margin-left: 83.33333%;}.row .col.offset-l11 {margin-left: 91.66667%;} .row .col.offset-l12 {margin-left: 100%;}
+    }
+    html, body {font-family:'Roboto', sans-serif;font-size:14px;font-weight:400;line-height:20px;}
+    html {width:100%;height:100%;color:rgba(0,0,0,.87);-ms-touch-action:manipulation;touch-action:manipulation;}
+    body {margin:0;width:100%;min-height:100%;background-color:#f5f5f5 !important;} canvas {border: 1px solid #263238;}
+    .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;flex-wrap: wrap;} .canvas-editor {overflow: auto;} .canvas-row {flex-basis: 100%;}
+    ::selection {background:#b3d4fc;text-shadow:none;} .hide {display:none;} .red-text {color: #ff0266;} .green-text {color: #00C853;} .blue-text {color: #2962FF;} .slate-text {color: #455A64;} .brown-text {color: #3E2723;}
+    .logo {width:5rem;height:5em;top:-3em;left:calc((100vw / 2) - 2.5rem);position:absolute;z-index:1;}
+    label.logo {top:-2em;left: calc((100vw / 2) - 3.5rem);text-align:center;width:25em;height:3em;word-spacing:7em;transform:translateX(-35%);}
+    label.logo a {text-decoration:none;transform:perspective(2.5em) rotateX(15deg) scaleY(0.8);transition:all 0.5s;
+    display:inline-block;text-align:center;font-size:4em;font-weight:700;line-height:0.5;color:#08e3ff;
+    text-shadow:0 -1px 15px rgba(0, 0, 0, 0.9), 0 1px 0 #005d64, 0 3px 0 #006269, 0 5px 0 #00676e, 0 7px 0 #006c73, 0 9px 0 #007178, 0 6px 50px rgba(59, 233, 255, 0.8);}
+    label.logo a:first-line {font-size:0.8em;} label.logo a:hover {transform:perspective(8em) rotateX(11deg) scale(1.2);
+    text-shadow:0 -1px 15px black, 0 1px 0 #005d64, 0 2px 0 #006269, 0 0px 0 #00676e, 0 1px 0 #006c73, 0 2px 0 #007178, 0 2px 30px rgba(59, 233, 255, 0.6);}
+    .shadow {box-shadow:0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);}
+    .white {background-color:#fff !important;} .blue-grey {background-color:#263238 !important;}
+    .grey {background-color:#424242 !important;} .grey-text {color:#424242 !important;} .white-text {color:#fff !important;}
+    .ribbon {position:fixed;width:100%;height:40vh;flex-shrink:0;} .overlay {top:0;left:0;position:fixed;width:100vw;height:200vh;background:rgba(0,0,0,.5);transform:translateY(-50%);}
+    .loader {position:relative;margin:0 auto;width:100px;height:100%;} .loader:before {content:'';display:block;padding-top:100%;}
+    .loader-circular {width: 90px;height:100%;top: 70px;left: 0px;animation:rotate 2s linear infinite;transform-origin:center center;position:absolute;bottom:0;right:0;margin:auto;}
+    .loader-path {stroke-dasharray:1, 200;stroke-linecap: round;stroke-dashoffset:0;animation:dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;}
+    @keyframes rotate { 100% {transform:rotate(360deg);}}@keyframes dash { 0% {stroke-dasharray:1, 200;stroke-dashoffset:0;} 50% {stroke-dasharray:89, 200;stroke-dashoffset:-35px;}
+    100% {stroke-dasharray:89, 200;stroke-dashoffset:-124px;}}
+    @keyframes color { 100%, 0% {stroke:#FF1744;} 40% {stroke:#D500F9;} 66% {stroke:#76FF03;} 80%, 90% {stroke:#FFA700;}}
+    .no-select {-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+    #snackbar { border: none;position: fixed;right: 0;left: 50%;z-index: 2000;bottom: -112px;min-width: 50vw;min-height: 48px;max-height: 112px;max-width: 1235px;overflow: hidden;
+    padding: 14px 24px;margin: 0;border-radius: 2px;font-size: 1rem;color: white;background-color: #006064;background-clip: padding-box;box-sizing: border-box;transition: all 200ms ease-out;
+    transform: translateX(-50%); cursor: pointer;} #snackbar.active {bottom: 0;} #snackbar.snackbar-error {background-color: #B71C1C;} #snackbar .snackbar-message {overflow: auto;}
+    #snackbar.snackbar-header {overflow: visible;} #snackbar.snackbar-header .snackbar-head {position: absolute;top: -1.45em;left: 0;opacity: 0;font-size: 1.5em;
+    background: rgba(66,66,66,1); border: none;text-align: center;padding: 0 .5em;width: 100%;transition: opacity 300ms;} #snackbar.snackbar-header.active .snackbar-head {opacity: 1;}
+    @media only screen and (max-width: 600px) { #snackbar {width: 100%;margin: 0;border-radius: 0px;}} #snackbar:last-child {padding: 0 0 0 24px;float: right;color: #ffeb3b;
+    text-decoration: none;text-transform: uppercase;} .snackbar-msg {display: none;}
+    .unload-bar {position: absolute;background-color: black;width: 100%;height: 3px;top: 0;left: 0;animation: unloadbar 2s linear 1 forwards;}
+    #snackbar:hover .unload-bar {animation: none;} @keyframes unloadbar { 0% {width: 100%;} 100% {width: 0px;}}
+    .switch {position:relative;display:inline-block;width:60px;height:34px;} .switch input:not([type=range]):not([type=color]) {display:none;}
+    .slider:not([type=range]) {position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#B71C1C;-webkit-transition:.2s;transition:.2s;}
+    .slider:not([type=range]):before {position:absolute;content:"";height:26px;width:26px;left:4px;bottom:4px;background-color:white;-webkit-transition:.2s;transition:.2s;}
+    input:not([type=range]):not([type=color]):checked + .slider:not([type=range]) {background-color:#00C853;} input:not([type=range]):not([type=color]):focus + .slider:not([type=range]) {box-shadow:0 0 1px #00C853;}
+    input:not([type=range]):not([type=color]):checked + .slider:not([type=range]):before {-webkit-transform:translateX(26px);-ms-transform:translateX(26px);transform:translateX(26px);}
+    .slider:not([type=range]).round {border-radius:34px;} .slider:not([type=range]).round:before {border-radius:50%;} input[type=color] {margin: 1em 0;padding: 0 !important;} input[type=range]:focus {outline: none;}
+    input[type=range].slider {-webkit-appearance: none;appearance: none;background: none;width: 100%;display: inline-block;padding: 1em 0;}
+    input[type=range]::-webkit-slider-runnable-track {height: 10px;background: #ddd;border: none;border-radius: 3px;} input[type=range]::-ms-track {height: 10px;background: #ddd;border: none;border-radius: 3px;}
+    input[type=range]::-moz-range-track {height: 10px;background: #ddd;border: none;border-radius: 3px;}
+    input[type=range]::-webkit-slider-thumb {-webkit-appearance: none;appearance: none;border: none;height: 16px;width: 16px;border-radius: 50%;background: #555;margin-top: -3px;position: relative;}
+    input[type=range].red::-webkit-slider-thumb {background: #ff0266;} input[type=range].green::-webkit-slider-thumb {background: #00C853;} input[type=range].blue::-webkit-slider-thumb {background: #2962FF;}
+    input[type=range].hue::-webkit-slider-thumb {background: linear-gradient(90deg, #ff0266 0%, #00C853 40%, #2962FF 90%);}
+    input[type=range].saturation::-webkit-slider-thumb {background: linear-gradient(90deg, rgba(255,255,255,.2) 0%, #555000 100%);}
+    input[type=range].luminance::-webkit-slider-thumb {background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(255,255,255,1) 100%);}
+    input[type=range]::-ms-thumb {-webkit-appearance: none;appearance: none;border: none;height: 16px;width: 16px;border-radius: 50%;background: #555;margin-top: 0px;position: relative;}
+    input[type=range].red::-ms-thumb/*, input[type="range"].red::-ms-fill-lower*/ {background: #ff0266;} input[type=range].green::-ms-thumb/*, input[type="range"].green::-ms-fill-lower*/ {background: #00C853;}
+    input[type=range].blue::-ms-thumb/*, input[type="range"].blue::-ms-fill-lower*/ {background: #2962FF;} input[type=range].hue::-ms-thumb {background: linear-gradient(90deg, #ff0266 0%, #00C853 40%, #2962FF 90%);}
+    input[type=range].saturation::-ms-thumb {background: linear-gradient(90deg, rgba(255,255,255,.2) 0%, #555000 100%);} input[type=range].luminance::-ms-thumb {background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(255,255,255,1) 100%);}
+    input[type=range]::-moz-range-thumb {-webkit-appearance: none;appearance: none;border: none;height: 16px;width: 16px;border-radius: 50%;background: #555;margin-top: -5px;position: relative;}
+    input[type=range].red::-moz-range-thumb/*, input[type="range"].red::-moz-range-progress*/ {background: #ff0266;} input[type=range].green::-moz-range-thumb/*, input[type="range"].green::-moz-range-progress*/ {background: #00C853;}
+    input[type=range].blue::-moz-range-thumb/*, input[type="range"].blue::-moz-range-progress*/ {background: #2962FF;} input[type=range].hue::-moz-range-thumb {background: linear-gradient(90deg, #ff0266 0%, #00C853 40%, #2962FF 90%);}
+    input[type=range].saturation::-moz-range-thumb {background: linear-gradient(90deg, rgba(255,255,255,.2) 0%, #555000 100%);}
+    input[type=range].luminance::-moz-range-thumb {background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(255,255,255,1) 100%);} input[type=range]:focus::-webkit-slider-runnable-track {background: #ccc;}
+    input[type=range]:focus::-ms-track {background: #ccc;} input[type=range]:focus::-moz-range-track {background: #ccc;} input.label-value {display: inline-block !important;width: auto !important;}
+    input[type=range].slate::-webkit-slider-runnable-track {background: #B0BEC5;} input[type=range].slate::-ms-track {background: #B0BEC5;} input[type=range].brown::-moz-range-track {background: #B0BEC5;}
+    input[type=range].slate::-webkit-slider-thumb {background: #263238;} input[type=range].slate::-ms-thumb {background: #263238;} input[type=range].slate::-moz-range-thumb {background: #263238;}
+    input[type=range].brown::-webkit-slider-runnable-track {background: #BCAAA4;} input[type=range].brown::-ms-track {background: #BCAAA4;} input[type=range].brown::-moz-range-track {background: #BCAAA4;}
+    input[type=range].brown::-webkit-slider-thumb {background: #3E2723;} input[type=range].brown::-ms-thumb {background: #3E2723;} input[type=range].brown::-moz-range-thumb {background: #3E2723;}
+    output.range-tooltip {display: inline-block;position: relative;left: 10px;top: calc(-1em - var(--height));padding: 3px;border-radius: 3px;background: #95a;color: #eee;transform: translate(calc((var(--val) - var(--min))/(var(--max) - var(--min)) * var(--width) - 50%));}
+    main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;}
+    main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
+    @media (max-width: 479px) {main > div {padding:8px 0;}}
+    @media (min-width: 840px) {main > div {padding:8px;}}
+    @media (max-width: 839px) and (min-width: 480px) {main > div {padding:8px;}}
+    @media (max-width: 479px) {.margin {width:calc(50% - 16px);display:none !important;margin:8px;box-sizing:border-box;}}
+    @media (max-width: 839px) and (min-width: 480px) {.margin {width:calc(25% - 16px);display:none !important;margin:8px;box-sizing:border-box;}}
+    @media (min-width: 840px) {.margin {width:calc(16.6666666667% - 16px);margin:8px;box-sizing:border-box;}}
+    .content {min-height:calc(100vh - 15vh);margin-bottom:80px;border-radius:2px;box-sizing:border-box;}
+    .menu {position:relative;width:100%;text-align:center;padding:1.5em 0 1.2em 0;background:#03A9F4;}
+    .btn-icon {cursor: pointer;font-size:1.3em;padding:1em .2em .3em .3em;color:white;fill:white;line-height:1.25em;vertical-align:bottom;border:4px solid transparent;border-radius:50%;user-select:none;}
+    .btn-icon.active {border:4px solid #00E5FF;}
+    @media (min-width: 840px) {.content {width:calc(66.6666666667% - 16px);margin:8px;}}
+    @media (max-width: 839px) and (min-width: 480px) {.content {width:calc(100% - 16px);margin:8px;} .instruct {font-size:1.5em !important;}}
+    @media (max-width: 479px) {.content {width:100%;margin:8px 0;} .instruct {font-size:1em !important;}}
+    ul, ol {font-size:14px;line-height:24px;font-weight:400;letter-spacing:0;} .instruct {text-align:center;width:100%;background:#3F51B5;color:#fff;font-size:1.7em;padding:1em 0;}
+    a {color:rgb(255,82,82);font-weight: 500;}
+    a, button, checkbox, .icon-palette, radio, .slider, .switch {-webkit-tap-highlight-color:transparent;-webkit-tap-highlight-color:rgba(255,255,255,0);}
+    button, input:not([type=range]):not([type=color]) {overflow:visible;} button, input:not([type=range]):not([type=color]), optgroup, select, textarea {font-family:sans-serif;font-size:100%;line-height:1.15;margin:0;}
+    .center {display:flex;flex-flow:row nowrap;align-items:center;justify-content:center;} .container {padding:0 2rem;font-size:1.5em;text-align:center;}
+    input:not([type=range]):not([type=color]), select, textarea, body *,input:not([type=range]):not([type=color])::after,input:not([type=range]):not([type=color])::before,select::after,select::before,textarea::after,textarea::before {box-sizing:border-box;}
+    .vcol {margin:1em 0 2em 0;} .vcol > * {padding:0 0 1em 0;}
+    .form-radio, .md-grp {position:relative;margin-top:2.25em;margin-bottom:2.25em;} .md-grp input:not([type=range]):not([type=color]) {height:1.9rem;} .md-grp textarea {resize:none;}
+    .md-grp .bar {position:relative;border-bottom:0.0625em solid #999;display:block;}
+    .md-grp .bar::before {content:'';height:0.125em;width:0;left:50%;bottom:-0.0625em;position:absolute;background:#03A9F4;transition:left 0.28s ease, width 0.28s ease;}
+    .md-grp select {width:100%;font-size:1em;height:1.6em;padding:0.125em 0.125em 0.0625em;background:none;border:none;line-height:1.6;box-shadow:none;}
+    .md-grp label:not(.switch) {position:absolute;top:0.25em;left:0;width:100%;pointer-events:none;padding-left:0.125em;z-index:1;color:#b3b3b3;font-size:1em;font-weight:normal;transition:all 180ms cubic-bezier(0.4, 0, 0.2, 1);}
+    .md-grp input:not([type=range]):not([type=color]), .md-grp textarea {display:block;background:none;padding:0.125em 0.125em 0.0625em;font-size:1em;border-width:0;border-color:transparent;line-height:1.9;
+    width:100%;transition:all 0.28s ease;box-shadow:none;margin-bottom:.5em;} .md-grp input:not([type=range]):not([type=color]):invalid:not(:focus), .md-grp textarea:invalid:not(:focus) {color:transparent;}
+    .md-grp select, .md-grp input:not([type=range]):not([type=color]):focus, .md-grp input:not([type=range]):not([type=color]):valid, .md-grp input:not([type=range]):not([type=color]).has-value, .md-grp textarea:focus, .md-grp textarea:valid, .md-grp textarea.has-value {color:#333;}
+    .md-grp select ~ label, .md-grp input:not([type=range]):not([type=color]):focus ~ label, .md-grp input:not([type=range]):not([type=color]):valid ~ label, .md-grp input:not([type=range]):not([type=color]).has-value ~ label, .md-grp textarea:focus ~ label,
+    .md-grp textarea:valid ~ label, .md-grp textarea.has-value ~ label {font-size:0.8em;color:grey;top:-1.5em;left:0;}
+    .md-grp input:not([type=range]):not([type=color]):placeholder-shown ~ label, .md-grp textarea:placeholder-shown ~ label {top:0.25em !important;}
+    .md-grp input:not([type=range]):not([type=color]):invalid ~ label, .md-grp textarea:invalid ~ label {color:#E91E63 !important;}
+    .md-grp select:invalid ~ .bar::before, .md-grp input:not([type=range]):not([type=color]):invalid ~ .bar::before, .md-grp textarea:invalid ~ .bar::before {width:100%;left:0;background:#E91E63;}
+    .md-grp select:focus, .md-grp input:not([type=range]):not([type=color]):focus, .md-grp textarea:focus {outline:none;} .md-grp select:focus ~ label, .md-grp input:not([type=range]):not([type=color]):focus ~ label, .md-grp textarea:focus ~ label {color:#03A9F4;}
+    .md-grp select:focus ~ .bar::before, .md-grp input:not([type=range]):not([type=color]):focus ~ .bar::before, .md-grp textarea:focus ~ .bar::before {width:100%;left:0;}
+    button {border:none;cursor:pointer;color:white;padding:15px 40px;border-radius:2px;box-shadow:2px 2px 4px rgba(0, 0, 0, .4);background:#03A9F4;position:relative;overflow:hidden;}
+    button:after {content:'';position:absolute;top:50%;left:50%;width:5px;height:5px;background:rgba(255, 255, 255, .5);opacity:0;border-radius:100%;transform:scale(1, 1) translate(-50%);transform-origin:50% 50%;}
+    button:focus:not(:active)::after {animation:ripple 500ms ease-out;} @keyframes ripple { 0% {transform:scale(0, 0);opacity:1;} 20% {transform:scale(25, 25);opacity:1;} 100% {opacity:0;transform:scale(40, 40);}}
+  </style>
+</head>
+<body class="grey" onload="mm.loaded()">
+  <div class="ribbon blue-grey"></div>
+  <main>
+    <div>
+      <div class="margin"></div>
+      <img src="/favicon.png" class="logo">
+      <label class="logo">
+        <a href="/">Moto Moon</a>
+      </label>
+      <div class="content shadow white grey-text">
+        <div class="menu" id="menu">
+          <b class="btn-icon" title="WiFi Credentials" data-view="setup" onclick="mm.formRequest(event)"
+            data-req-action="/setup">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 600 445">
+              <g transform="translate(0,445) scale(0.1,-0.1)">
+              <path d="M1008 4431 c-77 -31 -113 -58 -199 -149 -419 -448 -681 -983 -780 -1597 -27 -167 -37 -565 -20 -752 62 -657 352 -1297 803 -1769 117 -122 180 -156 299 -162 107 -5 174 13 251 67 135 98 190 286 129 444 -22 57 -44 85 -197 257 -150 169 -312 442 -398 673 -149 397 -179 880 -80 1296 89 378 275 723 552 1023 93 101 125 154 143 240 35 161 -58 346 -209 416 -77 35 -223 42 -294 13z"/>
+              <path d="M4729 4432 c-175 -71 -274 -246 -240 -423 18 -91 48 -142 141 -244 170 -185 274 -333 375 -535 163 -325 235 -637 235 -1008 -1 -352 -68 -652 -214 -957 -106 -220 -223 -392 -394 -577 -49 -53 -99 -117 -111 -143 -91 -194 -14 -418 175 -511 54 -26 68 -29 164 -29 99 0 109 2 172 33 51 25 87 54 154 125 453 481 724 1067 800 1727 23 206 16 599 -15 795 -90 563 -324 1072 -692 1500 -110 128 -194 206 -255 235 -68 33 -227 39 -295 12z"/>
+              <path d="M1965 3607 c-73 -24 -109 -49 -194 -131 -247 -240 -415 -549 -493 -906 -20 -93 -22 -133 -22 -345 0 -212 2 -252 22 -345 79 -362 245 -666 500 -913 112 -108 165 -132 297 -132 88 0 107 3 157 27 197 92 276 313 184 513 -15 33 -55 86 -107 140 -140 145 -211 262 -265 440 -26 84 -28 102 -28 270 0 168 2 186 28 270 30 98 86 217 137 292 18 26 73 89 121 140 98 103 131 160 148 252 21 118 -12 230 -97 321 -77 84 -141 113 -258 117 -56 2 -105 -2 -130 -10z"/>
+              <path d="M3809 3606 c-74 -29 -116 -56 -162 -105 -109 -116 -133 -283 -61 -428 14 -30 60 -89 105 -136 136 -140 211 -266 266 -446 25 -80 27 -99 27 -266 0 -168 -2 -186 -28 -270 -30 -98 -86 -217 -137 -292 -18 -26 -73 -89 -121 -140 -98 -103 -131 -160 -148 -252 -29 -162 56 -330 207 -406 53 -28 67 -30 163 -30 99 0 110 2 171 32 105 52 282 244 401 435 105 169 184 369 230 578 20 93 22 133 22 345 0 212 -2 252 -22 344 -80 366 -244 666 -500 914 -106 103 -165 130 -287 134 -59 2 -102 -2 -126 -11z"/>
+              <path d="M2858 2661 c-164 -53 -284 -195 -311 -370 -35 -229 120 -459 344 -510 162 -38 339 16 447 134 224 247 117 648 -199 746 -79 25 -203 24 -281 0z"/>
+              </g>
+            </svg>
+          </b>
+          <b class="btn-icon" title="Color" data-view="palette" onclick="mm.formRequest(event)"
+            data-req-action="/palette">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
+              <g transform="translate(-4, -4) scale(1.5,1.3)">
+              <path fill="#ffffff" d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A1.5,1.5 0 0,0 13.5,19.5C13.5,19.11 13.35,18.76 13.11,18.5C12.88,18.23 12.73,17.88 12.73,17.5A1.5,1.5 0 0,1 14.23,16H16A5,5 0 0,0 21,11C21,6.58 16.97,3 12,3Z" />
+              </g>
+            </svg>
+            <!--toggle switch <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 600 391">
+              <g transform="translate(0,391) scale(0.1,-0.1)">
+              <path d="M1484 3589 c-732 -65 -1340 -627 -1464 -1353 -28 -162 -28 -400 0 -562 106 -618 579 -1141 1176 -1300 226 -60 133 -57 1699 -61 1499 -5 1630 -2 1813 37 564 119 1028 536 1213 1090 108 323 108 707 0 1030 -211 630 -758 1061 -1422 1120 -137 12 -2878 11 -3015 -1z m3058 -564 c640 -111 1042 -751 862 -1371 -107 -370 -404 -654 -789 -755 -78 -21 -112 -24 -255 -23 -145 1 -177 4 -262 27 -383 102 -682 401 -785 782 -24 90 -27 117 -27 270 0 153 3 180 27 270 35 130 119 299 201 401 245 310 646 466 1028 399z"/>
+              </g>
+            </svg>-->
+          </b>
+          <b class="btn-icon" title="Preset Animation" data-view="anim" onclick="mm.formRequest(event)"
+            data-req-action="/anim">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
+              <g transform="translate(-4, -4) scale(1.5,1.3)">
+              <path fill="#ffffff" d="M6,6.9L3.87,4.78L5.28,3.37L7.4,5.5L6,6.9M13,1V4H11V1H13M20.13,4.78L18,6.9L16.6,5.5L18.72,3.37L20.13,4.78M4.5,10.5V12.5H1.5V10.5H4.5M19.5,10.5H22.5V12.5H19.5V10.5M6,20H18A2,2 0 0,1 20,22H4A2,2 0 0,1 6,20M12,5A6,6 0 0,1 18,11V19H6V11A6,6 0 0,1 12,5Z" />
+              </g>
+            </svg>
+          </b>
+          <b class="btn-icon" title="Brake Light Animation" data-view="brake" onclick="mm.formRequest(event)"
+            data-req-action="/brake">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
+              <g transform="translate(-4, -4) scale(1.5,1.3)">
+              <path fill="#ffffff" d="M7,2V13H10V22L17,10H13L17,2H7Z" />
+              </g>
+            </svg>
+          </b>
+          <b class="btn-icon" title="Turn Signal Animation" data-view="turn" onclick="mm.formRequest(event)"
+            data-req-action="/turn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 40 26">
+              <polygon transform="translate(-15,-22)" id="polygon5" points="24.64,26.46 15,35.33 24.64,43.81 24.64,39.76 32.35,39.76 32.35,30.7 32.35,30.7 24.64,30.7 "/>
+              <polygon transform="translate(-15,-22)" id="polygon7" points="45.36,30.24 37.65,30.24 37.65,39.3 45.36,39.3 45.36,43.54 55,34.67 55,34.67 45.36,26.19 "/>
+            </svg>
+          </b>
+        </div>
+        <div id="viewer"></div>
+        <div class="overlay" id="loader">
+          <div class="center loader">
+            <svg class="loader-circular" viewBox="25 25 50 50">
+              <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="hide view" id="setup">
+    <div class="instruct">
+      WiFi Setup
+    </div>
+    <div class="container">
+      <div class="md-grp">
+        <input type="text" placeholder=" " minlength="3" required="required" id="ssid">
+        <label for="ssid">SSID Name</label><i class="bar"></i>
+      </div>
+      <div class="md-grp">
+        <input type="password" placeholder=" " minlength="8" required="required" id="password">
+        <label for="password">SSID Password</label><i class="bar"></i>
+      </div>
+      <button type="button" onclick="mm.formRequest(event)"
+        data-req-sel="#ssid,#password" data-req-method="POST" data-req-action="/setup">Save</button>
+    </div>
+  </div>
+  <div class="hide view" id="reconnect">
+    <div class="instruct">
+      &#9995; WiFi Credentials Saved!
+    </div>
+    <div class="container">
+      <h3>Reconnect to WiFi and refresh the page to continue</h3>
+    </div>
+  </div>
+  <div class="hide view" id="palette">
+    <div class="container">
+      <div class="vcol">
+        <div>Toggle Brake lights</div>
+        <label class="switch">
+          <input type="checkbox" id="brakeOn" onclick="mm.formRequest(event)" value="true"
+            data-req-sel="#brakeOn" data-req-method="POST" data-req-action="/palette/apply/brake">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="vcol">
+        <div>Toggle Left Turn Signal</div>
+        <label class="switch">
+          <input type="checkbox" id="turnLeftOn" onclick="mm.formRequest(event)" value="true"
+            data-req-sel="#turnLeftOn" data-req-method="POST" data-req-action="/palette/apply/turn/left">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="vcol">
+        <div>Toggle Right Turn Signal</div>
+        <label class="switch">
+          <input type="checkbox" id="turnRightOn" onclick="mm.formRequest(event)" value="true"
+            data-req-sel="#turnRightOn" data-req-method="POST" data-req-action="/palette/apply/turn/right">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="hide view" id="anim">
+    <div class="container">
+      <div class="md-grp">
+        <div class="row color-select">
+          <div class="col s12 m12 l12">
+            <div class="canvas-editor">
+              <div class="brown-text">
+                <canvas class="editor">Bitmap editor canvas not supported</canvas>
+              </div>
+              <div class="canvas-col brown-text">
+                <svg style="width:1.5em;height:1.5em" viewBox="0 0 24 24">
+                  <path fill="#000000" d="M8,2H16A2,2 0 0,1 18,4V20A2,2 0 0,1 16,22H8A2,2 0 0,1 6,20V4A2,2 0 0,1 8,2M8,10V14H16V10H8M8,16V20H16V16H8M8,4V8H16V4H8Z" />
+                </svg>
+                <div>
+                  <input class="rangify-start-out label-value canvas-editor-rows" type="number" min="8" max="60" step="1" value="16"/>
+                </div>
+              </div>
+              <div class="canvas-row brown-text">
+                <svg style="width:1.5em;height:1.5em" viewBox="0 0 24 24">
+                  <path fill="#000000" d="M22,14A2,2 0 0,1 20,16H4A2,2 0 0,1 2,14V10A2,2 0 0,1 4,8H20A2,2 0 0,1 22,10V14M4,14H8V10H4V14M10,14H14V10H10V14M16,14H20V10H16V14Z" />
+                </svg>
+                <span>
+                  <input class="rangify-start-out label-value canvas-editor-cols" type="number" min="8" max="60" step="1" value="16"/>
+                </span>
+              </div>
+            </div>
+          </div>
+          <input class="hsl-text" type="hidden" value="0,0%,0%"/>
+          <input class="rgb-text" type="hidden" value="0,0,0" id="rgb"/>
+          <input class="col s12 m12 l12 hex" type="color" value="#00ff00" name="color" id="color"/>
+          <div class="col s12 m12 l4">
+            <div>Hue: <output class="hue-out">0</output></div>
+            <input class="slider hue" type="range" min="0" max="1" step="0.01" value="0"/>
+          </div>
+          <div class="col s12 m12 l4">
+            <div>Saturation: <output class="saturation-out">0</output></div>
+            <input class="slider saturation" type="range" min="0" max="1" step="0.01" value="0"/>
+          </div>
+          <div class="col s12 m12 l4">
+            <div>Luminance: <output class="luminance-out">0</output></div>
+            <input class="slider luminance" type="range" min="0" max="1" step="0.01" value="0"/>
+          </div>
+          <div class="col s12 m12 l4">
+            <div class="red-text">Red: <output class="red-out">0</output></div>
+            <input class="slider red" type="range" min="0" max="255" step="1" value="0"/>
+          </div>
+          <div class="col s12 m12 l4">
+            <div class="green-text">Green: <output class="green-out">0</output></div>
+            <input class="slider green" type="range" min="0" max="255" step="1" value="0"/>
+          </div>
+          <div class="col s12 m12 l4">
+            <div class="blue-text">Blue: <output class="blue-out">0</output></div>
+            <input class="slider blue" type="range" min="0" max="255" step="1" value="0"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 m12 l12">
+            <div class="brown-text">Bitmap Block Width: <input class="rangify-start-out label-value" type="number" min="16" max="60" step="16" value="16"/></div>
+            <input class="slider rangify-start brown" type="range" min="16" max="60" step="16" value="16" id="blockWidth"/>
+          </div>
+          <div class="col s12 m12 l12">
+            <div class="brown-text">Bitmap Block Height: <input class="rangify-start-out label-value" type="number" min="16" max="60" step="16" value="16"/></div>
+            <input class="slider rangify-start brown" type="range"min="16" max="60" step="16" value="16" id="pixelStop"/>
+          </div>
+        </div>
+        <div class="row transition-select">
+          <div class="col s12 m12 l12 rangify-container">
+            <div class="slate-text">Duration: <input class="rangify-start-out label-value" type="number" min="1" max="60" step="1" value="1"/></div>
+            <input class="slider rangify-start slate" type="range" min="1" max="100" step="1" value="1"/>
+          </div>
+          <div class="col s12 m12 l12">
+            <select class="browser-default" id="ease">
+              <option value="0" selected>No easing</option>
+              <option value="CircularCenter">CircularCenter</option>
+              <option value="CircularIn">CircularIn</option>
+              <option value="CircularInOut">CircularInOut</option>
+              <option value="CircularOut">CircularOut</option>
+              <option value="CubicCenter">CubicCenter</option>
+              <option value="CubicIn">CubicIn</option>
+              <option value="CubicInOut">CubicInOut</option>
+              <option value="CubicOut">CubicOut</option>
+              <option value="ExponentialCenter">ExponentialCenter</option>
+              <option value="ExponentialIn">ExponentialIn</option>
+              <option value="ExponentialInOut">ExponentialInOut</option>
+              <option value="ExponentialOut">ExponentialOut</option>
+              <option value="Gamma">Gamma</option>
+              <option value="Linear">Linear</option>
+              <option value="QuadraticCenter">QuadraticCenter</option>
+              <option value="QuadraticIn">QuadraticIn</option>
+              <option value="QuadraticInOut">QuadraticInOut</option>
+              <option value="QuadraticOut">QuadraticOut</option>
+              <option value="QuarticCenter">QuarticCenter</option>
+              <option value="QuarticIn">QuarticIn</option>
+              <option value="QuarticInOut">QuarticInOut</option>
+              <option value="QuarticOut">QuarticOut</option>
+              <option value="QuinticCenter">QuinticCenter</option>
+              <option value="QuinticIn">QuinticIn</option>
+              <option value="QuinticInOut">QuinticInOut</option>
+              <option value="QuinticOut">QuinticOut</option>
+              <option value="SinusoidalCenter">SinusoidalCenter</option>
+              <option value="SinusoidalIn">SinusoidalIn</option>
+              <option value="SinusoidalInOut">SinusoidalInOut</option>
+              <option value="SinusoidalOut">SinusoidalOut</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hide view" id="brake">
+    <div class="container">
+      <div class="md-grp">
+        <select id="lightType" class="browser-default" onchange="mm.viewSelection(event)">
+          <option value="" disabled selected hidden>Select a brake animation</option>
+          <option value="one">One</option>
+          <option value="two">Two</option>
+          <option value="three">Three</option>
+        </select>
+      </div>
+    </div>
+    <div class="container">
+      <div class="md-grp">
+        <label for="frame">Amination Frame</label><i class="bar"></i>
+        <input type="range" required="required" min="1" max="30" value="1" name="frame" id="frame">
+        <output for="r">50</output>
+      </div>
+      <button type="submit">Save</button>
+    </div>
+  </div>
+  <div class="hide view" id="turn">
+    <div class="container">
+      <div class="md-grp">
+        <select id="lightType" class="browser-default" onchange="mm.viewSelection(event)">
+          <option value="" disabled selected hidden>Select a turn signal animation</option>
+          <option value="one">One</option>
+          <option value="two">Two</option>
+          <option value="three">Three</option>
+        </select>
+      </div>
+    </div>
+    <div class="container">
+      <div class="md-grp">
+
+      </div>
+      <button type="submit">Save</button>
+    </div>
+  </div>
+  <div id="snackbar" class="no-select">
+    <div class="unload-bar"></div>
+    <span>TEMPLATE</span>
+    <a href="#">DONE</a>
+  </div>
+  <script>
+    var mm = new MM();
+    function MM() {
+      this.loader = null;
+      this.animEndEvents = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+      this.snackbarTkoHandles = [];
+      this.snackbarShowDelay = 7000;
+      this.snackbarQueue = [];
+    }
+    MM.prototype.loaded = function loaded() {
+      var mmi = this;
+      mmi.views = {};
+      mmi.viewer = mmi.viewer || document.getElementById('viewer');
+      mmi.loader = mmi.loader || document.getElementById('loader');
+      mmi.menus = mmi.menus || document.querySelectorAll('#menu .btn-icon');
+      for (var i = 0, vws = document.querySelectorAll('.view'), els, clr, cvs; vws && vws[i]; ++i) {
+        if (!vws[i].id) continue;
+        vws[i].className = 'view';
+        mmi.views[vws[i].id] = vws[i].parentNode.removeChild(vws[i]);
+        els = mmi.views[vws[i].id].querySelectorAll('.color-select');
+        for (var j = 0; j < els.length; ++j) {
+          clr = MM.Colorize.init(els[j]);
+          if (clr) MM.Canvas.init({ parent: els[j], inputColor: clr });
+        }
+        els = mmi.views[vws[i].id].querySelectorAll('.rangify-container');
+        for (var j = 0; j < els.length; ++j) MM.Rangify.init(els[j]);
+      }
+      if (!mmi.graph) {
+
+      } 
+      mmi.request('GET', '/setup');
+    };
+    MM.prototype.loadbar = function loadbar(hide) {
+      this.loader.classList[hide ? 'add' : 'remove']('hide');
+    };
+    MM.prototype.viewSelection = function viewSelection(event) {
+      var trg = event && event.currentTarget, json = {};
+      if (trg && trg.dataset.view) json[trg.dataset.view] = {};
+      if (trg && trg.value) json[trg.value] = {};
+      this.view(json);
+    };
+    MM.prototype.view = function view(json, req, opts, cb) {
+      var mmi = this, isInit = true;
+      mmi.viewer.appendChild(mmi.views.anim); // test
+      for (var nm in json) if (mmi.views[nm]) {
+        if (isInit && !(isInit = false)) mmi.viewer.innerHTML = '';
+        mmi.viewer.appendChild(mmi.views[nm]);
+        mmi.fillify(mmi.views[nm], json[nm]);
+        var unlock = json[nm]._conf && json[nm]._conf.menuUnlock;
+        for (var li = 0; li < mmi.menus.length; ++li) {
+          if (nm === mmi.menus[li].dataset.view) mmi.clazzList(mmi.menus[li]).add('active');
+          else mmi.clazzList(mmi.menus[li]).remove('active');
+          if (unlock) mmi.clazzList(mmi.menus[li]).remove('hide');
+        }
+      }
+      if (!opts.noLoading) mmi.loadbar(true);
+      if (json.message || json.error) mmi.snackbar(null, mmi.messageJSON(json.message, json.error, json.isError ? 'snackbar-error' : null, req, json));
+      if (typeof cb === 'function') cb(json, req);
+    };
+    MM.prototype.fillify = function fillify(el, json) {
+      for (var i = 0, dta, els = el instanceof Element ? el.querySelectorAll('[id],[name]') || [] : []; els[i]; ++i) {
+        if (dta = json[els[i].id || els[i].name]) {
+          for (var dn in dta) {
+            switch (dn) {
+              case 'value': case 'innerHTML': case 'innerText': case 'textContent': els[i][dn] = dta[dn]; break;
+              case 'checked': els[i].checked = dta[dn] == 'true' || dta[dn] == 1; break;
+              default: els[i].setAttribute(dn, dta[dn]);
+            }
+          }
+        }
+      }
+    };
+    MM.prototype.formRequest = function formRequest(event, opts, cb) {
+      var mmi = this, trg = event.currentTarget, els = document.querySelectorAll(trg.dataset.reqSel), pyld = {}, valid = true;
+      for (var i = 0; i < els.length; ++i) {
+        if (els[i].reportValidity && !els[i].reportValidity()) valid = false;
+        if ((els[i].type !== 'checkbox' && els[i].type !== 'radio') || els[i].checked) pyld[els[i].id || els[i].name] = els[i].value;
+        if (els[i].type && els[i].type.toLowerCase() == 'password') els[i].value = '';
+      }
+      if (!valid) return;
+      if (window.scroll) window.scroll(0, 0);
+      mmi.request(trg.dataset.reqMethod, trg.dataset.reqAction, pyld, opts, cb);
+    };
+    MM.prototype.request = function request(method, url, payload, opts, cb) {
+      if (!url || url.indexOf('?') > 0) throw new Error('Invlaid URL (parameters should be passed in payload): ' + url);
+      opts = opts || {};
+      // form.checkValidity() form.reportValidity()
+      method = (method || 'GET').toUpperCase();
+      var mmi = this, req = new XMLHttpRequest();
+      if (!opts.noLoading) mmi.loadbar();
+      req.onreadystatechange = function response() {
+        if (req.readyState === XMLHttpRequest.DONE) {
+          var ctyp = req.getResponseHeader('content-type'), json;
+          if (ctyp && ctyp.toLowerCase().indexOf('json') >= 0) try {
+            json = JSON.parse(req.responseText);
+            if (req.status === 0 || req.status !== 200) json = { error: new Error((req.statusText) + ': ' + json.message + ' URL ' + url), isError: true };
+            else if (json && json.isError && json.message) json.error = new Error(json.message);
+          } catch (e) {
+            e.cause = 'JSON.parse error for response from URL ' + url;
+            json = { error: e, isError: true };
+          } else if (req.status === 0 || req.status !== 200) json = { error: new Error((req.statusText || 'Request Access Denied to ') + ' URL ' + url), isError: true };
+          else json = { message: req.responseText };
+          mmi.view(json, req, opts, cb);
+          if (!opts.noLoading) mmi.loadbar(true);
+        }
+      };
+      req.onerror = function responseError(e) {
+        if (req.status === 401) window.location.reload(); // session expired
+        if (!opts.ignoreErrors) console.error(req.statusText || e);
+        if (!opts.noLoading) mmi.loadbar(true);
+      };
+      payload = payload || {};
+      req.withCredentials = opts.withCredentials;
+      if (!opts.useJSON) {
+        var params = '';
+        if (payload) for (var pk in payload) params += (params.length ? '&' : method === 'GET' ? '?' : '') + encodeURIComponent(pk) + '=' + encodeURIComponent(payload[pk]);
+        if (method === 'GET') {
+          req.open(method, url + params, true);
+          req.send(null);
+        } else {
+          req.open(method, url, true);
+          req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          req.send(params);
+        }
+      } else {
+        req.open(method, url, true);
+        req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        req.send(JSON.stringify(payload));
+      }
+      return req;
+    };
+    MM.prototype.reqJSON = function reqJSON(req, altMsg) {
+      var mmi = this, ctyp = req.getResponseHeader('content-type'), json;
+      if (ctyp && ctyp.toLowerCase().indexOf('json') >= 0) try {
+        json = JSON.parse(req.responseText);
+        json._res = { jsonContent: true };
+        mmi.messageJSON(null, null, null, req, json);
+      } catch (e) {
+        json = mmi.messageJSON(altMsg || 'JSON.parse Error', e, null, req);
+      } else json = mmi.messageJSON(altMsg || ctyp + ' is not a JSON response', null, null, req);
+      return json;
+    };
+    MM.prototype.messageJSON = function messageJSON(msg, msgObj, msgClass, req, obj) {
+      var typ = typeof obj;
+      obj = (typ === 'object' && obj) || (typ === 'string' && { _res: { message: obj } }) || {};
+      obj._res = obj._res || {};
+      obj._res.message = obj._res.message || obj.message || msg || (msgObj && msgObj.message);
+      obj._res.messageClass = (msgClass || '').trim();
+      obj._res.statusCode = obj._res.statusCode || obj.statusCode || (req ? req.status : null);
+      obj._res.error = obj._res.error instanceof Error ? obj._res.error : obj.error instanceof Error ? obj.error : msgObj instanceof Error ? msgObj : obj._res.statusCode && obj._res.statusCode !== 200 ? new Error(obj._res.message) : null;
+      obj._res.cause = obj._res.error && obj._res.error !== obj._res.error.cause && obj._res.error.cause;
+      obj._res.date = obj._res.date || obj.date || new Date();
+      obj._res.timeStamp = obj._res.timeStamp || obj.timeStamp || obj._res.date.toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+      obj._res.messageFull = obj._res.messageFull || obj.messageFull || ((obj._res.statusCode ? (obj._res.statusCode === 200 && 'INFO') || ('HTTP ' + obj._res.statusCode) : obj._res.error ? 'ERROR' : '') + ' (' + obj._res.timeStamp + '): ' + obj._res.message
+        + (obj._res.error && obj._res.message.trim() !== obj._res.error.message.trim() ? ' CAUSE: ' + obj._res.error : ''));
+      obj._res.jsonContent = obj._res.jsonContent || obj.jsonContent;
+      return obj;
+    };
+    MM.prototype.onWithTimeout = function onWithTimeout(el, evts, tko, once, cb) {
+      var mmi = this, tmh, fn = function timer() {
+        clearTimeout(tmh);
+        if (once) mmi.at(el, evts, undefined, true, fn);
+        if (arguments.length) cb.apply(this, arguments);
+        else cb();
+      };
+      mmi.at(el, evts, undefined, false, fn);
+      return tmh = setTimeout(fn, tko);
+    };
+    MM.prototype.at = function at(el, evts, useCapture, rm, fn) {
+      if (el && evts && fn) for (var i = 0, es = evts.split(' '), l = es.length; i < l; ++i) {
+        if (rm) el.removeEventListener(es[i], fn);
+        else el.addEventListener(es[i], fn, useCapture);
+      }
+    };
+    MM.prototype.clazzList = function clazzList(el) {
+      //if (el.classList) return el.classList;
+      var clo = {};
+      clo.clz = function(clzs, rplr) {
+        var arr = typeof rplr === 'boolean' ? Array.prototype.slice.call(clzs) : null, rm = rplr;
+        if (arr) rplr = function addrm(mtch, cn) {
+          arr.splice(arr.indexOf(cn), 1);
+          return rm ? '' : mtch;
+        };
+        for (var i = 0, l = clzs.length, isStr, val; i < l; ++i) {
+          clo.setClz(el, clzs[i], rplr);
+        }
+        return arr;
+      };
+      clo.setClz = function(el, cl, rplr) {
+        for (var i = 0, els = el instanceof Element ? [el] : el, ncl; i < els.length; ++i) {
+          var isStr = typeof els[i].className === 'string', rtyp = typeof rplr; // some elements don't support className the same way (e.g. svg)
+          var val = isStr ? els[i].className : els[i].getAttribute('class') || '';
+          ncl = cl && Array.isArray(cl) ? cl[i] || cl.join(' ') : cl; // try to match the element index with the passed class index or use all of the classes in combo
+          if (rtyp === 'string' || rtyp === 'function') val = val.replace(new RegExp('\\s*(' + ncl + ')\\s*', 'gi'), rplr);
+          else if (ncl) val += ' ' + ncl + ' ';
+          if (isStr) els[i].className = val;
+          else els[i].setAttribute('class', val);
+        }
+      };
+      return {
+        has: function hasClass(clz, all) {
+          if (!clz) return false;
+          for (var i = 0, els = el instanceof Element ? [el] : el, match = ' ' + clz + ' ', isMatch, mcnt = 0; i < els.length; ++i) {
+            isMatch = (' ' + els[i].className + ' ').replace(/[\n\t]/g, ' ').indexOf(match) > -1;
+            if ((!all && isMatch) || (all && !isMatch)) return isMatch;
+            if (isMatch) ++mcnt;
+          }
+          return mcnt === els.length;
+        },
+        remove: function rmer() {
+          clo.clz(arguments, ' ');
+        },
+        add: function addClass() {
+          for (var i = 0, clzs = clo.clz(arguments, false), l = clzs.length; i < l; ++i) {
+            clo.setClz(el, clzs[i]);
+          }
+        },
+        toggle: function tger() {
+          for (var i = 0, clzs = clo.clz(arguments, true), l = clzs.length; i < l; ++i) {
+            clo.setClz(el, clzs[i]);
+          }
+        }
+      };
+    };
+    MM.Color = {
+      blend: function(percentage, fromColor, toColor) {
+        var p = percentage, from = fromColor, to = toColor;
+        if (typeof(p) != 'number' || p <- 1 || p > 1 || typeof(from) != 'string' || (from[0] != 'r' && from[0] != '#') || (to && typeof(to) != 'string')) return null;
+        var h = typeof(to) === 'string' ? to.length > 9 ? true : to === 'c' ? from.length <= 9 : false : from.length > 9;
+        var b = p < 0, p = b ? p * -1 : p, to = to && to != 'c' ? to : b ? '#000000' : '#FFFFFF';
+        var f = from && typeof(from) === 'object' ? from : MM.Color.propertyToRGB(from), t = to && typeof(to) === 'object' ? to : MM.Color.propertyToRGB(to);
+        if (!f || !t) return null;
+        if (h) return 'rgb' + (f.a > -1 || t.a >- 1 ? 'a(' : '(') + Math.round((t.r - f.r) * p + f.r) + ',' + Math.round((t.g - f.g) * p + f.g)
+          + ',' + Math.round((t.b - f.b) * p + f.b) + (f.a < 0 && t.a < 0 ? ')' : ','
+          + (f.a > -1 && t.a > -1 ? Math.round(((t.a - f.a) * p + f.a) * 10000) / 10000 : t.a < 0 ? f.a : t.a) + ')');
+        else return '#' + (0x100000000 + Math.round((t.r - f.r) * p + f.r) * 0x1000000 + Math.round((t.g - f.g) * p + f.g) * 0x10000
+          + Math.round((t.b - f.b) * p + f.b) * 0x100 + (f.a > -1 && t.a > -1 ? Math.round(((t.a - f.a) * p + f.a) *255) : t.a > -1
+          ? Math.round(t.a * 255) : f.a > -1 ? Math.round(f.a * 255) : 255)).toString(16).slice(1, f.a > -1 || t.a > -1 ? undefined : -2);
+      },
+      propertyToRGB: function(color) {
+        var d = color, l = d.length, RGB = {};
+        if (l > 9) {
+          d = d.split(',');
+          if (d.length < 3 || d.length > 4) return null;
+          RGB.r = parseInt(d[0].split('(')[1]),
+          RGB.g = parseInt(d[1]);
+          RGB.b = parseInt(d[2]);
+          RGB.a = d[3] ? parseFloat(d[3]) : -1;
+          RGB.isHex = false;
+        } else {
+          if (l == 8 || l == 6 || l < 4) return null;
+          if (l < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (l > 4 ? d[4] + '' + d[4] : ''); // allow for 3 or 4 digit hex values
+          d = parseInt(d.slice(1), 16);
+          RGB.r = d >> 16 & 255;
+          RGB.g = d >> 8 & 255;
+          RGB.b = d & 255;
+          RGB.a = -1;
+          RGB.isHex = true;
+          if (l == 9 || l == 5) RGB.a = Math.round((RGB.b / 255) * 10000) / 10000;
+          RGB.b = RGB.g;
+          RGB.g = RGB.r;
+          RGB.r = d >> 24 & 255;
+        }
+        return RGB;
+      },
+      convert360: function(n) {
+        return Math.round(n * 360);
+      },
+      convert100: function(n) {
+        return Math.round(n * 100);
+      },
+      rgbToHSL: function(r, g, b) {
+        if (arguments.length === 1 && Array.isArray(r)) { // hexToHSL
+          g = r[1] || 0;
+          b = r[2] || 0;
+          r = r[0] || 0;
+        }
+        r /= 255, g /= 255, b /= 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h,s,l = (max + min) / 2;
+        if (max == min) {
+          h = s = 0; // achromatic
+        } else {
+          var d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r:h = (g - b) / d + (g < b ? 6 : 0);break;
+            case g:h = (b - r) / d + 2;break;
+            case b:h = (r - g) / d + 4;break;}
+          h /= 6;
+        }
+        return [h, s, l];
+      },
+      rgbToHex: function(r, g, b) {
+        var hex = '';
+        if (r == null || g == null || b == null) return hex;
+        for (var i = 0, cls = [r, g, b], comp; i < cls.length; i++) {
+          comp = parseInt(cls[i]).toString(16);
+          hex += comp.length == 1 ? '0' + comp : comp;
+        }
+        return hex;
+      },
+      hexToRGB: function(hex) {
+        var r, g, b;
+        hex = hex.match(/.{2}/g),
+        r = hex[0], g = hex[1], b = hex[2];
+        if (r == null || g == null || b == null) return false;
+        return [parseInt(r, 16), parseInt(g, 16), parseInt(b, 16)];
+      },
+      hueToRGB(v1, v2, vh) {
+        if (vh < 0) vh += 1;
+        if (vh > 1) vh -= 1;
+        if (6 * vh < 1) return v1 + (v2 - v1) * 6 * vh;
+        if (2 * vh < 1) return v2;
+        if (3 * vh < 2) return v1 + (v2 - v1) * (2 / 3 - vh) * 6;
+        return v1;
+      },
+      hslToRGB(h, s, l) {
+        var r, g, b, temp_1, temp_2;
+        if (s === 0) {
+          r = Math.round(l * 255);
+          g = Math.round(l * 255);
+          b = Math.round(l * 255);
+        } else {
+          temp_2 = l < .5 ? l * (1 + s) : l + s - s * l;
+          temp_1 = 2 * l - temp_2;
+          r = Math.round(255 * this.hueToRGB(temp_1, temp_2, h + 1 / 3));
+          g = Math.round(255 * this.hueToRGB(temp_1, temp_2, h));
+          b = Math.round(255 * this.hueToRGB(temp_1, temp_2, h - 1 / 3));
+        }
+        return [r, g, b];
+      }
+    };
+    MM.Colorize = {
+      getInputs: function(parent) {
+        return {
+          hue: parent.querySelector('.slider.hue'),
+          sat: parent.querySelector('.slider.saturation'),
+          lum: parent.querySelector('.slider.luminance'),
+          red: parent.querySelector('.slider.red'),
+          green: parent.querySelector('.slider.green'),
+          blue: parent.querySelector('.slider.blue'),
+          hsl: parent.querySelector('.hsl-text'),
+          rgb: parent.querySelector('.rgb-text'),
+          hex: parent.querySelector('.hex'),
+          hueOut: parent.querySelector('output.hue-out'),
+          satOut: parent.querySelector('output.saturation-out'),
+          lumOut: parent.querySelector('output.luminance-out'),
+          redOut: parent.querySelector('output.red-out'),
+          greenOut: parent.querySelector('output.green-out'),
+          blueOut: parent.querySelector('output.blue-out')
+        };
+      },
+      setRGB: function(r, g, b, els) {
+        els.red.value = r;
+        els.green.value = g;
+        els.blue.value = b;
+        if (els.rgb) els.rgb.value = r + ',' + g + ',' + b;
+        if (els.redOut) els.redOut.value = els.red.value;
+        if (els.greenOut) els.greenOut.value = els.green.value;
+        if (els.blueOut) els.blueOut.value = els.blue.value;
+      },
+      setTooltip: function(inp, out, fixed) {
+        out.value = fixed >= 0 ? parseFloat(inp.value || 0).toFixed(fixed) : inp.value;
+        out.style.setProperty('--val', inp.value);
+        var inpStyle = getComputedStyle(inp);
+        out.style.setProperty('--width', Math.round(inpStyle.width.replace(/[^\d\.]/g, '') || 0) + 'px');
+        out.style.setProperty('--height', Math.round(inpStyle.height.replace(/[^\d\.]/g, '') || 0) + 'px');
+      },
+      setHSL: function(h, s, l, els) {
+        els.hue.value = h;
+        els.sat.value = s;
+        els.lum.value = l;
+        var h2 = els.hsl || els.hueOut ? MM.Color.convert360(h) : null, s2 = els.hsl || els.satOut ? MM.Color.convert100(s) : null;
+        var l2 = els.hsl || els.lumOut ? MM.Color.convert100(s) : null;
+        if (els.hsl) els.hsl.value = h2 + ',' + s2 + '%,' + l2 + '%';
+        if (els.hueOut) els.hueOut.value = MM.Color.convert360(els.hue.value);
+        if (els.satOut) els.satOut.value = MM.Color.convert100(els.sat.value) + '%';
+        if (els.lumOut) els.lumOut.value = MM.Color.convert100(els.lum.value) + '%';
+      },
+      setHEX: function(hex, els) {
+        if (els.hex) els.hex.value = '#' + hex;
+      },
+      getHEX: function(hex) {
+        return hex.indexOf('#') !== -1 ? hex.substring(1) : hex;
+      },
+      hslChange: function(evt, els) {
+        var h = parseFloat(els.hue.value), s = parseFloat(els.sat.value), l = parseFloat(els.lum.value);
+        var rgb = MM.Color.hslToRGB(h, s, l);
+        var hex = MM.Color.rgbToHex(rgb[0], rgb[1], rgb[2]);
+        MM.Colorize.setRGB(rgb[0], rgb[1], rgb[2], els);
+        MM.Colorize.setHSL(h, s, l, els);
+        MM.Colorize.setHEX(hex, els);
+      },
+      rgbChange: function(evt, els) {
+        var r = parseFloat(els.red.value), g = parseFloat(els.green.value), b = parseFloat(els.blue.value);
+        var hsl = MM.Color.rgbToHSL(r, g, b);
+        var hex = MM.Color.rgbToHex(r, g, b);
+        MM.Colorize.setHSL(hsl[0], hsl[1], hsl[2], els);
+        MM.Colorize.setRGB(r, g, b, els);
+        MM.Colorize.setHEX(hex, els);
+      },
+      hexChange: function(evt, els) {
+        var hex = MM.Colorize.getHEX(els.hex.value);
+        if (hex.length === 3) hex = hex.repeat(2);
+        if (hex.length !== 6) return false;
+        var rgb = MM.Color.hexToRGB(hex);
+        var hsl = MM.Color.rgbToHSL(rgb[0], rgb[1], rgb[2]);
+        MM.Colorize.setRGB(rgb[0], rgb[1], rgb[2], els);
+        MM.Colorize.setHSL(hsl[0], hsl[1], hsl[2], els);
+      },
+      init: function(parent) {
+        var els = MM.Colorize.getInputs(parent);
+        if (els.hex) els.hex.addEventListener('input', function onHexInput(evt) {
+          requestAnimationFrame(function colorizeRequest() {
+            return MM.Colorize.hexChange(evt, els);
+          });
+        });
+        var hslListener = function(evt) {
+          requestAnimationFrame(function colorizeRequest() {
+            MM.Colorize.hslChange(evt, els);
+          })
+        };
+        els.hue.addEventListener('input', hslListener);
+        els.sat.addEventListener('input', hslListener);
+        els.lum.addEventListener('input', hslListener);
+        var rgbListener = function(evt) {
+          requestAnimationFrame(function colorizeRequest() {
+            MM.Colorize.rgbChange(evt, els);
+          });
+        };
+        els.red.addEventListener('input', rgbListener);
+        els.green.addEventListener('input', rgbListener);
+        els.blue.addEventListener('input', rgbListener);
+        if (els.hex) MM.Colorize.hexChange(null, els);
+        return els.hex;
+      }
+    };
+    MM.Canvas = {
+      createGraph: function(opts) {
+        opts = opts || {};
+        opts.parent = opts.parent || document;
+        var graph = {
+          parent: opts.parent,
+          canvas: opts.parent.querySelector('canvas.editor'),
+          inputCols: opts.parent.querySelector('.canvas-editor-cols'),
+          inputRows: opts.parent.querySelector('.canvas-editor-rows'),
+          inputColor: opts.inputColor,
+          pixels: [],
+          timestamps: {},
+          threshold: opts.threshold || 100,
+          blankColor: opts.blankColor || '#000000',
+          gridColor: opts.gridColor || '#DDDDDD',
+          bgColor: opts.bgColor || '#999999',
+          highlightColor: opts.highlightColor || 'rgba(255,255,255,0.5)',
+          blockWidth: opts.blockWidth || 20,
+          blockHeight: opts.blockHeight || 20,
+          x: 0, y: 0, ox: opts.offsetX || 10, oy: opts.offsetY || 10
+        };
+        if (!graph.canvas) return false;
+        graph.context = graph.canvas.getContext('2d');
+        graph.gridCanvas = document.createElement('canvas');
+        graph.gridContext = graph.gridCanvas.getContext('2d');
+        MM.Canvas.resize(graph, opts);
+        MM.Canvas.reset(graph);
+        return graph;
+      },
+      resize: function(graph, opts) {
+        var oldw, oldh;
+        if (opts && (!graph.gridColCount || opts.gridColCount !== graph.gridColCount)) {
+          oldw = graph.gridColCount || 16;
+          if (graph.inputCols) graph.inputCols.value = opts.gridColCount || oldw;
+          graph.gridColCount = (graph.inputCols && parseInt(graph.inputCols.value)) || opts.gridColCount || oldw;
+          graph.gridCanvasWidth = (graph.gridColCount * graph.blockWidth) + 1;
+          graph.gridCanvas.width = graph.gridCanvasWidth;
+          graph.canvas.width = graph.gridCanvas.width + (graph.ox * 2);
+        }
+        if (opts && (!graph.gridRowCount || opts.gridRowCount !== graph.gridRowCount)) {
+          oldh = graph.gridRowCount || 16;
+          if (graph.inputRows) graph.inputRows.value = opts.gridRowCount || oldh;
+          graph.gridRowCount = (graph.inputRows && parseInt(graph.inputRows.value)) || opts.gridRowCount || oldh;
+          graph.gridCanvasHeight = (graph.gridRowCount * graph.blockHeight) + 1;
+          graph.gridCanvas.height = graph.gridCanvasHeight;
+          graph.canvas.height = graph.gridCanvas.height + (graph.oy * 2);
+        }
+        if (!oldw && !oldh) return false;
+        var colChg = graph.gridColCount - oldw, rowChg = graph.gridRowCount - oldh;console.log(oldw, graph.gridColCount, oldh, graph.gridRowCount, colChg, rowChg);
+        graph.gridContext.fillStyle = graph.bgColor;
+        graph.gridContext.fillRect(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
+        graph.gridContext.fillStyle = graph.blankColor;
+        graph.gridContext.fillRect(1, 1, graph.gridCanvasWidth - 2, graph.gridCanvasHeight - 2);
+        graph.gridContext.beginPath();
+        graph.gridContext.strokeStyle = graph.gridColor;
+        graph.gridContext.lineWidth = '1';
+        for (let y = graph.blockHeight; y <= Math.max(graph.gridCanvasWidth, graph.gridCanvasHeight); y += graph.blockHeight) {
+          graph.gridContext.moveTo(0.5 + y, 1);
+          graph.gridContext.lineTo(0.5 + y, graph.gridCanvasHeight - 1);
+        }
+        for (let x = graph.blockWidth; x <= Math.max(graph.gridCanvasWidth, graph.gridCanvasHeight); x += graph.blockWidth) {
+          graph.gridContext.moveTo(1, 0.5 + x);
+          graph.gridContext.lineTo(graph.gridCanvasWidth - 1, 0.5 + x);
+        }
+        graph.gridContext.stroke();
+        graph.grid = graph.gridContext.getImageData(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
+      },
+      export: function(graph, width, height) {
+        var canvas = document.createElement('canvas'), context = canvas.getContext('2d');
+        if (width === null || isNaN(width)) width = 16;
+        if (height === null || isNaN(height)) height = 16;
+        canvas.width = width;
+        canvas.height = height;
+        for (var y = 1, pix; y <= height; y += 1) {
+          for (var x = 1; x <= width; x += 1) {
+            pix = MM.Canvas.pixel(graph, x, y);
+            if (pix.on === true) {
+              context.fillStyle = pix.color;
+              context.fillRect(x - 1, y - 1, 1, 1);
+            }
+          }
+        }
+        return canvas;
+      },
+      download: function(graph, width, height) {
+        var canvas = MM.Canvas.export(graph, width, height), link = document.createElement('a');
+        link.download = 'image.bmp';
+        link.href = canvas.toDataURL('image/bmp');
+        link.click();
+      },
+      upload: function(grpah) {
+        canvas.toBlob(function(blob) {
+          var formData = new FormData(); //this will submit as a "multipart/form-data" request
+          formData.append("image_name", blob); //"image_name" is what the server will call the blob
+          upload(formData); //upload the "formData", not the "blob"
+        });
+      },
+      pixel: function(graph, row, col, val) {
+        if (val) graph.pixels[graph.gridColCount * row + col] = val;
+        return graph.pixels[graph.gridColCount * row + col];
+      },
+      reset: function(graph) {
+        for (let y = 1; y <= graph.gridRowCount; y += 1) {
+          for (let x = 1; x <= graph.gridColCount; x += 1) {
+            MM.Canvas.pixel(graph, x, y, {
+              highlight: false,
+              color: graph.blankColor,
+              on: false,
+              x: (x - 1) * graph.blockWidth,
+              y: (y - 1) * graph.blockHeight,
+              h: graph.blockHeight - 1,
+              w: graph.blockWidth - 1
+            });
+          }
+        }
+      },
+      fill: function(graph, setPix, highlight) {
+        var inRange = graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.gridCanvasWidth && graph.y <= graph.oy + graph.gridCanvasHeight;
+        for (var y = 1, pix, fx, fy, fw, fh; y <= graph.gridRowCount; y += 1) {
+          for (var x = 1; x <= graph.gridColCount; x += 1) {
+            pix = MM.Canvas.pixel(graph, x, y);
+            pix.highlight = false;
+            fx = graph.ox + pix.x + 1;
+            fy = graph.oy + pix.y + 1;
+            fw = graph.blockWidth - 1;
+            fh = graph.blockHeight - 1;
+            if (inRange && graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + pix.w)
+                && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + pix.h)) {
+              pix.highlight = highlight;
+              if (setPix) {
+                pix.on = pix.color !== graph.inputColor.value ? true : !pix.on;
+                pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
+              }
+            }
+            graph.context.fillStyle = graph.blankColor;
+            graph.context.fillRect(fx, fy, fw, fh);
+            if (pix.on) {
+              graph.context.fillStyle = pix.color;
+              graph.context.fillRect(fx, fy, fw, fh);
+            }
+            if (pix.highlight) {
+              graph.context.fillStyle = graph.highlightColor;
+              graph.context.fillRect(fx, fy, fw, fh);
+            }
+          }
+        }
+      },
+      init: function(options) {
+        var graph = MM.Canvas.createGraph(options);
+        if (!graph || !graph.canvas) return false;
+        var listener = function(evt) {
+          var el = this, canvasAnim, typ = evt.type, btn = evt.button;
+          if (typ === 'mouseover' || typ === 'mousemove') {
+            var rect = el.getBoundingClientRect();
+            graph.x = Math.floor(evt.clientX - (rect.left + document.body.scrollLeft));
+            graph.y = Math.floor(evt.clientY - (rect.top + document.body.scrollTop));
+          } else if (typ === 'mouseout') {
+            graph.x = 0;
+            graph.y = 0;
+          }
+          canvasAnim = function(ts) {
+            var lts = graph.timestamps[typ];
+            if (!lts) lts = graph.timestamps[typ] = ts;
+            if (!typ !== 'init' && ts - lts < graph.threshold) return requestAnimationFrame(canvasAnim);
+            if (typ === 'init') graph.context.putImageData(graph.grid, graph.ox + graph.x, graph.oy + graph.y);
+            graph.drawing = typ === 'mouseup' ? false : (typ === 'mousemove' && graph.drawing) || (typ === 'mousedown' && btn === 0);
+            console.log(typ, graph.drawing);
+            MM.Canvas.fill(graph, graph.drawing, typ === 'mouseover' || typ === 'mousemove');
+          };
+          requestAnimationFrame(canvasAnim);
+        };
+        graph.canvas.addEventListener('mouseover', listener);
+        graph.canvas.addEventListener('mouseout', listener);
+        graph.canvas.addEventListener('mousemove', listener);
+        graph.canvas.addEventListener('mousedown', listener);
+        graph.canvas.addEventListener('mouseup', listener);
+        if (graph.inputCols) graph.inputCols.addEventListener('change', function resizeWidth(evt) {
+          MM.Canvas.resize(graph, { gridColCount: this.value });
+        });
+        if (graph.inputRows) graph.inputRows.addEventListener('change', function resizeHeight(evt) {
+          MM.Canvas.resize(graph, { gridRowCount: this.value });
+        });
+        listener.call(graph.canvas, { type: 'init' });
+      }
+    };
+    MM.Rangify = {
+      getInputs: function(parent) {
+        return {
+          start: parent.querySelector('.slider.rangify-start'),
+          stop: parent.querySelector('.slider.rangify-stop'),
+          startOut: parent.querySelector('.rangify-start-out'),
+          stopOut: parent.querySelector('.rangify-stop-out'),
+        };
+      },
+      constrain: function(evt, els) {
+        var frmOut = evt && ((els.startOut && evt.target === els.startOut) || (els.stopOut && evt.target === els.stopOut));
+        var start = parseFloat(els[frmOut ? 'startOut' : 'start'].value);
+        var stop = els.stop ? parseFloat(els[frmOut ? 'stopOut' : 'stop'].value) : start;
+        els.start.value = Math.min(start, stop);
+        if (els.stop) els.stop.value = Math.max(start, stop);
+        if (els.startOut) {
+          els.startOut.value = els.start.value;
+          els.startOut.min = els.start.min;
+          els.startOut.max = els.start.max;
+          els.startOut.step = els.start.step;
+        }
+        if (els.stop && els.stopOut) {
+          els.stopOut.value = els.stop.value;
+          els.stopOut.min = els.stop.min;
+          els.stopOut.max = els.stop.max;
+          els.stopOut.step = els.stop.step;
+        }
+      },
+      init: function(parent) {
+        var els = MM.Rangify.getInputs(parent);
+        var constrainer = function(evt) {
+          requestAnimationFrame(function rangeRequest() {
+            MM.Rangify.constrain(evt, els);
+          });
+        };
+        els.start.addEventListener('input', constrainer);
+        if (els.stop) els.stop.addEventListener('input', constrainer);
+        if (els.startOut) els.startOut.addEventListener('change', constrainer);
+        if (els.stopOut) els.stopOut.addEventListener('change', constrainer);
+        MM.Rangify.constrain(null, els);
+      }
+    };
+    MM.prototype.snackbar = function snackbar(req, json, url, label, altMsg, hideCb) {
+      var mdi = this;
+      json = json || mdi.reqJSON(req, altMsg);
+      if (mdi.snackbarInProgress) {
+        mdi.snackbarQueue.push(arguments);
+        return json;
+      }
+      mdi.snackbarInProgress = true;
+      var sbo = document.querySelector('#snackbar'), sb = sbo.cloneNode(true);
+      var ulb = sb.querySelector('.unload-bar'), txt = sb.querySelector('span'), lnk = sb.querySelector('a'), sbCL = mdi.clazzList(sb);
+      sb.className = ''; // reset CSS classes
+      if (json._res && json._res.messageClass) sbCL.add(json._res.messageClass);
+      if (json instanceof Error || (json._res && json._res.error)) {
+        sbCL.add('snackbar-error');
+        if (json._res) {
+          console.error(json._res.error);
+          if (json._res.cause) console.error(json._res.cause);
+        } else console.error(json);
+      }
+      var isError = sbCL.has('snackbar-error');
+      sbo.parentNode.replaceChild(sb, sbo); // ensure there are no pending listeners
+      for (var i = 0, l = mdi.snackbarTkoHandles.length; i < l; ++i) {
+        clearTimeout(mdi.snackbarTkoHandles[i]); // ensure there are no pending timeouts
+      }
+      mdi.snackbarTkoHandles.length = 0;
+      //var dim = { height: sb.clientHeight + 1, width: sb.clientWidth + 1 };
+      txt.innerText = (json._res && json._res.messageFull) || json.message;
+      console.log(txt.innerText);
+      if (lnk && url && label) {
+        lnk.innerText = label;
+        lnk.setAttribute('href', url);
+        lnk.style.display = 'inline-block';
+      } else if (lnk) lnk.style.display = 'none';
+      var tch = 'ontouchstart' in window || navigator.msMaxTouchPoints, pan = { dir: 'Right' }, tko = !tch || window.Modernizr ? 100 : 4000;
+      if (tch) mdi.at(sb, 'pan', false, function (ev) {
+        if (ev.gesture.pointerType === 'touch') {
+          pan.dirVal = ev.gesture.direction;
+          pan.x = ev.gesture.deltaX;
+          pan.velocityX = ev.gesture.velocityX;
+          pan.dir = pan.dirVal === 4 ? 'Left' : pan.dirVal === 2 ? 'Right' : pan.dir;
+          pan.swipeLeft = pan.dir === 'Left' && (pan.x > (-1 * sb.offsetWidth / 2) || pan.velocityX < -0.75);
+          pan.swipeRight = !pan.swipeLeft && pan.dir === 'Right' && (pan.x < (-1 * sb.offestWidth / 2) || pan.velocityX > 0.75);
+        }
+      });
+      var snh = {}, hideHandle, closing;
+      if (ulb) {
+        var ulbs = getComputedStyle(sb);
+        ulb.style.backgroundColor = MM.Color.blend(-.5, ulbs.getPropertyValue('background-color'), ulbs.getPropertyValue('color'));
+      }
+      snh.showAutoHide = function(noInit) {
+        var sbShowDelay = isError ? mdi.snackbarShowDelayError : mdi.snackbarShowDelay;
+        if (!noInit && ulb) ulb.style.animationDuration = sbShowDelay + 'ms';
+        if (!noInit) sbCL.add('active');
+        clearTimeout(hideHandle);
+        mdi.snackbarTkoHandles.push(hideHandle = setTimeout(snh.snackbarHide, sbShowDelay));
+      };
+      snh.snackbarHide = function() {
+        if (mdi.snackbarPause) return snh.showAutoHide();
+        sbCL.remove('active');
+        var args = mdi.snackbarQueue.shift();
+        mdi.snackbarInProgress = false;
+        if (args) mdi.snackbar.apply(mdi, args);
+        if (hideCb) hideCb();
+      };
+      sb.addEventListener(tch ? 'panend' : 'click', function snackbarCloseListener(ev) { // paning end or click will close snackbar message
+        if ((!tch && ev.gesture && ev.gesture.pointerType !== 'touch') || (tch && !pan.swipeLeft && !pan.swipeRight)) return;
+        closing = true;
+        mdi.snackbarPause = false;
+        mdi.snackbarTkoHandles.push(mdi.onWithTimeout(sb, mdi.animEndEvents, tko, true, snh.snackbarHide));
+        mdi.clazzList(sb).add('animated', 'slideOut', pan.dir);
+      });
+      if (!tch) sb.addEventListener('mouseout', function snackbarPauseCloseListener(ev) {
+        mdi.snackbarPause = false;
+        if (!closing) snh.showAutoHide();
+      });
+      if (!tch) sb.addEventListener('mouseover', function snackbarPauseCloseListener(ev) { // allow pausing on devices with a mouse
+        mdi.snackbarPause = true;
+      });
+      if (sbCL.has('active')) { // according to spec the snackbar should be hidden before showing again
+        mdi.snackbarTkoHandles.push(mdi.onWithTimeout(sb, mdi.animEndEvents, tko, true, function snackbarReshowAnimEnd() {
+          mdi.snackbarTkoHandles.push(setTimeout(snh.showAutoHide, 500)); // delay reshowing for visual affects
+        }));
+        sbCL.remove('active');
+      } else snh.showAutoHide();
+      return json;
+    };
+  </script>
+</body>
+</html>
