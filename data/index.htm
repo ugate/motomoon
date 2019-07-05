@@ -39,10 +39,9 @@
     }
     html, body {font-family:'Roboto', sans-serif;font-size:14px;font-weight:400;line-height:20px;}
     html {width:100%;height:100%;color:rgba(0,0,0,.87);-ms-touch-action:manipulation;touch-action:manipulation;}
-    body {margin:0;width:100%;min-height:100%;background-color:#f5f5f5 !important;} canvas {border: 1px solid #263238;}
-    .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;flex-wrap: wrap;} .canvas-editor {overflow: auto;} .canvas-row {flex-basis: 100%;} ::selection {background:#b3d4fc;text-shadow:none;} .hide {display:none;}
-    .red-text {color: #ff0266;} .green-text {color: #00C853;} .blue-text {color: #2962FF;} .slate-text {color: #455A64;} .brown-text {color: #3E2723;} .white-text, .white-text path {fill: #fff;color: #fff;}
-    .grey-text {color:#424242;}
+    body {margin:0;width:100%;min-height:100%;background-color:#f5f5f5 !important;} canvas {border: 1px solid #263238;} ::selection {background:#b3d4fc;text-shadow:none;} .hide {display:none;}
+    .red-text {color: #ff0266 !important;} .green-text {color: #00C853 !important;} .blue-text {color: #2962FF !important;} .slate-text {color: #455A64 !important;} .brown-text {color: #3E2723 !important;}
+    .white-text, .white-text path {fill: #fff !important;color: #fff !important;} .grey-text {color:#424242 !important;}
     .bg-green {background-color: #4CAF50 !important;} .bg-teal {background-color: #009688 !important;} .bg-indigo {background-color: #3F51B5 !important;} .bg-purple {background-color: #673AB7 !important;}
     .bg-pink {background-color: #E91E63 !important;} .bg-blue {background-color: #03A9F4 !important;} .bg-grey {background-color:#424242 !important;} .bg-blue-grey {background-color:#263238 !important;}
     .bg-white {background-color:#fff !important;}
@@ -100,9 +99,12 @@
     input[type=range].brown::-webkit-slider-runnable-track {background: #BCAAA4;} input[type=range].brown::-ms-track {background: #BCAAA4;} input[type=range].brown::-moz-range-track {background: #BCAAA4;}
     input[type=range].brown::-webkit-slider-thumb {background: #3E2723;} input[type=range].brown::-ms-thumb {background: #3E2723;} input[type=range].brown::-moz-range-thumb {background: #3E2723;}
     output.range-tooltip {display: inline-block;position: relative;left: 10px;top: calc(-1em - var(--height));padding: 3px;border-radius: 3px;background: #95a;color: #eee;transform: translate(calc((var(--val) - var(--min))/(var(--max) - var(--min)) * var(--width) - 50%));}
-    main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;}
-    main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
-    @media (max-width: 479px) {main > div {padding:8px 0;}}
+    .dimensions > input {width: 3em !important;} .dimensions > input:first-of-type {text-align: right;} .dimensions > input:nth-of-type(2) {width: 1em !important;}
+    .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: visible;} .canvas-editor canvas {cursor: crosshair;} .canvas-row {flex-basis: 100%;}
+    .color-toolbar {display: flex;flex-direction: column;} .color-toolbar .btn {margin: .1em;}
+    .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em, .1em .1em .4em .1em rgba(0,0,0,0);}
+    main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;} main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
+    @media (max-width: 479px) {main > div {padding:8px 0;}.canvas-editor{flex-wrap: wrap;}.color-toolbar {flex-direction: row;}}
     @media (min-width: 840px) {main > div {padding:8px;}}
     @media (max-width: 839px) and (min-width: 480px) {main > div {padding:8px;}}
     @media (max-width: 479px) {.margin {width:calc(50% - 16px);display:none !important;margin:8px;box-sizing:border-box;}}
@@ -142,14 +144,18 @@
     button:focus:not(:active)::after {animation:ripple 500ms ease-out;} @keyframes ripple { 0% {transform:scale(0, 0);opacity:1;} 20% {transform:scale(25, 25);opacity:1;} 100% {opacity:0;transform:scale(40, 40);}}
     .btn {text-decoration: none;text-align: center;letter-spacing: .5px;transition: .2s ease-out;cursor: pointer;border: none;border-radius: 2px;display: inline-block;height: 36px;line-height: 36px;outline: 0;padding: 0 2rem;
     vertical-align: middle;-webkit-tap-highlight-color: transparent;box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);}
-    .btn [type="checkbox"]:not(:checked), .btn [type="checkbox"]:checked {position: absolute;left: -9999px;visibility: hidden;-webkit-tap-highlight-color: transparent;} .btn input[type="checkbox"], input[type="radio"] {box-sizing: border-box;padding: 0;}
-    .button-toggle {position: relative;display: block;padding: 0 0 0 .5rem !important;margin: 0;top: 0 !important;left: 0 !important;width: 3rem;font-size: 2rem !important;transition: .2s ease !important;} .button-toggle ~ .button-toggle {margin-top: .1em !important;}
-    .button-toggle [type="checkbox"] ~ label {position: absolute;padding: .2em .5em !important;margin: 0;top: 0 !important;left: 0 !important;height: 100% !important;overflow: hidden;font-size: 1rem !important;cursor: pointer;}
-    .button-toggle [type="checkbox"] + label {width: 100%;} .button-toggle [type="checkbox"] + label + label {left: 3em  !important;margin-top: .8em !important;height: calc(100% - .8em) !important;border-radius: 0 .4em .4em 0;}
-    .button-toggle [type="checkbox"] ~ label svg, .button-toggle [type="checkbox"] ~ label b {font-size: 2em !important;position: relative;top: 0 !important;line-height: 1em !important;height: 100% !important;display: block;transition: top .2s ease-in-out;}
-    .button-toggle [type="checkbox"] ~ label svg + svg, .button-toggle [type="checkbox"] ~ label b + b {margin-top: .2em !important;} .button-toggle [type="checkbox"]:checked ~ label svg, .button-toggle [type="checkbox"]:checked ~ label b {top: -1.25em !important;}
-    .button-toggle [type="checkbox"] ~ label:before {display: none;} .button-toggle [type="checkbox"] ~ label b:first-child {padding-top: .2em !important;}
-    .button-toggle [type="checkbox"] ~ label b {font-size: 1em !important;line-height: 1em !important;white-space: nowrap;cursor: auto;text-align: center;}
+    .btn [type="checkbox"]:not(:checked), .btn [type="checkbox"]:checked, .btn [type="radio"]:not(:checked), .btn [type="radio"]:checked {position: absolute;left: -9999px;visibility: hidden;-webkit-tap-highlight-color: transparent;}
+    .btn input[type="checkbox"], .btn input[type="radio"] {box-sizing: border-box;padding: 0;}
+    .button-toggle {position: relative;display: block;padding: 0 0 0 .5rem !important;margin: 0;top: 0 !important;left: 0 !important;width: 3rem;font-size: 2rem !important;transition: .2s ease !important;}
+    .button-toggle [type="checkbox"] ~ label, .button-toggle [type="radio"] ~ label {position: absolute;padding: .2em .5em !important;margin: 0;top: 0 !important;left: 0 !important;height: 100% !important;overflow: hidden;font-size: 1rem !important;cursor: pointer;}
+    .button-toggle [type="checkbox"] + label, .button-toggle [type="radio"] + label {width: 100%;}
+    .button-toggle [type="checkbox"] + label + label, .button-toggle [type="radio"] + label + label {left: 3em  !important;margin-top: .8em !important;height: calc(100% - .8em) !important;border-radius: 0 .4em .4em 0;}
+    .button-toggle [type="checkbox"] ~ label svg, .button-toggle [type="checkbox"] ~ label b, .button-toggle [type="radio"] ~ label svg, .button-toggle [type="radio"] ~ label b {font-size: 2em !important;position: relative;top: 0 !important;line-height: 1em !important;
+    height: 100% !important;display: block;transition: top .2s ease-in-out;}
+    .button-toggle [type="checkbox"] ~ label svg + svg, .button-toggle [type="checkbox"] ~ label b + b, .button-toggle [type="radio"] ~ label svg + svg, .button-toggle [type="radio"] ~ label b + b {margin-top: .2em !important;}
+    .button-toggle [type="checkbox"]:checked ~ label svg, .button-toggle [type="checkbox"]:checked ~ label b, .button-toggle [type="radio"]:checked ~ label svg, .button-toggle [type="radio"]:checked ~ label b {top: -1.25em !important;}
+    .button-toggle [type="checkbox"] ~ label:before, .button-toggle [type="radio"] ~ label:before {display: none;} .button-toggle [type="checkbox"] ~ label b:first-child, .button-toggle [type="radio"] ~ label b:first-child {padding-top: .2em !important;}
+    .button-toggle [type="checkbox"] ~ label b, .button-toggle [type="radio"] ~ label b {font-size: 1em !important;line-height: 1em !important;white-space: nowrap;cursor: auto;text-align: center;}
   </style>
 </head>
 <body class="bg-grey" onload="mm.loaded()">
@@ -282,9 +288,9 @@
         <div class="row color-select">
           <div class="col s12 m12 l12">
             <div class="canvas-editor">
-              <div class="brown-text">
+              <div class="color-toolbar brown-text">
                 <div class="btn button-toggle">
-                  <input class="canvas-editor-pen" type="checkbox" checked="checked" id="pixPen" />
+                  <input class="canvas-editor-pen active" type="checkbox" checked="checked" id="pixPen" />
                   <label for="pixPen" class="hex-value-bg">
                     <svg viewBox="0 0 24 24" title="Pixel Eraser">
                       <path d="M16.24,3.56L21.19,8.5C21.97,9.29 21.97,10.55 21.19,11.34L12,20.53C10.44,22.09 7.91,22.09 6.34,20.53L2.81,17C2.03,16.21 2.03,14.95 2.81,14.16L13.41,3.56C14.2,2.78 15.46,2.78 16.24,3.56M4.22,15.58L7.76,19.11C8.54,19.9 9.8,19.9 10.59,19.11L14.12,15.58L9.17,10.63L4.22,15.58Z" />
@@ -305,9 +311,12 @@
                     </svg>
                   </label>
                 </div>
-                <div class="btn button-toggle canvas-editor-eyedrop">
-                  <input type="checkbox" disabled="disabled" id="pixEyeDrop" />
-                  <label for="pixEyeDrop" class="white-text bg-pink">
+                <div class="btn button-toggle">
+                  <input class="canvas-editor-eyedrop-or-spray" type="checkbox" checked="checked" id="pixEyeDropOrSpray" />
+                  <label for="pixEyeDropOrSpray" class="hex-value-bg">
+                    <svg viewBox="0 0 24 24" title="Spray Color">
+                      <path d="M10,4H12V6H10V4M7,3H9V5H7V3M7,6H9V8H7V6M6,8V10H4V8H6M6,5V7H4V5H6M6,2V4H4V2H6M13,22A2,2 0 0,1 11,20V10A2,2 0 0,1 13,8V7H14V4H17V7H18V8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H13M13,10V20H18V10H13Z" />
+                    </svg>
                     <svg viewBox="0 0 24 24" title="Select Color">
                       <path d="M6.92,19L5,17.08L13.06,9L15,10.94M20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L13.84,6.41L11.91,4.5L10.5,5.91L11.92,7.33L3,16.25V21H7.75L16.67,12.08L18.09,13.5L19.5,12.09L17.58,10.17L20.7,7.05C21.1,6.65 21.1,6 20.71,5.63Z" />
                     </svg>
@@ -322,25 +331,14 @@
                   </label>
                 </div>
               </div>
-              <div class="brown-text">
+              <div>
                 <canvas class="editor">Bitmap editor canvas not supported</canvas>
               </div>
-              <div class="canvas-col brown-text">
-                <svg style="width:1.5em;height:1.5em" viewBox="0 0 24 24">
-                  <path fill="#000000" d="M8,2H16A2,2 0 0,1 18,4V20A2,2 0 0,1 16,22H8A2,2 0 0,1 6,20V4A2,2 0 0,1 8,2M8,10V14H16V10H8M8,16V20H16V16H8M8,4V8H16V4H8Z" />
-                </svg>
-                <div>
-                  <input class="rangify-start-out label-value canvas-editor-rows" type="number" min="8" max="60" step="1" value="16"/>
-                </div>
-              </div>
-              <div class="canvas-row brown-text">
-                <svg style="width:1.5em;height:1.5em" viewBox="0 0 24 24">
-                  <path fill="#000000" d="M22,14A2,2 0 0,1 20,16H4A2,2 0 0,1 2,14V10A2,2 0 0,1 4,8H20A2,2 0 0,1 22,10V14M4,14H8V10H4V14M10,14H14V10H10V14M16,14H20V10H16V14Z" />
-                </svg>
-                <span>
-                  <input class="rangify-start-out label-value canvas-editor-cols" type="number" min="8" max="60" step="1" value="16"/>
-                </span>
-              </div>
+            </div>
+            <div class="canvas-row dimensions">
+              <input class="canvas-editor-rows" type="number" min="8" max="60" step="1" value="16"/>
+              <input type="text" disabled="disabled" value="X"/>
+              <input class="canvas-editor-cols" type="number" min="8" max="60" step="1" value="16"/>
             </div>
           </div>
           <input class="hsl-text" type="hidden" value="0,0%,0%"/>
@@ -508,9 +506,9 @@
         mmi.fillify(mmi.views[nm], json[nm]);
         var unlock = json[nm]._conf && json[nm]._conf.menuUnlock;
         for (var li = 0; li < mmi.menus.length; ++li) {
-          if (nm === mmi.menus[li].dataset.view) mmi.clazzList(mmi.menus[li]).add('active');
-          else mmi.clazzList(mmi.menus[li]).remove('active');
-          if (unlock) mmi.clazzList(mmi.menus[li]).remove('hide');
+          if (nm === mmi.menus[li].dataset.view) MM.clazzList(mmi.menus[li]).add('active');
+          else MM.clazzList(mmi.menus[li]).remove('active');
+          if (unlock) MM.clazzList(mmi.menus[li]).remove('hide');
         }
       }
       if (!opts.noLoading) mmi.loadbar(true);
@@ -632,7 +630,93 @@
         else el.addEventListener(es[i], fn, useCapture);
       }
     };
-    MM.prototype.clazzList = function clazzList(el) {
+    MM.prototype.snackbar = function snackbar(req, json, url, label, altMsg, hideCb) {
+      var mdi = this;
+      json = json || mdi.reqJSON(req, altMsg);
+      if (mdi.snackbarInProgress) {
+        mdi.snackbarQueue.push(arguments);
+        return json;
+      }
+      mdi.snackbarInProgress = true;
+      var sbo = document.querySelector('#snackbar'), sb = sbo.cloneNode(true);
+      var ulb = sb.querySelector('.unload-bar'), txt = sb.querySelector('span'), lnk = sb.querySelector('a'), sbCL = MM.clazzList(sb);
+      sb.className = ''; // reset CSS classes
+      if (json._res && json._res.messageClass) sbCL.add(json._res.messageClass);
+      if (json instanceof Error || (json._res && json._res.error)) {
+        sbCL.add('snackbar-error');
+        if (json._res) {
+          console.error(json._res.error);
+          if (json._res.cause) console.error(json._res.cause);
+        } else console.error(json);
+      }
+      var isError = sbCL.has('snackbar-error');
+      sbo.parentNode.replaceChild(sb, sbo); // ensure there are no pending listeners
+      for (var i = 0, l = mdi.snackbarTkoHandles.length; i < l; ++i) {
+        clearTimeout(mdi.snackbarTkoHandles[i]); // ensure there are no pending timeouts
+      }
+      mdi.snackbarTkoHandles.length = 0;
+      //var dim = { height: sb.clientHeight + 1, width: sb.clientWidth + 1 };
+      txt.innerText = (json._res && json._res.messageFull) || json.message;
+      console.log(txt.innerText);
+      if (lnk && url && label) {
+        lnk.innerText = label;
+        lnk.setAttribute('href', url);
+        lnk.style.display = 'inline-block';
+      } else if (lnk) lnk.style.display = 'none';
+      var tch = 'ontouchstart' in window || navigator.msMaxTouchPoints, pan = { dir: 'Right' }, tko = !tch || window.Modernizr ? 100 : 4000;
+      if (tch) mdi.at(sb, 'pan', false, function (ev) {
+        if (ev.gesture.pointerType === 'touch') {
+          pan.dirVal = ev.gesture.direction;
+          pan.x = ev.gesture.deltaX;
+          pan.velocityX = ev.gesture.velocityX;
+          pan.dir = pan.dirVal === 4 ? 'Left' : pan.dirVal === 2 ? 'Right' : pan.dir;
+          pan.swipeLeft = pan.dir === 'Left' && (pan.x > (-1 * sb.offsetWidth / 2) || pan.velocityX < -0.75);
+          pan.swipeRight = !pan.swipeLeft && pan.dir === 'Right' && (pan.x < (-1 * sb.offestWidth / 2) || pan.velocityX > 0.75);
+        }
+      });
+      var snh = {}, hideHandle, closing;
+      if (ulb) {
+        var ulbs = getComputedStyle(sb);
+        ulb.style.backgroundColor = MM.Color.blend(-.5, ulbs.getPropertyValue('background-color'), ulbs.getPropertyValue('color'));
+      }
+      snh.showAutoHide = function(noInit) {
+        var sbShowDelay = isError ? mdi.snackbarShowDelayError : mdi.snackbarShowDelay;
+        if (!noInit && ulb) ulb.style.animationDuration = sbShowDelay + 'ms';
+        if (!noInit) sbCL.add('active');
+        clearTimeout(hideHandle);
+        mdi.snackbarTkoHandles.push(hideHandle = setTimeout(snh.snackbarHide, sbShowDelay));
+      };
+      snh.snackbarHide = function() {
+        if (mdi.snackbarPause) return snh.showAutoHide();
+        sbCL.remove('active');
+        var args = mdi.snackbarQueue.shift();
+        mdi.snackbarInProgress = false;
+        if (args) mdi.snackbar.apply(mdi, args);
+        if (hideCb) hideCb();
+      };
+      sb.addEventListener(tch ? 'panend' : 'click', function snackbarCloseListener(ev) { // paning end or click will close snackbar message
+        if ((!tch && ev.gesture && ev.gesture.pointerType !== 'touch') || (tch && !pan.swipeLeft && !pan.swipeRight)) return;
+        closing = true;
+        mdi.snackbarPause = false;
+        mdi.snackbarTkoHandles.push(mdi.onWithTimeout(sb, mdi.animEndEvents, tko, true, snh.snackbarHide));
+        MM.clazzList(sb).add('animated', 'slideOut', pan.dir);
+      });
+      if (!tch) sb.addEventListener('mouseout', function snackbarPauseCloseListener(ev) {
+        mdi.snackbarPause = false;
+        if (!closing) snh.showAutoHide();
+      });
+      if (!tch) sb.addEventListener('mouseover', function snackbarPauseCloseListener(ev) { // allow pausing on devices with a mouse
+        mdi.snackbarPause = true;
+      });
+      if (sbCL.has('active')) { // according to spec the snackbar should be hidden before showing again
+        mdi.snackbarTkoHandles.push(mdi.onWithTimeout(sb, mdi.animEndEvents, tko, true, function snackbarReshowAnimEnd() {
+          mdi.snackbarTkoHandles.push(setTimeout(snh.showAutoHide, 500)); // delay reshowing for visual affects
+        }));
+        sbCL.remove('active');
+      } else snh.showAutoHide();
+      return json;
+    };
+    MM.clazzList = function clazzList(el) {
       //if (el.classList) return el.classList;
       var clo = {};
       clo.clz = function(clzs, rplr) {
@@ -841,11 +925,13 @@
       },
       setBgs: function(els) {
         if (els.hex && els.backgrounds) {
+          var blnd = MM.Color.blend(.8, els.hex.value, '#DDDDDD');
           for (var i = 0, chld; i < els.backgrounds.length; i++) {
             els.backgrounds[i].style.backgroundColor = els.hex.value;
+            els.backgrounds[i].style.color = blnd;
             chld = els.backgrounds[i].querySelectorAll('path');
-            for (var j = 0, fill = chld && chld.length ? MM.Color.blend(.8, els.hex.value, '#DDDDDD') : null; j < chld.length; j++) {
-              chld[j].setAttribute('fill', fill);
+            for (var j = 0; j < chld.length; j++) {
+              chld[j].setAttribute('fill', blnd);
             }
           }
         }
@@ -921,26 +1007,28 @@
           inputRows: opts.parent.querySelector('.canvas-editor-rows'),
           inputPen: opts.parent.querySelector('.canvas-editor-pen'),
           inputFill: opts.parent.querySelector('.canvas-editor-fill'),
+          inputEyeDropOrSpray: opts.parent.querySelector('.canvas-editor-eyedrop-or-spray'),
           inputDownload: opts.parent.querySelector('.canvas-editor-download'),
           inputColor: opts.inputColor,
           pixels: [],
           timestamps: {},
           threshold: opts.threshold || 100,
           blankColor: opts.blankColor || '#000000',
-          gridColor: opts.gridColor || '#BDBDBD',
-          highlightColor: opts.highlightColor || 'rgba(255,255,255,0.5)',
+          bgColor: opts.bgColor || '#BBBBBB',
+          highlightColor: opts.highlightColor || 'rgba(221,221,221,0.5)',
           blockWidth: opts.blockWidth || 20,
           blockHeight: opts.blockHeight || 20,
           x: 0, y: 0, ox: opts.offsetX || 10, oy: opts.offsetY || 10
         };
+        graph.inputSel = graph.inputPen || graph.inputFill;
         if (!graph.canvas) return false;
         graph.context = graph.canvas.getContext('2d');
         graph.gridCanvas = document.createElement('canvas');
         graph.gridContext = graph.gridCanvas.getContext('2d');
-        MM.Canvas.resize(graph, opts);
+        MM.Canvas.resize(graph, opts, true);
         return graph;
       },
-      resize: function(graph, opts) {
+      resize: function(graph, opts, reset) {
         var oldw, oldh;
         if (opts && (!graph.gridColCount || opts.gridColCount !== graph.gridColCount)) {
           oldw = graph.gridColCount || 16;
@@ -960,26 +1048,16 @@
         }
         var colChg = graph.gridColCount - oldw, rowChg = graph.gridRowCount - oldh;
         var noChg = colChg === 0 && rowChg === 0;console.log('resize:', oldw, graph.gridColCount, oldh, graph.gridRowCount, colChg, rowChg);
-        if (true) {
-          MM.Canvas.reset(graph, 0, 0, colChg, rowChg); // clear
-          MM.Canvas.fill(graph);
-          MM.Canvas.fillGridStroke(graph);
-          return;
-        }
         graph.gridContext.fillStyle = graph.bgColor;
-        if (noChg) graph.gridContext.fillRect(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
-        graph.gridContext.fillStyle = graph.blankColor;
-        if (noChg) graph.gridContext.fillRect(1, 1, graph.gridCanvasWidth - 2, graph.gridCanvasHeight - 2);
-        else {
-          //if (colChg > 0) graph.gridContext.fillRect(oldw, 0, colChg * graph.blockWidth, graph.gridCanvasHeight);
-          if (rowChg > 0) {
-            //graph.gridContext.fillRect(0, oldh, graph.gridCanvasWidth, rowChg * graph.blockHeight);
-            MM.Canvas.reset(graph, 0, oldh);
-          }
-          //graph.gridContext.fillRect(colChg > 0 ? oldw : graph.blockWidth, rowChg > 0 ? oldh : graph.blockHeight, graph.gridCanvasWidth, graph.gridCanvasHeight);
+        graph.gridContext.fillRect(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
+        if (colChg > 0) for (var x = graph.gridColCount - colChg; x <= graph.gridColCount; x++) {
+          MM.Canvas.pixel(graph, x, y, true);
+        } else if (colChg < 0) for (var x = graph.gridColCount + colChg; x >= graph.gridColCount; x++) {
+          MM.Canvas.pixel(graph, x, y, true);
         }
-
+        MM.Canvas.pixelate(graph, false, reset ? 0 : graph.gridColCount + colChg, reset ? 0 : graph.gridRowCount + rowChg, colChg, rowChg);
         graph.grid = graph.gridContext.getImageData(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
+        MM.Canvas.paint(graph);
       },
       export: function(graph) {
         var canvas = document.createElement('canvas'), context = canvas.getContext('2d');
@@ -1011,66 +1089,68 @@
         });
       },
       pixel: function(graph, row, col, val) {
+        var idx = graph.gridColCount * row + col;
         if (val === true) val = {
           on: false,
-          highlight: false,
           color: graph.blankColor,
+          history: [],
           x: (col - 1) * graph.blockWidth,
-          y: (row - 1) * graph.blockHeight,
-          h: graph.blockHeight - 1,
-          w: graph.blockWidth - 1
+          y: (row - 1) * graph.blockHeight
         };
-        var idx = graph.gridColCount * row + col;
         if (val) graph.pixels[idx] = val;
-        else if (val === false) return graph.pixels.splice(idx, 1);
+        else if (val === false) return graph.pixels[idx] && graph.pixels.splice(idx, 1);
         return graph.pixels[idx];
       },
-      reset: function(graph, startX, startY, colChg, rowChg) {
-        /*if (colChg < 0 || rowChg < 0) { // remove
-          for (var y = rowChg < 0 ? rowChg + graph.gridRowCount : 1; y <= graph.gridRowCount; y++) {
-            for (var x = colChg < 0 ? colChg + graph.gridColCount : 1; x <= graph.gridColCount; x++) {
-              MM.Canvas.pixel(graph, x, y, false);
-            }
-          }
-        }*/
-        for (var y = startY && startY <= graph.gridRowCount ? startY : 1; y <= graph.gridRowCount; y++) {
+      pixelate: function(graph, undo, startX, startY) {
+        for (var y = startY && startY <= graph.gridRowCount ? startY : 1, pix, clr; y <= graph.gridRowCount; y++) {
           for (var x = startX && startX <= graph.gridColCount ? startX : 1; x <= graph.gridColCount; x++) {
-            MM.Canvas.pixel(graph, x, y, true);if (startY) console.log('pixel:', x, y)
+            if (undo && (pix = MM.Canvas.pixel(graph, x, y))) {
+              if (pix.history[undo]) {
+                pix.color = pix.history[undo].color;
+              }
+            } else MM.Canvas.pixel(graph, x, y, true);
           }
         }
       },
-      fillGridStroke: function(graph) {
-        graph.gridContext.beginPath();
-        graph.gridContext.strokeStyle = graph.gridColor;
-        graph.gridContext.lineWidth = '1';
-        for (var y = graph.blockHeight; y <= Math.max(graph.gridCanvasWidth, graph.gridCanvasHeight); y += graph.blockHeight) {
-          graph.gridContext.moveTo(0.5 + y, 1);
-          graph.gridContext.lineTo(0.5 + y, graph.gridCanvasHeight - 1);
-        }
-        for (var x = graph.blockWidth; x <= Math.max(graph.gridCanvasWidth, graph.gridCanvasHeight); x += graph.blockWidth) {
-          graph.gridContext.moveTo(1, 0.5 + x);
-          graph.gridContext.lineTo(graph.gridCanvasWidth - 1, 0.5 + x);
-        }
-        graph.gridContext.stroke();
-        graph.grid = graph.gridContext.getImageData(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
+      inRange: function(graph) {
+        return graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.gridCanvasWidth && graph.y <= graph.oy + graph.gridCanvasHeight;
       },
-      fill: function(graph, setPix, highlight) {
-        var inRange = graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.gridCanvasWidth && graph.y <= graph.oy + graph.gridCanvasHeight;
-        for (var y = 1, pix, fx, fy, fw, fh; y <= graph.gridRowCount; y++) {
+      inPoint: function(graph, pix) {
+        return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockWidth - 1)
+          && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockHeight - 1);
+      },
+      paint: function(graph, setPix, highlight, onlyGet) {
+        var inRange = MM.Canvas.inRange(graph);
+        if (!inRange && onlyGet) return;
+        var forDrop = graph.inputSel && graph.inputSel === graph.inputEyeDropOrSpray;
+        var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;
+        var useFill = forFill && !onlyGet && inRange;
+        var pixFill = useFill && MM.Canvas.paint(graph, false, false, true);
+        pixFill = pixFill && pixFill.color;
+        for (var y = 1, pix, fx, fy, fw, fh, hlt; y <= graph.gridRowCount; y++) {
           for (var x = 1; x <= graph.gridColCount; x++) {
             pix = MM.Canvas.pixel(graph, x, y);
-            pix.highlight = false;
+            hlt = false;
+            if (onlyGet) {
+              if (MM.Canvas.inPoint(graph, pix)) return pix;
+              continue;
+            }
             fx = graph.ox + pix.x + 1;
             fy = graph.oy + pix.y + 1;
             fw = graph.blockWidth - 1;
             fh = graph.blockHeight - 1;
-            if (inRange && graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + pix.w)
-                && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + pix.h)) {
-              pix.highlight = highlight;
+            if (forFill) {
+              if (useFill) {
+                hlt = highlight && pixFill === pix.color;
+                if (setPix && pixFill === pix.color) {
+                  pix.on = graph.inputFill.checked;
+                  pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
+                }
+              }
+            } else if (inRange && MM.Canvas.inPoint(graph, pix)) {
+              hlt = highlight;
               if (setPix) {
-                if (graph.inputSel && graph.inputSel === graph.inputFill) {
-                  pix.on = graph.inputFill.checked ? true : !pix.on;
-                } else pix.on = graph.inputPen ? graph.inputPen.checked : pix.color;
+                pix.on = graph.inputPen ? graph.inputPen.checked : pix.color;
                 pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
               }
             }
@@ -1080,8 +1160,8 @@
               graph.context.fillStyle = pix.color;
               graph.context.fillRect(fx, fy, fw, fh);
             }
-            if (pix.highlight) {
-              graph.context.fillStyle = graph.highlightColor;
+            if (hlt) {
+              graph.context.fillStyle = graph.inputSel && !graph.inputSel.checked ? graph.blankColor : graph.inputColor.value;
               graph.context.fillRect(fx, fy, fw, fh);
             }
           }
@@ -1091,7 +1171,7 @@
         var graph = MM.Canvas.createGraph(options);
         if (!graph || !graph.canvas) return false;
         var listener = function(evt) {
-          var el = this, canvasAnim, typ = evt.type, btn = evt.button;
+          var el = this, canvasFill, typ = evt.type, btn = evt.button;
           if (typ === 'mouseover' || typ === 'mousemove') {
             var rect = el.getBoundingClientRect();
             graph.x = Math.floor(evt.clientX - (rect.left + document.body.scrollLeft));
@@ -1100,15 +1180,15 @@
             graph.x = 0;
             graph.y = 0;
           }
-          canvasAnim = function(ts) {
+          canvasFill = function(ts) {
             var lts = graph.timestamps[typ];
             if (!lts) lts = graph.timestamps[typ] = ts;
-            if (!typ !== 'init' && ts - lts < graph.threshold) return requestAnimationFrame(canvasAnim);
+            if (!typ !== 'init' && ts - lts < graph.threshold) return requestAnimationFrame(canvasFill);
             if (typ === 'init') graph.context.putImageData(graph.grid, graph.ox + graph.x, graph.oy + graph.y);
             graph.drawing = typ === 'mouseup' ? false : (typ === 'mousemove' && graph.drawing) || (typ === 'mousedown' && btn === 0);
-            MM.Canvas.fill(graph, graph.drawing, typ === 'mouseover' || typ === 'mousemove');
+            MM.Canvas.paint(graph, graph.drawing, typ === 'mouseover' || typ === 'mousemove');
           };
-          requestAnimationFrame(canvasAnim);
+          requestAnimationFrame(canvasFill);
         };
         graph.canvas.addEventListener('mouseover', listener);
         graph.canvas.addEventListener('mouseout', listener);
@@ -1121,12 +1201,14 @@
         if (graph.inputRows) graph.inputRows.addEventListener('change', function resizeHeight(evt) {
           MM.Canvas.resize(graph, { gridRowCount: this.value });
         });
-        if (graph.inputPen) graph.inputPen.addEventListener('click', function pen() {
-          graph.inputSel = graph.inputPen;
-        });
-        if (graph.inputFill) graph.inputDownload.addEventListener('click', function fill() {
-          graph.inputSel = graph.inputFill;
-        });
+        var toolbarListener = function(evt) {
+          if (graph.inputSel) MM.clazzList(graph.inputSel).remove('active');
+          graph.inputSel = evt.currentTarget;
+          MM.clazzList(graph.inputSel).add('active');
+        };
+        if (graph.inputPen) graph.inputPen.addEventListener('click', toolbarListener);
+        if (graph.inputFill) graph.inputFill.addEventListener('click', toolbarListener);
+        if (graph.inputEyeDropOrSpray) graph.inputEyeDropOrSpray.addEventListener('click', toolbarListener);
         if (graph.inputDownload) graph.inputDownload.addEventListener('click', function download() {
           MM.Canvas.download(graph);
         });
@@ -1174,92 +1256,6 @@
         if (els.stopOut) els.stopOut.addEventListener('change', constrainer);
         MM.Rangify.constrain(null, els);
       }
-    };
-    MM.prototype.snackbar = function snackbar(req, json, url, label, altMsg, hideCb) {
-      var mdi = this;
-      json = json || mdi.reqJSON(req, altMsg);
-      if (mdi.snackbarInProgress) {
-        mdi.snackbarQueue.push(arguments);
-        return json;
-      }
-      mdi.snackbarInProgress = true;
-      var sbo = document.querySelector('#snackbar'), sb = sbo.cloneNode(true);
-      var ulb = sb.querySelector('.unload-bar'), txt = sb.querySelector('span'), lnk = sb.querySelector('a'), sbCL = mdi.clazzList(sb);
-      sb.className = ''; // reset CSS classes
-      if (json._res && json._res.messageClass) sbCL.add(json._res.messageClass);
-      if (json instanceof Error || (json._res && json._res.error)) {
-        sbCL.add('snackbar-error');
-        if (json._res) {
-          console.error(json._res.error);
-          if (json._res.cause) console.error(json._res.cause);
-        } else console.error(json);
-      }
-      var isError = sbCL.has('snackbar-error');
-      sbo.parentNode.replaceChild(sb, sbo); // ensure there are no pending listeners
-      for (var i = 0, l = mdi.snackbarTkoHandles.length; i < l; ++i) {
-        clearTimeout(mdi.snackbarTkoHandles[i]); // ensure there are no pending timeouts
-      }
-      mdi.snackbarTkoHandles.length = 0;
-      //var dim = { height: sb.clientHeight + 1, width: sb.clientWidth + 1 };
-      txt.innerText = (json._res && json._res.messageFull) || json.message;
-      console.log(txt.innerText);
-      if (lnk && url && label) {
-        lnk.innerText = label;
-        lnk.setAttribute('href', url);
-        lnk.style.display = 'inline-block';
-      } else if (lnk) lnk.style.display = 'none';
-      var tch = 'ontouchstart' in window || navigator.msMaxTouchPoints, pan = { dir: 'Right' }, tko = !tch || window.Modernizr ? 100 : 4000;
-      if (tch) mdi.at(sb, 'pan', false, function (ev) {
-        if (ev.gesture.pointerType === 'touch') {
-          pan.dirVal = ev.gesture.direction;
-          pan.x = ev.gesture.deltaX;
-          pan.velocityX = ev.gesture.velocityX;
-          pan.dir = pan.dirVal === 4 ? 'Left' : pan.dirVal === 2 ? 'Right' : pan.dir;
-          pan.swipeLeft = pan.dir === 'Left' && (pan.x > (-1 * sb.offsetWidth / 2) || pan.velocityX < -0.75);
-          pan.swipeRight = !pan.swipeLeft && pan.dir === 'Right' && (pan.x < (-1 * sb.offestWidth / 2) || pan.velocityX > 0.75);
-        }
-      });
-      var snh = {}, hideHandle, closing;
-      if (ulb) {
-        var ulbs = getComputedStyle(sb);
-        ulb.style.backgroundColor = MM.Color.blend(-.5, ulbs.getPropertyValue('background-color'), ulbs.getPropertyValue('color'));
-      }
-      snh.showAutoHide = function(noInit) {
-        var sbShowDelay = isError ? mdi.snackbarShowDelayError : mdi.snackbarShowDelay;
-        if (!noInit && ulb) ulb.style.animationDuration = sbShowDelay + 'ms';
-        if (!noInit) sbCL.add('active');
-        clearTimeout(hideHandle);
-        mdi.snackbarTkoHandles.push(hideHandle = setTimeout(snh.snackbarHide, sbShowDelay));
-      };
-      snh.snackbarHide = function() {
-        if (mdi.snackbarPause) return snh.showAutoHide();
-        sbCL.remove('active');
-        var args = mdi.snackbarQueue.shift();
-        mdi.snackbarInProgress = false;
-        if (args) mdi.snackbar.apply(mdi, args);
-        if (hideCb) hideCb();
-      };
-      sb.addEventListener(tch ? 'panend' : 'click', function snackbarCloseListener(ev) { // paning end or click will close snackbar message
-        if ((!tch && ev.gesture && ev.gesture.pointerType !== 'touch') || (tch && !pan.swipeLeft && !pan.swipeRight)) return;
-        closing = true;
-        mdi.snackbarPause = false;
-        mdi.snackbarTkoHandles.push(mdi.onWithTimeout(sb, mdi.animEndEvents, tko, true, snh.snackbarHide));
-        mdi.clazzList(sb).add('animated', 'slideOut', pan.dir);
-      });
-      if (!tch) sb.addEventListener('mouseout', function snackbarPauseCloseListener(ev) {
-        mdi.snackbarPause = false;
-        if (!closing) snh.showAutoHide();
-      });
-      if (!tch) sb.addEventListener('mouseover', function snackbarPauseCloseListener(ev) { // allow pausing on devices with a mouse
-        mdi.snackbarPause = true;
-      });
-      if (sbCL.has('active')) { // according to spec the snackbar should be hidden before showing again
-        mdi.snackbarTkoHandles.push(mdi.onWithTimeout(sb, mdi.animEndEvents, tko, true, function snackbarReshowAnimEnd() {
-          mdi.snackbarTkoHandles.push(setTimeout(snh.showAutoHide, 500)); // delay reshowing for visual affects
-        }));
-        sbCL.remove('active');
-      } else snh.showAutoHide();
-      return json;
     };
   </script>
 </body>
