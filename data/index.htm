@@ -44,7 +44,7 @@
     .white-text, .white-text path {fill: #fff !important;color: #fff !important;} .grey-text {color:#424242 !important;}
     .bg-green {background-color: #4CAF50 !important;} .bg-teal {background-color: #009688 !important;} .bg-indigo {background-color: #3F51B5 !important;} .bg-purple {background-color: #673AB7 !important;}
     .bg-pink {background-color: #E91E63 !important;} .bg-blue {background-color: #03A9F4 !important;} .bg-grey {background-color:#424242 !important;} .bg-blue-grey {background-color:#263238 !important;}
-    .bg-white {background-color:#fff !important;}
+    .bg-white {background-color:#fff !important;} .bg-slate {background-color: #607D8B !important;} .bg-yellow {background-color: #FFEB3B !important;} .bg-brown {background-color: #795548 !important;}
     .logo {width:5rem;height:5em;top:-3em;left:calc((100vw / 2) - 2.5rem);position:absolute;z-index:1;}
     label.logo {top:-2em;left: calc((100vw / 2) - 3.5rem);text-align:center;width:25em;height:3em;word-spacing:7em;transform:translateX(-35%);}
     label.logo a {text-decoration:none;transform:perspective(2.5em) rotateX(15deg) scaleY(0.8);transition:all 0.5s;
@@ -102,7 +102,7 @@
     .dimensions > input {width: 3em !important;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;} .dimensions > input:first-of-type {text-align: right;} .dimensions > input:nth-of-type(2) {width: 1em !important;}
     .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: visible;} .canvas-editor canvas {cursor: crosshair;} .canvas-row {flex-basis: 100%;}
     .color-toolbar {display: flex;flex-direction: column;} .color-toolbar .btn {margin: .1em;}
-    .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em, .1em .1em .4em .1em rgba(0,0,0,0);}
+    .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em #000000, .1em .1em .4em .1em rgba(0,0,0,0);}
     main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;} main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
     @media (max-width: 479px) {main > div {padding:8px 0;}.canvas-editor{flex-wrap: wrap;}.color-toolbar {flex-direction: row;}}
     @media (min-width: 840px) {main > div {padding:8px;}}
@@ -324,9 +324,17 @@
                 </div>
                 <div class="btn button-toggle canvas-editor-download">
                   <input type="checkbox" disabled="disabled" id="pixDownload" />
-                  <label for="pixDownload" class="white-text bg-purple">
+                  <label for="pixDownload" class="white-text bg-brown">
                     <svg viewBox="0 0 24 24" title="Download Bitmap">
                       <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+                    </svg>
+                  </label>
+                </div>
+                <div class="btn button-toggle canvas-editor-upload">
+                  <input type="checkbox" disabled="disabled" data-req-method="POST" data-req-action="/bitmap" id="pixUpload" />
+                  <label for="pixUpload" class="white-text bg-green">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                      <path d="M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2,4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z" />
                     </svg>
                   </label>
                 </div>
@@ -343,7 +351,7 @@
           </div>
           <input class="hsl-text" type="hidden" value="0,0%,0%"/>
           <input class="rgb-text" type="hidden" value="0,0,0" id="rgb"/>
-          <input class="col s12 m12 l12 hex" type="color" value="#00ff00" name="color" id="color"/>
+          <input class="col s12 m12 l12 hex" type="color" value="#03A9F4" name="color" id="color"/>
           <div class="col s12 m12 l4">
             <div>Hue: <output class="hue-out">0</output></div>
             <input class="slider hue" type="range" min="0" max="1" step="0.01" value="0"/>
@@ -477,8 +485,10 @@
         mmi.views[vws[i].id] = vws[i].parentNode.removeChild(vws[i]);
         els = mmi.views[vws[i].id].querySelectorAll('.color-select');
         for (var j = 0; j < els.length; ++j) {
-          clr = MM.Colorize.init(els[j], '.hex-value-bg');
-          if (clr) MM.Canvas.init({ parent: els[j], inputColor: clr });
+          clr = MM.Colorize.init({ parent: els[j], backgroundsSelect: '.hex-value-bg' });
+          if (clr) MM.Canvas.init({ parent: els[j], inputColor: clr, upload: function(formData, input){
+            mmi.request(input.dataset.reqMethod, input.dataset.reqAction, formData);
+          }});
         }
         els = mmi.views[vws[i].id].querySelectorAll('.rangify-container');
         for (var j = 0; j < els.length; ++j) MM.Rangify.init(els[j]);
@@ -569,7 +579,10 @@
       };
       payload = payload || {};
       req.withCredentials = opts.withCredentials;
-      if (!opts.useJSON) {
+      if (payload instanceof FormData) {
+        req.open(method, url, true);
+        req.send(payload);
+      } else if (!opts.useJSON) {
         var params = '';
         if (payload) for (var pk in payload) params += (params.length ? '&' : method === 'GET' ? '?' : '') + encodeURIComponent(pk) + '=' + encodeURIComponent(payload[pk]);
         if (method === 'GET') {
@@ -781,10 +794,13 @@
           + Math.round((t.b - f.b) * p + f.b) * 0x100 + (f.a > -1 && t.a > -1 ? Math.round(((t.a - f.a) * p + f.a) *255) : t.a > -1
           ? Math.round(t.a * 255) : f.a > -1 ? Math.round(f.a * 255) : 255)).toString(16).slice(1, f.a > -1 || t.a > -1 ? undefined : -2);
       },
-      shade: function(percentage, rgb) {
-        var p = percentage, P = p < 0, t = P ? 0 : 255 * p;
-        P = P ? 1 + p : 1 - p;
-        return [Math.round(parseInt(rgb[0] || 0) * P + t), Math.round(parseInt(rgb[1] || 0) * P + t), Math.round(parseInt(rgb[2] || 0) * P + t)];
+      contrast: function(rgb) {
+        var lum = 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
+        return lum > 150 ? '000000' : 'FFFFFF';
+      },
+      brightness: function(hsl, percentage) {
+        var lum = hsl[2] + hsl[2] * (percentage / 100);
+        return [hsl[0], hsl[1], lum];
       },
       propertyToRGB: function(color) {
         var d = color, l = d.length, RGB = {};
@@ -851,7 +867,7 @@
       },
       hexToRGB: function(hex) {
         var r, g, b;
-        hex = hex.match(/.{2}/g),
+        hex = hex.replace('#', '').match(/.{2}/g),
         r = hex[0], g = hex[1], b = hex[2];
         if (r == null || g == null || b == null) return false;
         return [parseInt(r, 16), parseInt(g, 16), parseInt(b, 16)];
@@ -878,27 +894,32 @@
           b = Math.round(255 * this.hueToRGB(temp_1, temp_2, h - 1 / 3));
         }
         return [r, g, b];
+      },
+      hslToHex: function(h, s, l) {
+        var rgb = MM.Color.hslToRGB(h, s, l);
+        return MM.Color.rgbToHex(rgb[0], rgb[1], rgb[2]);
       }
     };
     MM.Colorize = {
-      getInputs: function(parent, bgSel) {
+      controls: function(options) {
+        var opts = options || {}, prnt = opts.parent || document;
         return {
-          hue: parent.querySelector('.slider.hue'),
-          sat: parent.querySelector('.slider.saturation'),
-          lum: parent.querySelector('.slider.luminance'),
-          red: parent.querySelector('.slider.red'),
-          green: parent.querySelector('.slider.green'),
-          blue: parent.querySelector('.slider.blue'),
-          hsl: parent.querySelector('.hsl-text'),
-          rgb: parent.querySelector('.rgb-text'),
-          hex: parent.querySelector('.hex'),
-          backgrounds: bgSel && parent.querySelectorAll(bgSel),
-          hueOut: parent.querySelector('output.hue-out'),
-          satOut: parent.querySelector('output.saturation-out'),
-          lumOut: parent.querySelector('output.luminance-out'),
-          redOut: parent.querySelector('output.red-out'),
-          greenOut: parent.querySelector('output.green-out'),
-          blueOut: parent.querySelector('output.blue-out')
+          hue: prnt.querySelector('.slider.hue'),
+          sat: prnt.querySelector('.slider.saturation'),
+          lum: prnt.querySelector('.slider.luminance'),
+          red: prnt.querySelector('.slider.red'),
+          green: prnt.querySelector('.slider.green'),
+          blue: prnt.querySelector('.slider.blue'),
+          hsl: prnt.querySelector('.hsl-text'),
+          rgb: prnt.querySelector('.rgb-text'),
+          hex: prnt.querySelector('.hex'),
+          backgrounds: opts.backgroundsSelect && prnt.querySelectorAll(opts.backgroundsSelect),
+          hueOut: prnt.querySelector('output.hue-out'),
+          satOut: prnt.querySelector('output.saturation-out'),
+          lumOut: prnt.querySelector('output.luminance-out'),
+          redOut: prnt.querySelector('output.red-out'),
+          greenOut: prnt.querySelector('output.green-out'),
+          blueOut: prnt.querySelector('output.blue-out')
         };
       },
       setRGB: function(r, g, b, els) {
@@ -930,13 +951,13 @@
       },
       setBgs: function(els) {
         if (els.hex && els.backgrounds) {
-          var blnd = MM.Color.blend(.8, els.hex.value, '#DDDDDD');
+          var tcolor = '#' + MM.Color.contrast(MM.Color.hexToRGB(els.hex.value));
           for (var i = 0, chld; i < els.backgrounds.length; i++) {
             els.backgrounds[i].style.backgroundColor = els.hex.value;
-            els.backgrounds[i].style.color = blnd;
+            els.backgrounds[i].style.color = tcolor;
             chld = els.backgrounds[i].querySelectorAll('path');
             for (var j = 0; j < chld.length; j++) {
-              chld[j].setAttribute('fill', blnd);
+              chld[j].setAttribute('fill', tcolor);
             }
           }
         }
@@ -974,8 +995,8 @@
         MM.Colorize.setHSL(hsl[0], hsl[1], hsl[2], els);
         MM.Colorize.setBgs(els);
       },
-      init: function(parent, bgSel) {
-        var els = MM.Colorize.getInputs(parent, bgSel);
+      init: function(options) {
+        var els = MM.Colorize.controls(options);
         if (els.hex) els.hex.addEventListener('input', function onHexInput(evt) {
           requestAnimationFrame(function colorizeRequest() {
             return MM.Colorize.hexChange(evt, els);
@@ -1014,7 +1035,9 @@
           inputFill: opts.parent.querySelector('.canvas-editor-fill'),
           inputSprayOrEyeDrop: opts.parent.querySelector('.canvas-editor-spray-or-eyedrop'),
           inputDownload: opts.parent.querySelector('.canvas-editor-download'),
+          inputUpload: opts.parent.querySelector('.canvas-editor-upload'),
           inputColor: opts.inputColor,
+          upload: opts.upload,
           pixels: [],
           timestamps: {},
           threshold: opts.threshold || 100,
@@ -1090,13 +1113,13 @@
         canvas.toBlob(function blobed(blob) {
           var formData = new FormData();
           formData.append('bitmap', blob);
-          upload(formData); //upload the "formData", not the "blob"
+          graph.upload(formData, graph.inputUpload);
         });
       },
-      perimeter: function(graph, pix, setPix, reach) {
+      perimeter: function(graph, pix, setPix, altColor, reach) {
         reach = reach || 1;
         var fw = graph.blockWidth - 1, fh = graph.blockHeight - 1;
-        for (var r = pix.row - reach, pixc, percent, rgb, hex; r <= pix.row + reach; r++) {
+        for (var r = pix.row - reach, pixc, percent, hsl, hex; r <= pix.row + reach; r++) {
           if (r < 1) continue;
           else if (r > graph.gridRowCount) break;
           for (var c = pix.col - reach; c <= pix.col + reach; c++) {
@@ -1104,15 +1127,15 @@
             else if (c > graph.gridColCount) break;
             if (r === pix.row && c === pix.col) continue;
             if (pixc = MM.Canvas.pixel(graph, r, c)) {
-              rgb = MM.Color.shade(.5, MM.Color.hexToRGB(pix.color));
-              color = '#' + MM.Color.rgbToHex(rgb[0], rgb[1], rgb[2]);
+              hsl = MM.Color.brightness(MM.Color.rgbToHSL(MM.Color.hexToRGB(altColor || pix.color)), 80);
+              hex = '#' + MM.Color.hslToHex(hsl[0], hsl[1], hsl[2]);
               fx = graph.ox + pixc.x + 1;
               fy = graph.oy + pixc.y + 1;
-              graph.context.fillStyle = color;
+              graph.context.fillStyle = hex;
               graph.context.fillRect(fx, fy, fw, fh);
               if (setPix) {
                 pixc.on = true;
-                pixc.color = color;
+                pixc.color = hex;
               }
             }
           }
@@ -1151,13 +1174,13 @@
         return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockWidth - 1)
           && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockHeight - 1);
       },
-      paint: function(graph, setPix, highlight, onlyGet) {
+      paint: function(graph, setPix, highlight, exit, onlyGet) {
         var inRange = MM.Canvas.inRange(graph);
         if (!inRange && onlyGet) return;
         var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;
         var forDrop = !forFill && graph.inputSel && graph.inputSel === graph.inputSprayOrEyeDrop;
         var usePix = (forFill || forDrop) && !onlyGet && inRange;
-        var tpix = usePix && MM.Canvas.paint(graph, false, false, true);
+        var tpix = usePix && MM.Canvas.paint(graph, false, false, false, true);
         tpix = tpix ? { on: tpix.on, color: tpix.color, pix: tpix } : tpix;
         var sprayPix;
         for (var col = 1, pix, fx, fy, fw, fh, hlt, chg; col <= graph.gridRowCount; col++) {
@@ -1172,31 +1195,30 @@
             fy = graph.oy + pix.y + 1;
             fw = graph.blockWidth - 1;
             fh = graph.blockHeight - 1;
-            if (forFill) { // fill
-              if (usePix) {
-                hlt = highlight && tpix.color === pix.color;
-                if (setPix && tpix.color === pix.color) {
-                  pix.on = graph.inputSel.checked;
-                  pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
-                }
+            if (forFill && usePix) { // fill
+              hlt = highlight && tpix.color === pix.color;
+              if (setPix && tpix.color === pix.color) {
+                pix.on = graph.inputSel.checked;
+                pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
               }
-            } else if (forDrop) {
-              if (usePix) {
-                if (graph.inputSel.checked) { // sprayer
-                  //MM.Canvas.perimeter(graph, pix, setPix);
+            } else if (forDrop && usePix) {
+              if (graph.inputSel.checked) { // sprayer
+                if ((highlight || setPix) && tpix && tpix.pix.col === pix.col && tpix.pix.row === pix.row) {
                   hlt = highlight;
+                  MM.Canvas.perimeter(graph, pix, setPix, graph.inputColor.value || graph.blankColor);
                   if (setPix) {
                     pix.on = true;
                     pix.color = graph.inputColor.value || graph.blankColor;
                   }
-                } else if (setPix && MM.Canvas.inPoint(graph, pix)) { // dropper
-                  chg = graph.inputColor.value !== pix.color;
-                  graph.inputColor.value = pix.color;
-                  graph.inputColor.dispatchEvent(new Event('input'));
-                  if (chg) graph.inputColor.dispatchEvent(new Event('change'));
                 }
+              } else if (setPix && MM.Canvas.inPoint(graph, pix)) { // dropper
+                hlt = highlight;
+                chg = graph.inputColor.value !== pix.color;
+                graph.inputColor.value = pix.color;
+                graph.inputColor.dispatchEvent(new Event('input'));
+                if (chg) graph.inputColor.dispatchEvent(new Event('change'));
               }
-            } else if (inRange && MM.Canvas.inPoint(graph, pix)) { // pen/eraser
+            } else if ((!forFill && !forDrop) && inRange && MM.Canvas.inPoint(graph, pix)) { // pen/eraser
               hlt = highlight;
               if (setPix) {
                 pix.on = graph.inputPen ? graph.inputPen.checked : pix.color;
@@ -1215,7 +1237,6 @@
             }
           }
         }
-        //if (sprayPix) MM.Canvas.perimeter(graph, sprayPix, setPix);
       },
       init: function(options) {
         var graph = MM.Canvas.createGraph(options);
@@ -1236,7 +1257,7 @@
             if (!typ !== 'init' && ts - lts < graph.threshold) return requestAnimationFrame(canvasFill);
             if (typ === 'init') graph.context.putImageData(graph.grid, graph.ox + graph.x, graph.oy + graph.y);
             graph.drawing = typ === 'mouseup' ? false : (typ === 'mousemove' && graph.drawing) || (typ === 'mousedown' && btn === 0);
-            MM.Canvas.paint(graph, graph.drawing, typ === 'mouseover' || typ === 'mousemove');
+            MM.Canvas.paint(graph, graph.drawing, typ === 'mouseover' || typ === 'mousemove', typ === 'mouseout');
           };
           requestAnimationFrame(canvasFill);
         };
@@ -1261,6 +1282,9 @@
         if (graph.inputSprayOrEyeDrop) graph.inputSprayOrEyeDrop.addEventListener('click', toolbarListener);
         if (graph.inputDownload) graph.inputDownload.addEventListener('click', function download() {
           MM.Canvas.download(graph);
+        });
+        if (graph.inputUpload) graph.inputUpload.addEventListener('click', function upload() {
+          MM.Canvas.upload(graph);
         });
         listener.call(graph.canvas, { type: 'init' });
       }
