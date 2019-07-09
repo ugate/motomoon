@@ -344,9 +344,9 @@
               </div>
             </div>
             <div class="canvas-row dimensions">
-              <input class="canvas-editor-rows" type="number" min="8" max="60" step="1" value="16"/>
-              <input type="text" disabled="disabled" value="X"/>
               <input class="canvas-editor-cols" type="number" min="8" max="60" step="1" value="16"/>
+              <input type="text" disabled="disabled" value="X"/>
+              <input class="canvas-editor-rows" type="number" min="8" max="60" step="1" value="16"/>
             </div>
           </div>
           <input class="hsl-text" type="hidden" value="0,0%,0%"/>
@@ -1038,7 +1038,7 @@
           inputUpload: opts.parent.querySelector('.canvas-editor-upload'),
           inputColor: opts.inputColor,
           upload: opts.upload,
-          pixels: [],
+          pixels: {},
           timestamps: {},
           threshold: opts.threshold || 100,
           blankColor: opts.blankColor || '#000000',
@@ -1053,39 +1053,146 @@
         graph.context = graph.canvas.getContext('2d');
         graph.gridCanvas = document.createElement('canvas');
         graph.gridContext = graph.gridCanvas.getContext('2d');
-        MM.Canvas.resize(graph, opts, true);
+        MM.Canvas.resize(graph);
         return graph;
       },
-      resize: function(graph, opts, reset) {
+      resize: function(graph, newRowCount, newColCount) {
         var oldw, oldh;
-        if (opts && (!graph.gridColCount || opts.gridColCount !== graph.gridColCount)) {
+        if (!graph.gridColCount || !newColCount || newColCount !== graph.gridColCount) {
           oldw = graph.gridColCount || 16;
-          if (graph.inputCols) graph.inputCols.value = opts.gridColCount || oldw;
-          graph.gridColCount = (graph.inputCols && parseInt(graph.inputCols.value)) || opts.gridColCount || oldw;
+          if (graph.inputCols) graph.inputCols.value = newColCount || oldw;
+          graph.gridColCount = (graph.inputCols && parseInt(graph.inputCols.value)) || newColCount || oldw;
           graph.gridCanvasWidth = (graph.gridColCount * graph.blockWidth) + 1;
           graph.gridCanvas.width = graph.gridCanvasWidth;
           graph.canvas.width = graph.gridCanvas.width + (graph.ox * 2);
         }
-        if (opts && (!graph.gridRowCount || opts.gridRowCount !== graph.gridRowCount)) {
+        if (!graph.gridRowCount || !newRowCount || newRowCount !== graph.gridRowCount) {
           oldh = graph.gridRowCount || 16;
-          if (graph.inputRows) graph.inputRows.value = opts.gridRowCount || oldh;
-          graph.gridRowCount = (graph.inputRows && parseInt(graph.inputRows.value)) || opts.gridRowCount || oldh;
+          if (graph.inputRows) graph.inputRows.value = newRowCount || oldh;
+          graph.gridRowCount = (graph.inputRows && parseInt(graph.inputRows.value)) || newRowCount || oldh;
           graph.gridCanvasHeight = (graph.gridRowCount * graph.blockHeight) + 1;
           graph.gridCanvas.height = graph.gridCanvasHeight;
           graph.canvas.height = graph.gridCanvas.height + (graph.oy * 2);
         }
-        var colChg = graph.gridColCount - oldw, rowChg = graph.gridRowCount - oldh;
-        var noChg = colChg === 0 && rowChg === 0;console.log('resize:', oldw, graph.gridColCount, oldh, graph.gridRowCount, colChg, rowChg);
         graph.gridContext.fillStyle = graph.bgColor;
         graph.gridContext.fillRect(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
-        if (colChg > 0) for (var x = graph.gridColCount - colChg; x <= graph.gridColCount; x++) {
-          MM.Canvas.pixel(graph, x, y, true);
-        } else if (colChg < 0) for (var x = graph.gridColCount + colChg; x >= graph.gridColCount; x++) {
-          MM.Canvas.pixel(graph, x, y, true);
-        }
-        MM.Canvas.pixelate(graph, false, reset ? 0 : graph.gridRowCount + rowChg, reset ? 0 : graph.gridColCount + colChg, rowChg, colChg);
         graph.grid = graph.gridContext.getImageData(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
         MM.Canvas.paint(graph);
+      },
+      pixel: function(graph, row, col, val) {
+        var id = 'pixel_col' + col + '_row' + row;
+        if (val === true) val = graph.pixels[id] || {
+          id: id,
+          on: false,
+          color: graph.blankColor,
+          col: col,
+          row: row,
+          x: (col - 1) * graph.blockWidth,
+          y: (row - 1) * graph.blockHeight,
+          history: []
+        };
+        if (val) graph.pixels[id] = val;
+        else if (val === false) return graph.pixels[id] && delete graph.pixels[id];
+        return graph.pixels[id];
+      },
+      inRange: function(graph) {
+        return graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.gridCanvasWidth && graph.y <= graph.oy + graph.gridCanvasHeight;
+      },
+      inPoint: function(graph, pix) {
+        return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockWidth - 1)
+          && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockHeight - 1);
+      },
+      paint: function(graph, setPix, highlight, onlyGet) {
+        var inRange = MM.Canvas.inRange(graph);
+        if (!inRange && onlyGet) return;
+        var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;
+        var forDrop = !forFill && graph.inputSel && graph.inputSel === graph.inputSprayOrEyeDrop;
+        var usePix = forFill && !onlyGet && inRange;
+        var tpix = usePix && MM.Canvas.paint(graph, false, false, true);
+        tpix = tpix ? { on: tpix.on, color: tpix.color, pix: tpix } : tpix;
+        for (var col = 1, pix, fx, fy, fw, fh, hlt, chg, ids = forDrop && graph.inputSel.checked && []; col <= graph.gridColCount; col++) {
+          for (var row = 1; row <= graph.gridRowCount; row++) {
+            pix = MM.Canvas.pixel(graph, row, col, true);
+            if (onlyGet) {
+              if (MM.Canvas.inPoint(graph, pix)) return pix;
+              continue;
+            }
+            hlt = false;
+            fx = graph.ox + pix.x + 1;
+            fy = graph.oy + pix.y + 1;
+            fw = graph.blockWidth - 1;
+            fh = graph.blockHeight - 1;
+            if (forFill && usePix) { // fill
+              hlt = highlight && tpix && tpix.color === pix.color;
+              if (setPix && tpix && tpix.color === pix.color) {
+                pix.on = graph.inputSel.checked;
+                pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
+              }
+            } else if (forDrop) {
+              if (graph.inputSel.checked) { // sprayer
+                if ((highlight || setPix) && MM.Canvas.inPoint(graph, pix)) {
+                  hlt = highlight;
+                  MM.Canvas.perimeter(graph, pix, setPix, graph.inputColor.value || graph.blankColor, ids);
+                  if (setPix) {
+                    pix.on = true;
+                    pix.color = graph.inputColor.value || graph.blankColor;
+                  }
+                }
+              } else if (setPix && MM.Canvas.inPoint(graph, pix)) { // dropper
+                hlt = highlight;
+                chg = graph.inputColor.value !== pix.color;
+                graph.inputColor.value = pix.color;
+                graph.inputColor.dispatchEvent(new Event('input'));
+                if (chg) graph.inputColor.dispatchEvent(new Event('change'));
+              }
+            } else if ((!forFill && !forDrop) && inRange && MM.Canvas.inPoint(graph, pix)) { // pen/eraser
+              hlt = highlight;
+              if (setPix) {
+                pix.on = graph.inputPen ? graph.inputPen.checked : pix.color;
+                pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
+              }
+            }
+            if (!ids || ids.indexOf(pix.id) < 0) {
+              graph.context.fillStyle = graph.blankColor;
+              graph.context.fillRect(fx, fy, fw, fh);
+              if (pix.on) {
+                graph.context.fillStyle = pix.color;
+                graph.context.fillRect(fx, fy, fw, fh);
+              }
+            }
+            if (hlt) {
+              graph.context.fillStyle = graph.inputSel && !graph.inputSel.checked ? graph.blankColor : graph.inputColor.value;
+              graph.context.fillRect(fx, fy, fw, fh);
+            }
+          }
+        }
+      },
+      perimeter: function(graph, pix, setPix, altColor, ids, reach) {
+        reach = reach || 1;
+        var fw = graph.blockWidth - 1, fh = graph.blockHeight - 1;
+        for (var r = pix.row - reach, pixc, prcnt, hsl, hex; r <= pix.row + reach; r++) {
+          if (r < 1) continue;
+          else if (r > graph.gridRowCount) break;
+          for (var c = pix.col - reach; c <= pix.col + reach; c++) {
+            if (c < 1) continue;
+            else if (c > graph.gridColCount) break;
+            if (r === pix.row && c === pix.col) continue;
+            if (pixc = MM.Canvas.pixel(graph, r, c)) {
+              prcnt = pix.row === pixc.row || pix.col === pixc.col ? 50 : 80;
+              hsl = MM.Color.brightness(MM.Color.rgbToHSL(MM.Color.hexToRGB(altColor || pix.color)), prcnt);
+              hex = '#' + MM.Color.hslToHex(hsl[0], hsl[1], hsl[2]);
+              fx = graph.ox + pixc.x + 1;
+              fy = graph.oy + pixc.y + 1;
+              graph.context.fillStyle = hex;
+              graph.context.fillRect(fx, fy, fw, fh);
+              if (setPix) {
+                pixc.on = true;
+                pixc.color = hex;
+              }
+              if (ids) ids.push(pixc.id);
+            }
+          }
+        }
       },
       export: function(graph) {
         var canvas = document.createElement('canvas'), context = canvas.getContext('2d');
@@ -1116,128 +1223,6 @@
           graph.upload(formData, graph.inputUpload);
         });
       },
-      perimeter: function(graph, pix, setPix, altColor, reach) {
-        reach = reach || 1;
-        var fw = graph.blockWidth - 1, fh = graph.blockHeight - 1;
-        for (var r = pix.row - reach, pixc, percent, hsl, hex; r <= pix.row + reach; r++) {
-          if (r < 1) continue;
-          else if (r > graph.gridRowCount) break;
-          for (var c = pix.col - reach; c <= pix.col + reach; c++) {
-            if (c < 1) continue;
-            else if (c > graph.gridColCount) break;
-            if (r === pix.row && c === pix.col) continue;
-            if (pixc = MM.Canvas.pixel(graph, r, c)) {
-              hsl = MM.Color.brightness(MM.Color.rgbToHSL(MM.Color.hexToRGB(altColor || pix.color)), 80);
-              hex = '#' + MM.Color.hslToHex(hsl[0], hsl[1], hsl[2]);
-              fx = graph.ox + pixc.x + 1;
-              fy = graph.oy + pixc.y + 1;
-              graph.context.fillStyle = hex;
-              graph.context.fillRect(fx, fy, fw, fh);
-              if (setPix) {
-                pixc.on = true;
-                pixc.color = hex;
-              }
-            }
-          }
-        }
-      },
-      pixel: function(graph, row, col, val) {
-        var idx = graph.gridColCount * row + col;
-        if (val === true) val = {
-          on: false,
-          color: graph.blankColor,
-          history: [],
-          col: col,
-          row: row,
-          x: (col - 1) * graph.blockWidth,
-          y: (row - 1) * graph.blockHeight
-        };
-        if (val) graph.pixels[idx] = val;
-        else if (val === false) return graph.pixels[idx] && graph.pixels.splice(idx, 1);
-        return graph.pixels[idx];
-      },
-      pixelate: function(graph, undo, startRow, startCol) {
-        for (var col = startCol && startCol <= graph.gridColCount ? startCol : 1, pix, clr; col <= graph.gridColCount; col++) {
-          for (var row = startRow && startRow <= graph.gridRowCount ? startRow : 1; row <= graph.gridRowCount; row++) {
-            if (undo && (pix = MM.Canvas.pixel(graph, row, col))) {
-              if (pix.history[undo]) {
-                pix.color = pix.history[undo].color;
-              }
-            } else MM.Canvas.pixel(graph, row, col, true);
-          }
-        }
-      },
-      inRange: function(graph) {
-        return graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.gridCanvasWidth && graph.y <= graph.oy + graph.gridCanvasHeight;
-      },
-      inPoint: function(graph, pix) {
-        return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockWidth - 1)
-          && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockHeight - 1);
-      },
-      paint: function(graph, setPix, highlight, exit, onlyGet) {
-        var inRange = MM.Canvas.inRange(graph);
-        if (!inRange && onlyGet) return;
-        var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;
-        var forDrop = !forFill && graph.inputSel && graph.inputSel === graph.inputSprayOrEyeDrop;
-        var usePix = (forFill || forDrop) && !onlyGet && inRange;
-        var tpix = usePix && MM.Canvas.paint(graph, false, false, false, true);
-        tpix = tpix ? { on: tpix.on, color: tpix.color, pix: tpix } : tpix;
-        var sprayPix;
-        for (var col = 1, pix, fx, fy, fw, fh, hlt, chg; col <= graph.gridRowCount; col++) {
-          for (var row = 1; row <= graph.gridColCount; row++) {
-            pix = MM.Canvas.pixel(graph, row, col);
-            if (onlyGet) {
-              if (MM.Canvas.inPoint(graph, pix)) return pix;
-              continue;
-            }
-            hlt = false;
-            fx = graph.ox + pix.x + 1;
-            fy = graph.oy + pix.y + 1;
-            fw = graph.blockWidth - 1;
-            fh = graph.blockHeight - 1;
-            if (forFill && usePix) { // fill
-              hlt = highlight && tpix.color === pix.color;
-              if (setPix && tpix.color === pix.color) {
-                pix.on = graph.inputSel.checked;
-                pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
-              }
-            } else if (forDrop && usePix) {
-              if (graph.inputSel.checked) { // sprayer
-                if ((highlight || setPix) && tpix && tpix.pix.col === pix.col && tpix.pix.row === pix.row) {
-                  hlt = highlight;
-                  MM.Canvas.perimeter(graph, pix, setPix, graph.inputColor.value || graph.blankColor);
-                  if (setPix) {
-                    pix.on = true;
-                    pix.color = graph.inputColor.value || graph.blankColor;
-                  }
-                }
-              } else if (setPix && MM.Canvas.inPoint(graph, pix)) { // dropper
-                hlt = highlight;
-                chg = graph.inputColor.value !== pix.color;
-                graph.inputColor.value = pix.color;
-                graph.inputColor.dispatchEvent(new Event('input'));
-                if (chg) graph.inputColor.dispatchEvent(new Event('change'));
-              }
-            } else if ((!forFill && !forDrop) && inRange && MM.Canvas.inPoint(graph, pix)) { // pen/eraser
-              hlt = highlight;
-              if (setPix) {
-                pix.on = graph.inputPen ? graph.inputPen.checked : pix.color;
-                pix.color = (pix.on && graph.inputColor.value) || graph.blankColor;
-              }
-            }
-            graph.context.fillStyle = graph.blankColor;
-            graph.context.fillRect(fx, fy, fw, fh);
-            if (pix.on) {
-              graph.context.fillStyle = pix.color;
-              graph.context.fillRect(fx, fy, fw, fh);
-            }
-            if (hlt) {
-              graph.context.fillStyle = graph.inputSel && !graph.inputSel.checked ? graph.blankColor : graph.inputColor.value;
-              graph.context.fillRect(fx, fy, fw, fh);
-            }
-          }
-        }
-      },
       init: function(options) {
         var graph = MM.Canvas.createGraph(options);
         if (!graph || !graph.canvas) return false;
@@ -1266,12 +1251,13 @@
         graph.canvas.addEventListener('mousemove', listener);
         graph.canvas.addEventListener('mousedown', listener);
         graph.canvas.addEventListener('mouseup', listener);
-        if (graph.inputCols) graph.inputCols.addEventListener('change', function resizeWidth(evt) {
-          MM.Canvas.resize(graph, { gridColCount: this.value });
-        });
-        if (graph.inputRows) graph.inputRows.addEventListener('change', function resizeHeight(evt) {
-          MM.Canvas.resize(graph, { gridRowCount: this.value });
-        });
+        if (graph.inputCols && graph.inputRows) {
+          var resizeListener = function resizeWidth(evt) {
+            MM.Canvas.resize(graph, parseInt(graph.inputRows.value), parseInt(graph.inputCols.value));
+          };
+          graph.inputCols.addEventListener('change', resizeListener); 
+          graph.inputRows.addEventListener('change', resizeListener);
+        }
         var toolbarListener = function(evt) {
           if (graph.inputSel) MM.clazzList(graph.inputSel).remove('active');
           graph.inputSel = evt.currentTarget;
