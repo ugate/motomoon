@@ -36,6 +36,7 @@
       .row .col.l11 {width: 91.66667%;margin-left: 0;} .row .col.l12 {width: 100%;margin-left: 0;} .row .col.offset-l1 {margin-left: 8.33333%;} .row .col.offset-l2 {margin-left: 16.66667%;} .row .col.offset-l3 {margin-left: 25%;}
       .row .col.offset-l4 {margin-left: 33.33333%;} .row .col.offset-l5 {margin-left: 41.66667%;} .row .col.offset-l6 {margin-left: 50%;} .row .col.offset-l7 {margin-left: 58.33333%;} .row .col.offset-l8 {margin-left: 66.66667%;}
       .row .col.offset-l9 {margin-left: 75%;} .row .col.offset-l10 {margin-left: 83.33333%;}.row .col.offset-l11 {margin-left: 91.66667%;} .row .col.offset-l12 {margin-left: 100%;}
+      .content {width: calc(100% - 16px);}
     }
     html, body {font-family:'Roboto', sans-serif;font-size:14px;font-weight:400;line-height:20px;}
     html {width:100%;height:100%;color:rgba(0,0,0,.87);-ms-touch-action:manipulation;touch-action:manipulation;}
@@ -100,30 +101,31 @@
     input[type=range].brown::-webkit-slider-thumb {background: #3E2723;} input[type=range].brown::-ms-thumb {background: #3E2723;} input[type=range].brown::-moz-range-thumb {background: #3E2723;}
     output.range-tooltip {display: inline-block;position: relative;left: 10px;top: calc(-1em - var(--height));padding: 3px;border-radius: 3px;background: #95a;color: #eee;transform: translate(calc((var(--val) - var(--min))/(var(--max) - var(--min)) * var(--width) - 50%));}
     .dimensions > input {width: 3em !important;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;} .dimensions > input:first-of-type {text-align: right;} .dimensions > input:nth-of-type(2) {width: 1em !important;}
-    .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: visible;} .canvas-editor canvas {cursor: crosshair;} .canvas-row {flex-basis: 100%;}
+    .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: auto;padding-bottom: .1em;} .canvas-editor canvas {cursor: crosshair;} .canvas-row {flex-basis: 100%;}
     .color-toolbar {display: flex;flex-direction: column;} .color-toolbar .btn {margin: .1em;}
     .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em #000000, .1em .1em .4em .1em rgba(0,0,0,0);}
     main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;} main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
-    @media (max-width: 479px) {main > div {padding:8px 0;}.canvas-editor{flex-wrap: wrap;}.color-toolbar {flex-direction: row;}}
+    @media (max-width: 479px) {main > div {padding:8px 0;}}
     @media (min-width: 840px) {main > div {padding:8px;}}
     @media (max-width: 839px) and (min-width: 480px) {main > div {padding:8px;}}
     @media (max-width: 479px) {.margin {width:calc(50% - 16px);display:none !important;margin:8px;box-sizing:border-box;}}
     @media (max-width: 839px) and (min-width: 480px) {.margin {width:calc(25% - 16px);display:none !important;margin:8px;box-sizing:border-box;}}
     @media (min-width: 840px) {.margin {width:calc(16.6666666667% - 16px);margin:8px;box-sizing:border-box;}}
-    .content {min-height:calc(100vh - 15vh);margin-bottom:80px;border-radius:2px;box-sizing:border-box;}
+    .content {min-height:calc(100vh - 15vh);margin-bottom:80px;margin-top:8px;border-radius:2px;box-sizing:border-box;}
     .menu {position:relative;width:100%;text-align:center;padding:1.5em 0 1.2em 0;background:#03A9F4;}
     .btn-icon {cursor: pointer;font-size:1.3em;padding:1em .2em .3em .3em;color:white;fill:white;line-height:1.25em;vertical-align:bottom;border:4px solid transparent;border-radius:50%;user-select:none;}
     .btn-icon.active {border:4px solid #00E5FF;}
-    @media (min-width: 840px) {.content {width:calc(66.6666666667% - 16px);margin:8px;}}
-    @media (max-width: 839px) and (min-width: 480px) {.content {width:calc(100% - 16px);margin:8px;} .instruct {font-size:1.5em !important;}}
-    @media (max-width: 479px) {.content {width:100%;margin:8px 0;} .instruct {font-size:1em !important;}}
+    @media (min-width: 993px) {.content {width: calc(100% - 16px);}}
+    @media (max-width: 992px) and (min-width: 840px) {}
+    @media (max-width: 839px) and (min-width: 480px) {.content {width:calc(100% - 16px);margin:8px;} .instruct {font-size:1.5em !important;}.canvas-editor{flex-wrap: wrap;flex-direction: column;}.color-toolbar {flex-direction: row;}}
+    @media (max-width: 479px) {.content {width:100%;margin:8px 0;} .container {padding:0 !important;} .instruct {font-size:1em !important;}.canvas-editor{flex-wrap: wrap;flex-direction: column;}.color-toolbar {flex-direction: row;}}
     ul, ol {font-size:14px;line-height:24px;font-weight:400;letter-spacing:0;} .instruct {text-align:center;width:100%;background:#3F51B5;color:#fff;font-size:1.7em;padding:1em 0;}
     a {color:rgb(255,82,82);font-weight: 500;}
     a, button, checkbox, .icon-palette, radio, .slider, .switch {-webkit-tap-highlight-color:transparent;-webkit-tap-highlight-color:rgba(255,255,255,0);}
     button, input:not([type=range]):not([type=color]) {overflow:visible;} button, input:not([type=range]):not([type=color]), optgroup, select, textarea {font-family:sans-serif;font-size:100%;line-height:1.15;margin:0;}
     .center {display:flex;flex-flow:row nowrap;align-items:center;justify-content:center;} .container {padding:0 2rem;font-size:1.5em;text-align:center;}
     input:not([type=range]):not([type=color]), select, textarea, body *,input:not([type=range]):not([type=color])::after,input:not([type=range]):not([type=color])::before,select::after,select::before,textarea::after,textarea::before {box-sizing:border-box;}
-    .vcol {margin:1em 0 2em 0;} .vcol > * {padding:0 0 1em 0;}
+    .vcol {margin:1em 0 2em 0;} .vcol > * {padding:0 0 1em 0;} .no-top-btm-margin {margin-top:0 !important;margin-bottom:0 !important;}
     .form-radio, .md-grp {position:relative;margin-top:2.25em;margin-bottom:2.25em;} .md-grp input:not([type=range]):not([type=color]) {height:1.9rem;} .md-grp textarea {resize:none;}
     .md-grp .bar {position:relative;border-bottom:0.0625em solid #999;display:block;}
     .md-grp .bar::before {content:'';height:0.125em;width:0;left:50%;bottom:-0.0625em;position:absolute;background:#03A9F4;transition:left 0.28s ease, width 0.28s ease;}
@@ -162,7 +164,6 @@
   <div class="ribbon bg-blue-grey"></div>
   <main>
     <div>
-      <div class="margin"></div>
       <img src="/favicon.png" class="logo">
       <label class="logo">
         <a href="/">Moto Moon</a>
@@ -181,7 +182,7 @@
               </g>
             </svg>
           </b>
-          <b class="btn-icon" title="Color" data-view="palette" onclick="mm.formRequest(event)"
+          <b class="btn-icon" title="Bitmap Palette" data-view="palette" onclick="mm.formRequest(event)"
             data-req-action="/palette">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
               <g transform="translate(-4, -4) scale(1.5,1.3)">
@@ -284,9 +285,14 @@
   </div>
   <div class="hide view" id="anim">
     <div class="container">
-      <div class="md-grp">
+      <div class="md-grp no-top-btm-margin">
         <div class="row color-select">
           <div class="col s12 m12 l12">
+            <div class="canvas-row dimensions">
+              <input class="canvas-editor-cols" type="number" min="16" max="144" step="1" value="16"/>
+              <input type="text" disabled="disabled" value="X"/>
+              <input class="canvas-editor-rows" type="number" min="16" max="144" step="1" value="16"/>
+            </div>
             <div class="canvas-editor">
               <div class="color-toolbar brown-text">
                 <div class="btn button-toggle">
@@ -340,13 +346,8 @@
                 </div>
               </div>
               <div>
-                <canvas class="editor">Bitmap editor canvas not supported</canvas>
+                <canvas class="editor">Bitmap pixel editor canvas not supported</canvas>
               </div>
-            </div>
-            <div class="canvas-row dimensions">
-              <input class="canvas-editor-cols" type="number" min="8" max="60" step="1" value="16"/>
-              <input type="text" disabled="disabled" value="X"/>
-              <input class="canvas-editor-rows" type="number" min="8" max="60" step="1" value="16"/>
             </div>
           </div>
           <input class="hsl-text" type="hidden" value="0,0%,0%"/>
@@ -1102,7 +1103,7 @@
         return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockWidth - 1)
           && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockHeight - 1);
       },
-      paint: function(graph, setPix, highlight, onlyGet) {
+      paint: function(graph, setPix, highlight, onlyGet) {if (!onlyGet) console.log('paint:', setPix, highlight)
         var inRange = MM.Canvas.inRange(graph);
         if (!inRange && onlyGet) return;
         var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;
@@ -1194,28 +1195,29 @@
           }
         }
       },
-      export: function(graph) {
+      export: function(graph, transparent) {
         var canvas = document.createElement('canvas'), context = canvas.getContext('2d');
+        var blankColor = transparent ? null : graph.blankColor;
         canvas.width = graph.gridColCount;
         canvas.height = graph.gridRowCount;
         for (var y = 1, pix; y <= graph.gridRowCount; y++) {
           for (var x = 1; x <= graph.gridColCount; x++) {
-            pix = MM.Canvas.pixel(graph, x, y);
-            if (pix.on) {
-              context.fillStyle = pix.color;
+            pix = MM.Canvas.pixel(graph, y, x);
+            if (pix.on || blankColor) {
+              context.fillStyle = pix.on ? pix.color : blankColor;
               context.fillRect(x - 1, y - 1, 1, 1);
             }
           }
         }
         return canvas;
       },
-      download: function(graph) {
+      download: function(graph, transparent) {
         var canvas = MM.Canvas.export(graph), link = document.createElement('a');
         link.download = 'image.bmp';
         link.href = canvas.toDataURL('image/bmp');
         link.click();
       },
-      upload: function(grpah) {
+      upload: function(grpah, transparent) {
         var canvas = MM.Canvas.export(graph);
         canvas.toBlob(function blobed(blob) {
           var formData = new FormData();
@@ -1226,13 +1228,17 @@
       init: function(options) {
         var graph = MM.Canvas.createGraph(options);
         if (!graph || !graph.canvas) return false;
-        var listener = function(evt) {
-          var el = this, canvasFill, typ = evt.type, btn = evt.button;
-          if (typ === 'mouseover' || typ === 'mousemove') {
+        var listener = function(evt) {if (evt.changedTouches) console.log('changedTouches:', evt.type, evt.changedTouches);
+          if (evt.type.indexOf('touch') === 0 && evt.type !== 'touchstart') evt.preventDefault();
+          var el = this, canvasFill, typ = evt.type;
+          var move = typ === 'touchmove' || typ === 'mousemove', up = typ === 'touchend' || typ === 'mouseup';
+          var down = typ === 'touchstart' || (typ === 'mousedown' && evt.button === 0);
+          var evp = (evt.changedTouches && evt.changedTouches[0]) || evt;
+          if (move || typ === 'mouseover') {
             var rect = el.getBoundingClientRect();
-            graph.x = Math.floor(evt.clientX - (rect.left + document.body.scrollLeft));
-            graph.y = Math.floor(evt.clientY - (rect.top + document.body.scrollTop));
-          } else if (typ === 'mouseout') {
+            graph.x = Math.floor(evp.clientX - (rect.left + document.body.scrollLeft));
+            graph.y = Math.floor(evp.clientY - (rect.top + document.body.scrollTop));
+          } else if (typ === 'touchend' || typ === 'mouseout') {
             graph.x = 0;
             graph.y = 0;
           }
@@ -1241,11 +1247,14 @@
             if (!lts) lts = graph.timestamps[typ] = ts;
             if (!typ !== 'init' && ts - lts < graph.threshold) return requestAnimationFrame(canvasFill);
             if (typ === 'init') graph.context.putImageData(graph.grid, graph.ox + graph.x, graph.oy + graph.y);
-            graph.drawing = typ === 'mouseup' ? false : (typ === 'mousemove' && graph.drawing) || (typ === 'mousedown' && btn === 0);
-            MM.Canvas.paint(graph, graph.drawing, typ === 'mouseover' || typ === 'mousemove', typ === 'mouseout');
+            graph.drawing = up ? false : (move && graph.drawing) || down;
+            MM.Canvas.paint(graph, graph.drawing, move || typ === 'mouseover', typ === 'mouseout');
           };
           requestAnimationFrame(canvasFill);
         };
+        graph.canvas.addEventListener('touchstart', listener);
+        graph.canvas.addEventListener('touchmove', listener);
+        graph.canvas.addEventListener('touchend', listener);
         graph.canvas.addEventListener('mouseover', listener);
         graph.canvas.addEventListener('mouseout', listener);
         graph.canvas.addEventListener('mousemove', listener);
