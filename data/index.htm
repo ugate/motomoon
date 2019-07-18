@@ -45,7 +45,7 @@
     .white-text, .white-text path {fill: #fff !important;color: #fff !important;} .grey-text {color:#424242 !important;}
     .bg-green {background-color: #4CAF50 !important;} .bg-teal {background-color: #009688 !important;} .bg-indigo {background-color: #3F51B5 !important;} .bg-purple {background-color: #673AB7 !important;}
     .bg-pink {background-color: #E91E63 !important;} .bg-blue {background-color: #03A9F4 !important;} .bg-grey {background-color:#424242 !important;} .bg-blue-grey {background-color:#263238 !important;}
-    .bg-white {background-color:#fff !important;} .bg-slate {background-color: #607D8B !important;} .bg-yellow {background-color: #FFEB3B !important;} .bg-brown {background-color: #795548 !important;}
+    .bg-white {background-color:#fff !important;} .bg-slate {background-color: #607D8B !important;} .bg-yellow {background-color: #FFEB3B !important;} .bg-dark-grey {background-color: #212121 !important;}
     .logo {width:5rem;height:5em;top:-3em;left:calc((100vw / 2) - 2.5rem);position:absolute;z-index:1;}
     label.logo {top:-2em;left: calc((100vw / 2) - 3.5rem);text-align:center;width:25em;height:3em;word-spacing:7em;transform:translateX(-35%);}
     label.logo a {text-decoration:none;transform:perspective(2.5em) rotateX(15deg) scaleY(0.8);transition:all 0.5s;
@@ -103,9 +103,9 @@
     .dimensions > input {width: 3em !important;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;} .dimensions > input:first-of-type {text-align: right;} .dimensions > input:nth-of-type(2) {width: 1em !important;}
     .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: auto;padding-bottom: .1em;} .canvas-editor canvas {cursor: crosshair;} .canvas-row {flex-basis: 100%;}
     .color-toolbar {display: flex;flex-direction: column;} .color-toolbar .btn {margin: .1em;}
-    .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em #000000, .1em .1em .4em .1em rgba(0,0,0,0);}
+    .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em #B71C1C, .1em .1em .4em .1em rgba(0,0,0,0);}
     main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;} main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
-    @media (max-width: 479px) {main > div {padding:8px 0;}}
+    @media (max-width: 479px) {main > div {padding:8px 0;margin:0;width:100% !important;}}
     @media (min-width: 840px) {main > div {padding:8px;}}
     @media (max-width: 839px) and (min-width: 480px) {main > div {padding:8px;}}
     @media (max-width: 479px) {.margin {width:calc(50% - 16px);display:none !important;margin:8px;box-sizing:border-box;}}
@@ -168,7 +168,7 @@
       <label class="logo">
         <a href="/">Moto Moon</a>
       </label>
-      <div class="content shadow bg-white grey-text">
+      <div class="content shadow bg-dark-grey white-text">
         <div class="menu" id="menu">
           <b class="btn-icon" title="WiFi Credentials" data-view="setup" onclick="mm.formRequest(event)"
             data-req-action="/setup">
@@ -289,9 +289,10 @@
         <div class="row color-select">
           <div class="col s12 m12 l12">
             <div class="canvas-row dimensions">
-              <input class="canvas-editor-cols" type="number" min="16" max="144" step="1" value="16"/>
-              <input type="text" disabled="disabled" value="X"/>
-              <input class="canvas-editor-rows" type="number" min="16" max="144" step="1" value="16"/>
+              <input class="canvas-editor-cols  white-text" type="number" min="16" max="144" step="1" value="16"/>
+              <input class="white-text" type="text" disabled="disabled" value="X"/>
+              <input class="canvas-editor-rows white-text" type="number" min="16" max="144" step="1" value="16"/>
+              <!-- <input class="canvas-editor-blocks white-text" type="number" min="10" max="40" step="1" value="20"/> -->
             </div>
             <div class="canvas-editor">
               <div class="color-toolbar brown-text">
@@ -330,7 +331,7 @@
                 </div>
                 <div class="btn button-toggle canvas-editor-download">
                   <input type="checkbox" disabled="disabled" id="pixDownload" />
-                  <label for="pixDownload" class="white-text bg-brown">
+                  <label for="pixDownload" class="white-text bg-slate">
                     <svg viewBox="0 0 24 24" title="Download Bitmap">
                       <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
                     </svg>
@@ -1032,6 +1033,7 @@
           canvas: opts.parent.querySelector('canvas.editor'),
           inputCols: opts.parent.querySelector('.canvas-editor-cols'),
           inputRows: opts.parent.querySelector('.canvas-editor-rows'),
+          inputBlocks: opts.parent.querySelector('.canvas-editor-blocks'),
           inputPen: opts.parent.querySelector('.canvas-editor-pen'),
           inputFill: opts.parent.querySelector('.canvas-editor-fill'),
           inputSprayOrEyeDrop: opts.parent.querySelector('.canvas-editor-spray-or-eyedrop'),
@@ -1041,13 +1043,12 @@
           upload: opts.upload,
           pixels: {},
           timestamps: {},
-          threshold: opts.threshold || 100,
+          threshold: opts.threshold || 50,
           blankColor: opts.blankColor || '#000000',
           bgColor: opts.bgColor || '#BBBBBB',
           highlightColor: opts.highlightColor || 'rgba(221,221,221,0.5)',
-          blockWidth: opts.blockWidth || 20,
-          blockHeight: opts.blockHeight || 20,
-          x: 0, y: 0, ox: opts.offsetX || 10, oy: opts.offsetY || 10
+          blockSize: opts.blockSize,
+          x: 0, y: 0, ox: opts.offsetX || 0, oy: opts.offsetY || 0
         };
         graph.inputSel = graph.inputPen || graph.inputFill;
         if (!graph.canvas) return false;
@@ -1057,21 +1058,26 @@
         MM.Canvas.resize(graph);
         return graph;
       },
-      resize: function(graph, newRowCount, newColCount) {
-        var oldw, oldh;
-        if (!graph.gridColCount || !newColCount || newColCount !== graph.gridColCount) {
+      resize: function(graph, rows, cols, blockSize) {
+        var oldw, oldh, oldb;
+        if (!graph.blockSize || !blockSize || blockSize !== graph.blockSize) {
+          oldb = graph.blockSize || 20;
+          if (graph.inputBlocks) graph.inputBlocks.value = blockSize || oldb;
+          graph.blockSize = (graph.inputBlocks && parseInt(graph.inputBlocks.value)) || blockSize || oldb;
+        }
+        if (!graph.gridColCount || !cols || cols !== graph.gridColCount || graph.blockSize !== oldb) {
           oldw = graph.gridColCount || 16;
-          if (graph.inputCols) graph.inputCols.value = newColCount || oldw;
-          graph.gridColCount = (graph.inputCols && parseInt(graph.inputCols.value)) || newColCount || oldw;
-          graph.gridCanvasWidth = (graph.gridColCount * graph.blockWidth) + 1;
+          if (graph.inputCols) graph.inputCols.value = cols || oldw;
+          graph.gridColCount = (graph.inputCols && parseInt(graph.inputCols.value)) || cols || oldw;
+          graph.gridCanvasWidth = (graph.gridColCount * graph.blockSize) + 1;
           graph.gridCanvas.width = graph.gridCanvasWidth;
           graph.canvas.width = graph.gridCanvas.width + (graph.ox * 2);
         }
-        if (!graph.gridRowCount || !newRowCount || newRowCount !== graph.gridRowCount) {
+        if (!graph.gridRowCount || !rows || rows !== graph.gridRowCount || graph.blockSize !== oldb) {
           oldh = graph.gridRowCount || 16;
-          if (graph.inputRows) graph.inputRows.value = newRowCount || oldh;
-          graph.gridRowCount = (graph.inputRows && parseInt(graph.inputRows.value)) || newRowCount || oldh;
-          graph.gridCanvasHeight = (graph.gridRowCount * graph.blockHeight) + 1;
+          if (graph.inputRows) graph.inputRows.value = rows || oldh;
+          graph.gridRowCount = (graph.inputRows && parseInt(graph.inputRows.value)) || rows || oldh;
+          graph.gridCanvasHeight = (graph.gridRowCount * graph.blockSize) + 1;
           graph.gridCanvas.height = graph.gridCanvasHeight;
           graph.canvas.height = graph.gridCanvas.height + (graph.oy * 2);
         }
@@ -1088,8 +1094,8 @@
           color: graph.blankColor,
           col: col,
           row: row,
-          x: (col - 1) * graph.blockWidth,
-          y: (row - 1) * graph.blockHeight,
+          x: (col - 1) * graph.blockSize,
+          y: (row - 1) * graph.blockSize,
           history: []
         };
         if (val) graph.pixels[id] = val;
@@ -1100,10 +1106,10 @@
         return graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.gridCanvasWidth && graph.y <= graph.oy + graph.gridCanvasHeight;
       },
       inPoint: function(graph, pix) {
-        return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockWidth - 1)
-          && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockHeight - 1);
+        return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockSize - 1)
+          && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockSize - 1);
       },
-      paint: function(graph, setPix, highlight, onlyGet) {if (!onlyGet) console.log('paint:', setPix, highlight)
+      paint: function(graph, setPix, highlight, onlyGet) {
         var inRange = MM.Canvas.inRange(graph);
         if (!inRange && onlyGet) return;
         var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;
@@ -1121,8 +1127,8 @@
             hlt = false;
             fx = graph.ox + pix.x + 1;
             fy = graph.oy + pix.y + 1;
-            fw = graph.blockWidth - 1;
-            fh = graph.blockHeight - 1;
+            fw = graph.blockSize - 1;
+            fh = graph.blockSize - 1;
             if (forFill && usePix) { // fill
               hlt = highlight && tpix && tpix.color === pix.color;
               if (setPix && tpix && tpix.color === pix.color) {
@@ -1170,7 +1176,7 @@
       },
       perimeter: function(graph, pix, setPix, altColor, ids, reach) {
         reach = reach || 1;
-        var fw = graph.blockWidth - 1, fh = graph.blockHeight - 1;
+        var fw = graph.blockWidth - 1, fh = graph.blockSize - 1;
         for (var r = pix.row - reach, pixc, prcnt, hsl, hex; r <= pix.row + reach; r++) {
           if (r < 1) continue;
           else if (r > graph.gridRowCount) break;
@@ -1228,7 +1234,7 @@
       init: function(options) {
         var graph = MM.Canvas.createGraph(options);
         if (!graph || !graph.canvas) return false;
-        var listener = function(evt) {if (evt.changedTouches) console.log('changedTouches:', evt.type, evt.changedTouches);
+        var listener = function(evt) {
           if (evt.type.indexOf('touch') === 0 && evt.type !== 'touchstart') evt.preventDefault();
           var el = this, canvasFill, typ = evt.type;
           var move = typ === 'touchmove' || typ === 'mousemove', up = typ === 'touchend' || typ === 'mouseup';
@@ -1262,11 +1268,20 @@
         graph.canvas.addEventListener('mouseup', listener);
         if (graph.inputCols && graph.inputRows) {
           var resizeListener = function resizeWidth(evt) {
-            MM.Canvas.resize(graph, parseInt(graph.inputRows.value), parseInt(graph.inputCols.value));
+            var rows = parseInt((graph.inputRows && graph.inputRows.value) || 0);
+            var cols = parseInt((graph.inputCols && graph.inputCols.value) || 0);
+            var blks = parseInt((graph.inputBlocks && graph.inputBlocks.value) || 0);
+            MM.Canvas.resize(graph, rows, cols, blks);
           };
           graph.inputCols.addEventListener('change', resizeListener); 
           graph.inputRows.addEventListener('change', resizeListener);
         }
+        if (graph.inputBlocks) graph.inputBlocks.addEventListener('change', function blockSize(evt) {
+          var rows = parseInt((graph.inputRows && graph.inputRows.value) || 0);
+          var cols = parseInt((graph.inputCols && graph.inputCols.value) || 0);
+          var blks = parseInt((graph.inputBlocks && graph.inputBlocks.value) || 0);
+          MM.Canvas.resize(graph, rows, cols, blks);
+        });
         var toolbarListener = function(evt) {
           if (graph.inputSel) MM.clazzList(graph.inputSel).remove('active');
           graph.inputSel = evt.currentTarget;
