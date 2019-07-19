@@ -58,19 +58,6 @@ bool turnRightOff(bool now = false) {
 
 // ----------------- Program -----------------------------
 
-// esp8266 defaults to RX pin DMA instead of strip(PixelCount, PixelPin)
-NeoPixelBus<MyPixelColorFeature, Neo800KbpsMethod> strip(PixelCount);
-NeoPixelAnimator animations(AnimCount); // NeoPixel animation management object
-
-// sprite sheet stored in progmem using the same pixel feature as the NeoPixelBus
-NeoVerticalSpriteSheet<NeoBufferProgmemMethod<MyPixelColorFeature>> spriteSheet(
-    myImageWidth, // image width and sprite width since its vertical sprite sheet
-    myImageHeight,  // image height
-    1, // sprite is only one pixel high
-    myImage);
-
-uint16_t indexSprite;
-
 void LoopAnimUpdate(const AnimationParam& param) {
   // wait for this animation to complete, we are using it as a timer of sorts
   if (param.state == AnimationState_Completed) {
@@ -81,6 +68,12 @@ void LoopAnimUpdate(const AnimationParam& param) {
     spriteSheet.Blt(strip, 0, indexSprite);
     indexSprite = (indexSprite + 1) % myImageHeight; // increment and wrap
   }
+}
+
+bool updatePixelImage(const File& file) {
+  // initialize the image with the file
+  if (!pixImage.Begin(file)) false;
+  pixImage.Blt()
 }
 
 void ledSetup() {

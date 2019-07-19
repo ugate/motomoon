@@ -52,13 +52,17 @@ void statusIndicator(const uint8_t stat, const uint8_t netStat = 3/* WL_CONNECTE
 // There are two provided, but you can create your own easily enough using 
 // free versions of Paint.Net and the plugin 
 #include "Pg3d.h"
-typedef NeoGrbFeature MyPixelColorFeature;
 
 const uint16_t PixelCount = 180;                            // WS2812 60 LEDs/meter, 3 meter strip
 const uint16_t AnimCount = 2;                               // max number of animations that will run
 RgbColor rbg = RgbColor(0, 0, 0);                           // color used for status indicator (1st LED)
 
 byte led_flags = 0;                                         // flags for tracking LED states (separate ON/OFF flags for each state should exist to account for spurts of false-positive irregularities)
+File bmpFile;                                               // temp file storage of uploaded pixel bitmap
+NeoBitmapFile<MyPixelColorFeature, File> pixImage;          // the bitmap file that will hold the drawn bitmap (uses bmpFile)
+NeoPixelAnimator animations(AnimCount);                     // animation management
+uint16_t animState;                                         // tracks the current pixel index for the animation
+
 
 #include "led.cpp"
 
@@ -73,7 +77,8 @@ byte led_flags = 0;                                         // flags for trackin
 
 #define NET_NEEDS_SETUP (1 << 1)                            // determines if the network setup has been performed
 #define DNS_PORT 53                                         // the port used for DNS (AP Mode only)
-#define SSID_FILE "/ssid.txt"                               // wifi credential storage size in SPIFFS
+#define SSID_FILE "/ssid.txt"                               // wifi credential storage filename in SPIFFS
+#define BITMAP_FILE "/bitmap.bmp"                           // bitmap used for  storage filename in SPIFFS
 #define NET_RESTART 0                                       // flag that indicates the net services should perform a hard reset of the CPU
 #define NET_SOFT_STOP 1                                     // flag that indicates the net services should perform a soft stop by closing net servers
 #define NET_SOFT_RESTART 2                                  // flag that indicates the net services should perform a soft restart by closing net servers, disconnecting from WiFi, reset the net parameters and restart

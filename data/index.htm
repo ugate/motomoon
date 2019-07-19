@@ -1041,6 +1041,7 @@
           inputUpload: opts.parent.querySelector('.canvas-editor-upload'),
           inputColor: opts.inputColor,
           upload: opts.upload,
+          pen: { a: 100, w: 10, h: 10, x: 0, y: 0 },
           pixels: {},
           timestamps: {},
           threshold: opts.threshold || 50,
@@ -1086,6 +1087,24 @@
         graph.grid = graph.gridContext.getImageData(0, 0, graph.gridCanvasWidth, graph.gridCanvasHeight);
         MM.Canvas.paint(graph);
       },
+      cursor: function(graph) {
+        if (!graph.inputColor || !graph.inputSel) return false;
+        var svg, opt, fill = graph.inputColor.value;
+        if (graph.inputSel === graph.inputPen) {
+          opt = graph.pen;
+          svg = '<svg xmlns="http://www.w3.org/2000/svg" height="128" width="128"><circle cx="' + (opt.x + opt.w) + '" cy="' + (opt.y + opt.h) + '" r="' + Math.max(opt.w, opt.h) + '"';
+          svg += ' fill="' + fill + '"' + (opt.s ? ' stroke="' + opt.s + '" stroke-width="' + (opt.sw || 2) + '" stroke-linecap="round"' : '') + '/></svg>';
+        } else if (graph.inputSel === graph.inputFill) {
+          svg = '<svg viewBox="0 0 24 24">';
+          svg += '<path fill="' + fill + '" d="M15.14,3C14.63,3 14.12,3.2 13.73,3.59L2.59,14.73C1.81,15.5 1.81,16.77 2.59,17.56L5.03,20H12.69L21.41,11.27C22.2,10.5 22.2,9.23 21.41,8.44L16.56,3.59C16.17,3.2 15.65,3 15.14,3M17,18L15,20H22V18" />';
+          svg += '</svg>';
+        } else if (graph.inputSel === graph.inputZoom) {
+          graph.canvas.style.cursor = graph.inputSel.checked ? 'zoom-out' : 'zoom-in';
+        }
+        if (svg) {
+          graph.canvas.style.cursor = 'url(data:image/svg+xml;base64,' + btoa(svg) + ') ' + opt.w + ' ' + opt.h + ', auto';
+        }
+      },
       pixel: function(graph, row, col, val) {
         var id = 'pixel_col' + col + '_row' + row;
         if (val === true) val = graph.pixels[id] || {
@@ -1110,6 +1129,7 @@
           && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockSize - 1);
       },
       paint: function(graph, setPix, highlight, onlyGet) {
+        MM.Canvas.cursor(graph);
         var inRange = MM.Canvas.inRange(graph);
         if (!inRange && onlyGet) return;
         var forFill = !forDrop && graph.inputSel && graph.inputSel === graph.inputFill;

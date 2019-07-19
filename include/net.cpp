@@ -271,6 +271,34 @@ void httpPostSetup() { //SERIAL_OUT.println("POST SETUP JSON");
   } else http.send(200, "application/json", "{\"message\":\"POST SSID/Password are already set\"}");
 }
 
+void httpUpload() {
+  HTTPUpload& upload = http.upload();
+  if (upload.totalBytes > FSInfo.totalBytes - FSInfo.usedBytes) {
+    server.send(400, "text/plain", "413: not enough space, couldn't create bitmap file");
+    return false;
+  }
+  if (upload.status == UPLOAD_FILE_START) {
+    String filename = upload.filename;
+    if (!filename.startsWith("/")) filename = "/" + filename;
+    if (filename.length() > FSInfo.maxPathLength) {
+      server.send(400, "text/plain", "400: file name too long, couldn't create bitmap file");
+      return;
+    }
+    bmpFile = SPIFFS.open(filename, "w");
+    filename = String();
+  } else if (upload.status == UPLOAD_FILE_WRITE) {
+    if (bmpFile) bmpFile.write(upload.buf, upload.currentSize);
+  } else if (upload.status == UPLOAD_FILE_END) {
+    if (bmpFile) {
+      bmpFile.close();
+      updatePixelImage(bmpFile);
+    } else {
+      server.send(500, "text/plain", "500: couldn't create bitmap file");
+      return;
+    }
+  }
+}
+
 // ----------------- Server -----------------------------
 
 // stops/restarts net services
@@ -300,8 +328,7 @@ void netLoop() {
 
 // should be called in the main setup
 IPAddress netSetup() {
-  SPIFFS.begin();
-  //read_wifi_spiffs();
+  SPIFFS.begin(); //read_wifi_spiffs();
   EEPROM.begin(sizeof(wifi)); //clear_wifi_eeprom();
   read_wifi_eeprom();
   uint8_t wstat = WL_CONNECTED;
@@ -330,8 +357,10 @@ IPAddress netSetup() {
   http.onNotFound(httpNotFound);
   http.serveStatic("/favicon.ico", SPIFFS, "/favicon.png", "public, max-age=31536000");
   http.serveStatic("/favicon.png", SPIFFS, "/favicon.png", "public, max-age=31536000");
+  http.serveStatic("/bitmap.bmp", SPIFFS, "/bitmap.bmp", "public, max-age=0");
   http.serveStatic("/", SPIFFS, "/index.htm");
   http.serveStatic("/home", SPIFFS, "/index.htm");
+  http.serveStatic("/index.htm", SPIFFS, "/index.htm");
   http.on("/manifest.json", HTTP_GET, httpGetManifest);
   /*http.on("/", HTTP_GET, []() {
     http.send(200, "text/html", html);
@@ -339,6 +368,7 @@ IPAddress netSetup() {
   http.on("/setup", HTTP_GET, httpGetSetup);
   http.on("/setup", HTTP_POST, httpPostSetup);
   http.on("/palette", HTTP_GET, httpGetColorPalettes);
+  http.on('/bitmap', HTTP_POST, httpUpload);
   http.on("/palette/apply/brake", HTTP_POST, httpPostBrakeFlag);
   http.on("/palette/apply/turn/left", HTTP_POST, httpPostLeftFlag);
   http.on("/palette/apply/turn/right", HTTP_POST, httpPostRightFlag);
