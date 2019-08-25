@@ -38,7 +38,7 @@
       .row .col.offset-l9 {margin-left: 75%;} .row .col.offset-l10 {margin-left: 83.33333%;}.row .col.offset-l11 {margin-left: 91.66667%;} .row .col.offset-l12 {margin-left: 100%;}
       .content {width: calc(100% - 16px);}
     }
-    html, body {font-family:'Roboto', sans-serif;font-size:14px;font-weight:400;line-height:20px;}
+    html, body {font-family:'Roboto', sans-serif;font-size:14px;font-weight:400;line-height:1rem;}
     html {width:100%;height:100%;color:rgba(0,0,0,.87);-ms-touch-action:manipulation;touch-action:manipulation;}
     body {margin:0;width:100%;min-height:100%;background-color:#f5f5f5 !important;} ::selection {background:#b3d4fc;text-shadow:none;} .hide {display:none;}
     .red-text {color: #ff0266 !important;} .green-text {color: #00C853 !important;} .blue-text {color: #2962FF !important;} .slate-text {color: #455A64 !important;} .brown-text {color: #3E2723 !important;}
@@ -46,6 +46,8 @@
     .bg-green {background-color: #4CAF50 !important;} .bg-teal {background-color: #009688 !important;} .bg-indigo {background-color: #3F51B5 !important;} .bg-purple {background-color: #673AB7 !important;}
     .bg-pink {background-color: #E91E63 !important;} .bg-blue {background-color: #03A9F4 !important;} .bg-grey {background-color:#424242 !important;} .bg-blue-grey {background-color:#263238 !important;}
     .bg-white {background-color:#fff !important;} .bg-slate {background-color: #607D8B !important;} .bg-yellow {background-color: #FFEB3B !important;} .bg-dark-grey {background-color: #212121 !important;}
+    .bg-canvas {  background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%),
+    linear-gradient(-45deg, transparent 75%, #808080 75%);background-size: 20px 20px;background-position: 0 0, 0 10px, 10px -10px, -10px 0px;border: 1px solid;}
     .logo {width:5rem;height:5em;top:-3em;left:calc((100vw / 2) - 2.5rem);position:absolute;z-index:1;}
     label.logo {top:-2em;left: calc((100vw / 2) - 3.5rem);text-align:center;width:25em;height:3em;word-spacing:7em;transform:translateX(-35%);}
     label.logo a {text-decoration:none;transform:perspective(2.5em) rotateX(15deg) scaleY(0.8);transition:all 0.5s;
@@ -100,9 +102,10 @@
     input[type=range].brown::-webkit-slider-runnable-track {background: #BCAAA4;} input[type=range].brown::-ms-track {background: #BCAAA4;} input[type=range].brown::-moz-range-track {background: #BCAAA4;}
     input[type=range].brown::-webkit-slider-thumb {background: #3E2723;} input[type=range].brown::-ms-thumb {background: #3E2723;} input[type=range].brown::-moz-range-thumb {background: #3E2723;}
     output.range-tooltip {display: inline-block;position: relative;left: 10px;top: calc(-1em - var(--height));padding: 3px;border-radius: 3px;background: #95a;color: #eee;transform: translate(calc((var(--val) - var(--min))/(var(--max) - var(--min)) * var(--width) - 50%));}
-    .editor-options {min-height: 2em;} .editor-options > input {padding-left: 24px !important;width: calc(2em + 24px) !important;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
-    .canvas-editor, .canvas-row {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: auto;padding-bottom: .1em;} canvas.editor {cursor: crosshair;border: 1px solid;} .canvas-row {flex-basis: 100%;}
-    .color-toolbar {display: flex;flex-direction: column;} .color-toolbar .btn {margin: .1em;}
+    .editor-options {min-height: 2em;} input.iconic {padding-left: 24px !important;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+    input.digits-2 {width: calc(2em + 24px) !important;} input.digits-3 {width: calc(3em + 24px) !important;}
+    .flexy {display: flex;justify-content: center;align-items: center;} .canvas-editor {overflow: auto;padding-bottom: .1em;} canvas.editor {cursor: crosshair;}
+    .flexy-col, .flexy-squeeze {display: flex;flex-direction: column;} .flexy-100 {flex-basis: 100%;} .flexy-stretch {align-items: stretch;} .flexy-grow {flex: 1 0 auto;} .color-toolbar .btn {margin: .1em;}
     .color-toolbar input.active ~ label {box-shadow: 0px .4em 0px -.2em #FFFFFF, 0px -.4em 0px -.2em #FFFFFF, .4em 0px 0px -.2em #FFFFFF, -.4em 0px 0px -.2em #FFFFFF, 0px 0px 0px .2em #B71C1C, .1em .1em .4em .1em rgba(0,0,0,0);}
     main {position:relative;top:3em;flex-shrink:0;flex-grow:1;-webkit-overflow-scrolling:touch;} main > div {max-width:1600px;width:calc(100% - 16px);margin:0px auto;display:flex;flex-flow:row wrap;align-items:stretch;}
     @media (max-width: 479px) {main > div {padding:8px 0;margin:0;width:100% !important;}}
@@ -117,8 +120,8 @@
     .btn-icon.active {border:4px solid #00E5FF;}
     @media (min-width: 993px) {.content {width: calc(100% - 16px);}}
     @media (max-width: 992px) and (min-width: 840px) {}
-    @media (max-width: 839px) and (min-width: 480px) {.content {width:calc(100% - 16px);margin:8px;} .instruct {font-size:1.5em !important;}.canvas-editor{flex-wrap: wrap;flex-direction: column;}.color-toolbar {flex-direction: row;}}
-    @media (max-width: 479px) {.content {width:100%;margin:8px 0;} .container {padding:0 !important;} .instruct {font-size:1em !important;}.canvas-editor{flex-wrap: wrap;flex-direction: column;}.color-toolbar {flex-direction: row;}}
+    @media (max-width: 839px) and (min-width: 480px) {.content {width:calc(100% - 16px);margin:8px;} .instruct {font-size:1.5em !important;}.canvas-editor{flex-wrap: wrap;flex-direction: column;}.flexy-squeeze {flex-direction: row;}}
+    @media (max-width: 479px) {.content {width:100%;margin:8px 0;} .container {padding:0 !important;} .instruct {font-size:1em !important;}.canvas-editor{flex-wrap: wrap;flex-direction: column;}.flexy-squeeze {flex-direction: row;}}
     ul, ol {font-size:14px;line-height:24px;font-weight:400;letter-spacing:0;} .instruct {text-align:center;width:100%;background:#3F51B5;color:#fff;font-size:1.7em;padding:1em 0;}
     a {color:rgb(255,82,82);font-weight: 500;}
     a, button, checkbox, .icon-palette, radio, .slider, .switch {-webkit-tap-highlight-color:transparent;-webkit-tap-highlight-color:rgba(255,255,255,0);}
@@ -132,7 +135,7 @@
     .md-grp select {width:100%;font-size:1em;height:1.6em;padding:0.125em 0.125em 0.0625em;background:none;border:none;line-height:1.6;box-shadow:none;}
     .md-grp label:not(.switch) {position:absolute;top:0.25em;left:0;width:100%;padding-left:0.125em;z-index:1;color:#b3b3b3;font-size:1em;font-weight:normal;transition:all 180ms cubic-bezier(0.4, 0, 0.2, 1);}
     .md-grp input:not([type=range]):not([type=color]), .md-grp textarea {display:block;background:none;padding:0.125em 0.125em 0.0625em;font-size:1em;border-width:0;border-color:transparent;line-height:1.9;
-    width:100%;transition:all 0.28s ease;box-shadow:none;margin-bottom:.5em;} .md-grp input:not([type=range]):not([type=color]):invalid:not(:focus), .md-grp textarea:invalid:not(:focus) {color:transparent;}
+    width:100%;transition:all 0.28s ease;box-shadow:none;} .md-grp input:not([type=range]):not([type=color]):invalid:not(:focus), .md-grp textarea:invalid:not(:focus) {color:transparent;}
     .md-grp select, .md-grp input:not([type=range]):not([type=color]):focus, .md-grp input:not([type=range]):not([type=color]):valid, .md-grp input:not([type=range]):not([type=color]).has-value, .md-grp textarea:focus, .md-grp textarea:valid, .md-grp textarea.has-value {color:#333;}
     .md-grp select ~ label, .md-grp input:not([type=range]):not([type=color]):focus ~ label, .md-grp input:not([type=range]):not([type=color]):valid ~ label, .md-grp input:not([type=range]):not([type=color]).has-value ~ label, .md-grp textarea:focus ~ label,
     .md-grp textarea:valid ~ label, .md-grp textarea.has-value ~ label {font-size:0.8em;color:grey;top:-1.5em;left:0;}
@@ -158,6 +161,15 @@
     .button-toggle [type="checkbox"]:checked ~ label svg, .button-toggle [type="checkbox"]:checked ~ label b, .button-toggle [type="radio"]:checked ~ label svg, .button-toggle [type="radio"]:checked ~ label b {top: -1.25em !important;}
     .button-toggle [type="checkbox"] ~ label:before, .button-toggle [type="radio"] ~ label:before {display: none;} .button-toggle [type="checkbox"] ~ label b:first-child, .button-toggle [type="radio"] ~ label b:first-child {padding-top: .2em !important;}
     .button-toggle [type="checkbox"] ~ label b, .button-toggle [type="radio"] ~ label b {font-size: 1em !important;line-height: 1em !important;white-space: nowrap;cursor: auto;text-align: center;}
+    input.vertical-top-to-bottom {transform: translateY(110%) rotate(90deg);transform-origin: center;}
+    .canvas-editor-cols {
+      background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJ3aWR0aDoyNHB4O2hlaWdodDoyNHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik05LDExSDE1VjhMMTksMTJMMTUsMTZWMTNIOVYxNkw1LDEyTDksOFYxMU0yLDIwVjRINFYyMEgyTTIwLDIwVjRIMjJWMjBIMjBaIiAvPjwvc3ZnPg==)
+      no-repeat scroll !important;
+    }
+    .canvas-editor-rows {
+      background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTEyLDIwQTcsNyAwIDAsMSA1LDEzQTcsNyAwIDAsMSAxMiw2QTcsNyAwIDAsMSAxOSwxM0E3LDcgMCAwLDEgMTIsMjBNMTkuMDMsNy4zOUwyMC40NSw1Ljk3QzIwLDUuNDYgMTkuNTUsNSAxOS4wNCw0LjU2TDE3LjYyLDZDMTYuMDcsNC43NCAxNC4xMiw0IDEyLDRBOSw5IDAgMCwwIDMsMTNBOSw5IDAgMCwwIDEyLDIyQzE3LDIyIDIxLDE3Ljk3IDIxLDEzQzIxLDEwLjg4IDIwLjI2LDguOTMgMTkuMDMsNy4zOU0xMSwxNEgxM1Y4SDExTTE1LDFIOVYzSDE1VjFaIj48L3BhdGg+PC9zdmc+)
+      no-repeat scroll !important;
+    }
     .pen-size {
       background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHdpZHRoPSIyNCIgPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0xMiwyQTEwLDEwIDAgMCwwIDIsMTJBMTAsMTAgMCAwLDAgMTIsMjJBMTAsMTAgMCAwLDAgMjIsMTJBMTAsMTAgMCAwLDAgMTIsMk0xMiwyMEE4LDggMCAwLDEgNCwxMkE4LDggMCAwLDEgMTIsNEE4LDggMCAwLDEgMjAsMTJBOCw4IDAgMCwxIDEyLDIwTTE2LDE1VjEzSDhWMTVMNSwxMkw4LDlWMTFIMTZWOUwxOSwxMkwxNiwxNVoiIC8+PC9zdmc+)
       no-repeat scroll !important;
@@ -176,7 +188,7 @@
         <div class="menu" id="menu">
           <b class="btn-icon" title="WiFi Credentials" data-view="setup" onclick="mm.formRequest(event)"
             data-req-action="/setup">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 600 445">
+            <svg width="36" height="24" viewBox="0 0 600 445">
               <g transform="translate(0,445) scale(0.1,-0.1)">
               <path d="M1008 4431 c-77 -31 -113 -58 -199 -149 -419 -448 -681 -983 -780 -1597 -27 -167 -37 -565 -20 -752 62 -657 352 -1297 803 -1769 117 -122 180 -156 299 -162 107 -5 174 13 251 67 135 98 190 286 129 444 -22 57 -44 85 -197 257 -150 169 -312 442 -398 673 -149 397 -179 880 -80 1296 89 378 275 723 552 1023 93 101 125 154 143 240 35 161 -58 346 -209 416 -77 35 -223 42 -294 13z"/>
               <path d="M4729 4432 c-175 -71 -274 -246 -240 -423 18 -91 48 -142 141 -244 170 -185 274 -333 375 -535 163 -325 235 -637 235 -1008 -1 -352 -68 -652 -214 -957 -106 -220 -223 -392 -394 -577 -49 -53 -99 -117 -111 -143 -91 -194 -14 -418 175 -511 54 -26 68 -29 164 -29 99 0 109 2 172 33 51 25 87 54 154 125 453 481 724 1067 800 1727 23 206 16 599 -15 795 -90 563 -324 1072 -692 1500 -110 128 -194 206 -255 235 -68 33 -227 39 -295 12z"/>
@@ -188,12 +200,12 @@
           </b>
           <b class="btn-icon" title="Bitmap Palette" data-view="palette" onclick="mm.formRequest(event)"
             data-req-action="/palette">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
+            <svg width="36" height="24" viewBox="0 0 24 24">
               <g transform="translate(-4, -4) scale(1.5,1.3)">
               <path fill="#ffffff" d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A1.5,1.5 0 0,0 13.5,19.5C13.5,19.11 13.35,18.76 13.11,18.5C12.88,18.23 12.73,17.88 12.73,17.5A1.5,1.5 0 0,1 14.23,16H16A5,5 0 0,0 21,11C21,6.58 16.97,3 12,3Z" />
               </g>
             </svg>
-            <!--toggle switch <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 600 391">
+            <!--toggle switch <svg width="36" height="24" viewBox="0 0 600 391">
               <g transform="translate(0,391) scale(0.1,-0.1)">
               <path d="M1484 3589 c-732 -65 -1340 -627 -1464 -1353 -28 -162 -28 -400 0 -562 106 -618 579 -1141 1176 -1300 226 -60 133 -57 1699 -61 1499 -5 1630 -2 1813 37 564 119 1028 536 1213 1090 108 323 108 707 0 1030 -211 630 -758 1061 -1422 1120 -137 12 -2878 11 -3015 -1z m3058 -564 c640 -111 1042 -751 862 -1371 -107 -370 -404 -654 -789 -755 -78 -21 -112 -24 -255 -23 -145 1 -177 4 -262 27 -383 102 -682 401 -785 782 -24 90 -27 117 -27 270 0 153 3 180 27 270 35 130 119 299 201 401 245 310 646 466 1028 399z"/>
               </g>
@@ -201,7 +213,7 @@
           </b>
           <b class="btn-icon" title="Preset Animation" data-view="anim" onclick="mm.formRequest(event)"
             data-req-action="/anim">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
+            <svg width="36" height="24" viewBox="0 0 24 24">
               <g transform="translate(-4, -4) scale(1.5,1.3)">
               <path fill="#ffffff" d="M6,6.9L3.87,4.78L5.28,3.37L7.4,5.5L6,6.9M13,1V4H11V1H13M20.13,4.78L18,6.9L16.6,5.5L18.72,3.37L20.13,4.78M4.5,10.5V12.5H1.5V10.5H4.5M19.5,10.5H22.5V12.5H19.5V10.5M6,20H18A2,2 0 0,1 20,22H4A2,2 0 0,1 6,20M12,5A6,6 0 0,1 18,11V19H6V11A6,6 0 0,1 12,5Z" />
               </g>
@@ -209,7 +221,7 @@
           </b>
           <b class="btn-icon" title="Brake Light Animation" data-view="brake" onclick="mm.formRequest(event)"
             data-req-action="/brake">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 24 24">
+            <svg width="36" height="24" viewBox="0 0 24 24">
               <g transform="translate(-4, -4) scale(1.5,1.3)">
               <path fill="#ffffff" d="M7,2V13H10V22L17,10H13L17,2H7Z" />
               </g>
@@ -217,7 +229,7 @@
           </b>
           <b class="btn-icon" title="Turn Signal Animation" data-view="turn" onclick="mm.formRequest(event)"
             data-req-action="/turn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 40 26">
+            <svg width="36" height="24" viewBox="0 0 40 26">
               <polygon transform="translate(-15,-22)" id="polygon5" points="24.64,26.46 15,35.33 24.64,43.81 24.64,39.76 32.35,39.76 32.35,30.7 32.35,30.7 24.64,30.7 "/>
               <polygon transform="translate(-15,-22)" id="polygon7" points="45.36,30.24 37.65,30.24 37.65,39.3 45.36,39.3 45.36,43.54 55,34.67 55,34.67 45.36,26.19 "/>
             </svg>
@@ -292,15 +304,15 @@
       <div class="md-grp no-top-btm-margin">
         <div class="row color-select">
           <div class="col s12 m12 l12">
-            <div class="canvas-editor">
-              <div class="color-toolbar brown-text">
+            <div class="canvas-editor flexy">
+              <div class="color-toolbar flexy flexy-squeeze brown-text">
                 <div class="btn button-toggle">
                   <input class="canvas-editor-pen active" data-ctrl-size-sel=".pen-size" type="checkbox" checked="checked" id="pixPen" />
                   <label for="pixPen" class="hex-value-bg">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" title="Pixel Eraser">
+                    <svg height="24" width="24" viewBox="0 0 24 24" title="Pixel Eraser">
                       <path d="M16.24,3.56L21.19,8.5C21.97,9.29 21.97,10.55 21.19,11.34L12,20.53C10.44,22.09 7.91,22.09 6.34,20.53L2.81,17C2.03,16.21 2.03,14.95 2.81,14.16L13.41,3.56C14.2,2.78 15.46,2.78 16.24,3.56M4.22,15.58L7.76,19.11C8.54,19.9 9.8,19.9 10.59,19.11L14.12,15.58L9.17,10.63L4.22,15.58Z" />
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" title="Pixel Pen">
+                    <svg height="24" width="24" viewBox="0 0 24 24" title="Pixel Pen">
                       <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
                     </svg>
                   </label>
@@ -308,10 +320,10 @@
                 <div class="btn button-toggle">
                   <input class="canvas-editor-fill" type="checkbox" checked="checked" id="pixFill" />
                   <label for="pixFill" class="hex-value-bg">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" data-cursor-x="width" data-cursor-y="0" title="Fill Eraser">
+                    <svg height="24" width="24" viewBox="0 0 24 24" data-cursor-x="width" data-cursor-y="0" title="Fill Eraser">
                       <path d="M15.14,3C14.63,3 14.12,3.2 13.73,3.59L2.59,14.73C1.81,15.5 1.81,16.77 2.59,17.56L5.03,20H12.69L21.41,11.27C22.2,10.5 22.2,9.23 21.41,8.44L16.56,3.59C16.17,3.2 15.65,3 15.14,3M17,18L15,20H22V18" />
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" data-cursor-x="width" data-cursor-y="height" title="Fill Bucket">
+                    <svg height="24" width="24" viewBox="0 0 24 24" data-cursor-x="width" data-cursor-y="height" title="Fill Bucket">
                       <path d="M19,11.5C19,11.5 17,13.67 17,15A2,2 0 0,0 19,17A2,2 0 0,0 21,15C21,13.67 19,11.5 19,11.5M5.21,10L10,5.21L14.79,10M16.56,8.94L7.62,0L6.21,1.41L8.59,3.79L3.44,8.94C2.85,9.5 2.85,10.47 3.44,11.06L8.94,16.56C9.23,16.85 9.62,17 10,17C10.38,17 10.77,16.85 11.06,16.56L16.56,11.06C17.15,10.47 17.15,9.5 16.56,8.94Z" />
                     </svg>
                   </label>
@@ -319,10 +331,10 @@
                 <div class="btn button-toggle">
                   <input class="canvas-editor-spray-or-eyedrop" type="checkbox" checked="checked" id="pixSprayOrEydrop" />
                   <label for="pixSprayOrEydrop" class="hex-value-bg">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" title="Eyedrop Select Color">
+                    <svg height="24" width="24" viewBox="0 0 24 24" title="Eyedrop Select Color">
                       <path d="M6.92,19L5,17.08L13.06,9L15,10.94M20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L13.84,6.41L11.91,4.5L10.5,5.91L11.92,7.33L3,16.25V21H7.75L16.67,12.08L18.09,13.5L19.5,12.09L17.58,10.17L20.7,7.05C21.1,6.65 21.1,6 20.71,5.63Z" />
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" data-cursor-x="0" data-cursor-y="0" title="Spray Color">
+                    <svg height="24" width="24" viewBox="0 0 24 24" data-cursor-x="0" data-cursor-y="0" title="Spray Color">
                       <path d="M10,4H12V6H10V4M7,3H9V5H7V3M7,6H9V8H7V6M6,8V10H4V8H6M6,5V7H4V5H6M6,2V4H4V2H6M13,22A2,2 0 0,1 11,20V10A2,2 0 0,1 13,8V7H14V4H17V7H18V8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H13M13,10V20H18V10H13Z" />
                     </svg>
                   </label>
@@ -330,7 +342,7 @@
                 <div class="btn button-toggle canvas-editor-download">
                   <input type="checkbox" disabled="disabled" id="pixDownload" />
                   <label for="pixDownload" class="white-text bg-slate">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" title="Download Bitmap">
+                    <svg height="24" width="24" viewBox="0 0 24 24" title="Download Bitmap">
                       <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
                     </svg>
                   </label>
@@ -338,27 +350,30 @@
                 <div class="btn button-toggle canvas-editor-upload">
                   <input type="checkbox" disabled="disabled" data-req-method="POST" data-req-action="/bitmap" id="pixUpload" />
                   <label for="pixUpload" class="white-text bg-green">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24">
+                    <svg height="24" width="24" viewBox="0 0 24 24">
                       <path d="M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2,4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z" />
                     </svg>
                   </label>
                 </div>
               </div>
-              <div class="no-select">
-                <div class="canvas-row editor-options">
-                  <!--<input class="canvas-editor-cols white-text" type="number" min="16" max="144" step="1" value="16"/>
-                  <input class="white-text" type="text" disabled="disabled" value="X"/>
-                  <input class="canvas-editor-rows white-text" type="number" min="16" max="144" step="1" value="16"/>-->
-                  <!-- <input class="canvas-editor-blocks white-text" type="number" min="10" max="40" step="1" value="20"/> -->
-                  <input class="pen-size white-text" type="number" min="1" max="36" step="1" value="10" title="Pen Size"/>
+              <div class="flexy flexy-col flexy-stretch no-select">
+                <div class="flexy editor-options">
+                  <input class="pen-size iconic digits-2 white-text" type="number" min="1" max="36" step="1" value="10" title="Pen Size"/>
                 </div>
-                <canvas class="editor" width="288" height="288">Bitmap editor canvas not supported</canvas>
-                <span class="no-select" title="Animation Timeline">
-                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="#FFFFFF" d="M12,20A7,7 0 0,1 5,13A7,7 0 0,1 12,6A7,7 0 0,1 19,13A7,7 0 0,1 12,20M19.03,7.39L20.45,5.97C20,5.46 19.55,5 19.04,4.56L17.62,6C16.07,4.74 14.12,4 12,4A9,9 0 0,0 3,13A9,9 0 0,0 12,22C17,22 21,17.97 21,13C21,10.88 20.26,8.93 19.03,7.39M11,14H13V8H11M15,1H9V3H15V1Z" />
-                  </svg>
-                </span>
-                <canvas class="led-strip block" width="288" height="24">LED canvas not supported</canvas>
+                <div class="flexy bg-canvas">
+                  <canvas class="editor" width="288" height="288">Bitmap editor canvas not supported</canvas>
+                </div>
+                <div class="flexy">
+                  <canvas class="led-strip flexy-grow" width="100%" height="24">LED canvas not supported</canvas>
+                  <input class="canvas-editor-cols iconic digits-3 white-text" type="number" min="144" max="432" step="1" value="288"/>
+                </div>
+              </div>
+              <div class="flexy flexy-col no-select" style="width: calc(3em + 24px)" title="Animation Timeline">
+                <svg class="flexy-100" viewBox="0 0 50 150" preserveAspectRatio="none" style="max-width: 2em;">
+                  <rect x="15" y="20" width="20" height="100%"></rect>
+                  <polyline points="0 24 25 0 50 24"></polyline>
+                </svg>
+                <input class="canvas-editor-rows iconic digits-3 white-text" type="number" min="144" max="432" step="1" value="288"/>
               </div>
             </div>
           </div>
@@ -835,6 +850,25 @@
       }
     };
     MM.Color = {
+      compare: function(i, srcColor, destColor, data, length, tolerance) {
+        if (i < 0 || i >= length) return false;
+        if (data[i + 3] === 0 && destColor.a > 0) return true;
+        if (Math.abs(srcColor[3] - destColor.a) <= tolerance && Math.abs(srcColor[0] - destColor.r) <= tolerance &&
+          Math.abs(srcColor[1] - destColor.g) <= tolerance && Math.abs(srcColor[2] - destColor.b) <= tolerance) return false;
+        if (srcColor[3] === data[i + 3] && srcColor[0] === data[i] && srcColor[1] === data[i + 1] && srcColor[2] === data[i + 2]) return true;
+        if (Math.abs(srcColor[3] - data[i + 3]) <= (255 - tolerance) && Math.abs(srcColor[0] - data[i]) <= tolerance &&
+          Math.abs(srcColor[1] - data[i + 1]) <= tolerance && Math.abs(srcColor[2] - data[i + 2]) <= tolerance) return true;
+        return false;
+      },
+      match: function(i, srcColor, destColor, data, length, tolerance) {
+        if (MM.Color.compare(i, srcColor, destColor, data, length, tolerance)) {
+          data[i] = destColor.r;
+          data[i + 1] = destColor.g;
+          data[i + 2] = destColor.b;
+          data[i + 3] = destColor.a;
+          return destColor;
+        }
+      },
       blend: function(percentage, fromColor, toColor) {
         var p = percentage, from = fromColor, to = toColor;
         if (typeof(p) != 'number' || p <- 1 || p > 1 || typeof(from) != 'string' || (from[0] != 'r' && from[0] != '#') || (to && typeof(to) != 'string')) return null;
@@ -877,9 +911,9 @@
           RGB.a = -1;
           RGB.isHex = true;
           if (l == 9 || l == 5) RGB.a = Math.round((RGB.b / 255) * 10000) / 10000;
-          RGB.b = RGB.g;
+          /*RGB.b = RGB.g;
           RGB.g = RGB.r;
-          RGB.r = d >> 24 & 255;
+          RGB.r = d >> 24 & 255;*/
         }
         return RGB;
       },
@@ -1096,17 +1130,15 @@
               return inpt;
             }
           },
-          pixels: {},
           timestamps: {},
           threshold: opts.threshold || 0,
           eraseColor: opts.eraseColor || '#000000',
-          highlightColor: opts.highlightColor || 'rgba(221,221,221,0.5)',
-          blockSize: opts.blockSize,
+          oulineColor: opts.outlineColor || '#BBBBBB',
           zoomIntensity: parseFloat(opts.zoomIntensity) || .2,
           zoomMin: .125, zoomMax: 4,
           x: 0, y: 0, ox: opts.offsetX || 0, oy: opts.offsetY || 0, scale: opts.scale || 1, points: []
         };
-        var inpts = ['cols', 'rows', 'blocks', 'pen', 'fill', 'spray-or-eyedrop', 'download', 'upload'];
+        var inpts = ['cols', 'rows', 'pen', 'fill', 'spray-or-eyedrop', 'download', 'upload'];
         var rpl = function(m) {
           return m.slice(1).toUpperCase();
         };
@@ -1133,17 +1165,65 @@
         MM.Canvas.inputCtrl(graph);
         if (!graph.canvas) return false;
         graph.ctx = graph.canvas.getContext('2d');
-        graph.ctx.imageSmoothingEnabled = true;
-        graph.ctx.mozImageSmoothingEnabled = true;
-        graph.ctx.imageSmoothingEnabled = 'low';
-        graph.ctx.mozImageSmoothingEnabled = 'low';
-        graph.mem = {};
-        graph.mem.canvas = document.createElement('canvas');
-        graph.mem.ctx = graph.mem.canvas.getContext('2d');
-        //MM.Canvas.resize(graph);
         graph.ctx.fillStyle = graph.eraseColor;
         graph.ctx.fillRect(0, 0, graph.canvas.width, graph.canvas.height);
+        MM.Canvas.buffered(graph);
+        //MM.Canvas.resize(graph, );
         return graph;
+      },
+      buffered: function(graph) {
+        var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
+        var buffer = {
+          undos: [],
+          redos: [],
+          state: ['lineWidth', 'strokeStyle', 'globalAlpha', 'lineJoin', 'lineCap', 'globalCompositeOperation'],
+          image: ctx.getImageData(0, 0, cvs.width, cvs.height)
+        };
+        var restore = function(from, to) {
+          var restore = from.pop();
+          if (restore) {
+            to.push(buffer.image);
+            buffer.image = restore;
+            if (cvs.width != buffer.image.width || cvs.height != buffer.image.height) {
+              MM.Canvas.resize(graph, buffer.image.width, buffer.image.height)
+            }
+            ctx.putImageData(restore.data, 0, 0);
+          }
+        };
+        graph.buffer = {
+          clear: function() {
+            buffer.undos.length = 0;
+            buffer.redos.length = 0;
+          },
+          undo: function() {
+            return restore(buffer.undos, buffer.redos);
+          },
+          redo: function() {
+            return restore(buffer.redos, buffer.undos);
+          },
+          save: function(oldImg, newImg) {
+            buffer.undos.push(oldImg);
+            buffer.redos.length = 0;
+            buffer.image = newImg;
+          },
+          state: function(state) {
+            var frm = state ? {} : graph.ctx, to = state ? graph.ctx : {};
+            for (var i = 0; i < buffer.state.length; i++) {
+              to[buffer.state[i]] = frm[buffer.state[i]];
+            }
+            return state ? true : to;
+          }
+        };
+      },
+      resize: function(graph, width, height) {
+        var state = graph.buffer.state();
+        width = parseInt(width);
+        height = parseInt(height);
+        graph.canvas.width = width;
+        graph.canvas.height = height;
+        graph.buffer.state(state);
+        if (graph.input.cols.el) graph.input.cols.el.value = width;
+        if (graph.input.rows.el) graph.input.rows.el.value = height;
       },
       inputCtrl: function(graph) {
         for (var nm in graph.input) {
@@ -1156,21 +1236,21 @@
       },
       cursor: function(graph) {
         var inpt = graph.input.selected, svg, opt, style;
+        var erase = graph.input.pen.el && !graph.input.pen.el.checked;
+        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
         if (inpt === graph.input.pen) {
-          var erase = graph.input.pen.el && !graph.input.pen.el.checked;
-          var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor; 
           var lw = ((graph.input.pen.ctrl.ctrlSizeSel && parseInt(graph.input.pen.ctrl.ctrlSizeSel.value)) || 10) + (graph.shadowBlur || 0);
-          opt = { x: 0, y: 0, w: lw, h: lw, s: 0, sw: 0, r: 0 };
+          opt = { x: 0, y: 0, w: lw, h: lw, s: '', sw: 0, r: 0 };
           if (inpt.el) {
             opt.x = parseFloat(inpt.el.dataset.penX) || opt.x;
             opt.y = parseFloat(inpt.el.dataset.penY) || opt.y;
             opt.w = parseFloat(inpt.el.dataset.penWidth) || opt.w;
             opt.h = parseFloat(inpt.el.dataset.penHeight) || opt.h;
-            opt.s = parseFloat(inpt.el.dataset.penStroke) || (graph.shadowBlur && '#777777') || opt.s;
-            opt.sw = parseFloat(inpt.el.dataset.penStrokeWidth) || (opt.s && ((graph.shadowBlur && 1) || opt.sw)) || 0;
+            opt.s = graph.oulineColor || opt.s;
+            opt.sw = (opt.s && 1) || 0;
             opt.r = Math.max(opt.w, opt.h) / 2.0;
           };
-          svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + (opt.w + (opt.sw * 2)) + '" height="' + (opt.h + (opt.sw * 2)) + '">';
+          svg = '<svg width="' + (opt.w + (opt.sw * 2)) + '" height="' + (opt.h + (opt.sw * 2)) + '">';
           svg += '<circle cx="' + (opt.x + opt.r) + '" cy="' + (opt.y + opt.r) + '" r="' + opt.r + '"';
           svg += ' fill="' + color + '"' + (opt.s ? ' stroke="' + opt.s + '" stroke-width="' + opt.sw + '" stroke-linecap="round"' : '') + '/></svg>';
           opt.px = opt.r + (opt.sw * 2.0);
@@ -1179,6 +1259,10 @@
           graph.canvas.style.cursor = inpt.el.checked ? 'zoom-out' : 'zoom-in';
         } else if (inpt && inpt.el) {
           svg = inpt.svg[inpt.el.checked ? 'checked' : 'unchecked'];
+          for (var i = 0; i < svg.children.length; i++) {
+            svg.children[i].style.fill = color;
+            svg.children[i].style.stroke = graph.oulineColor;
+          }
           if (svg && svg.dataset.hasOwnProperty('cursorX') && svg.dataset.hasOwnProperty('cursorY')) {
             opt = {};
             if (svg.dataset.cursorX === 'width' || svg.dataset.cursorX === 'height') {
@@ -1196,46 +1280,83 @@
           svg = (svg && svg.outerHTML) || '';
         }
         if (svg) {
+          if (svg.indexOf('xmlns=') < 0) svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
           graph.canvas.style.cursor = 'url(data:image/svg+xml;base64,' + btoa(svg) + ') ' + ((opt && opt.px) || 0) + ' ' + ((opt && opt.py) || 0) + ', auto';
         } else if (graph.canvas.style.cursor) graph.canvas.style.cursor = '';
       },
       pen: function(graph, drawing, highlight) {
         var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
         ctx.moveTo(graph.x, graph.y);
-        if (drawing) {
-          //ctx.canvas.width = ctx.parentNode.clientWidth;
-          //ctx.canvas.height = ctx.parentNode.clientHeight;
-          var erase = graph.input.selected === graph.input.pen && graph.input.pen.el && !graph.input.pen.el.checked;
-          var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
-          ctx.shadowColor = ctx.strokeStyle = ctx.fillStyle = color;
-          ctx.lineJoin = ctx.lineCap = 'round';
-          ctx.lineWidth = (graph.input.pen.ctrl.ctrlSizeSel && parseInt(graph.input.pen.ctrl.ctrlSizeSel.value)) || 10;
-          ctx.shadowBlur = graph.shadowBlur = ctx.lineWidth >= 3 ? 2 : 0;
-          if (graph.points.length && graph.points.length < 3) {
-            ctx.beginPath();
-            ctx.arc(graph.points[0].x, graph.points[0].y, ctx.lineWidth / 2.0, 0, Math.PI * 2.0, false);
-            ctx.fill();
-            ctx.closePath();
-            return;
-          }
-          for (var i = 0, c, d; i < graph.points.length - 1; i++) {
-            if (i === 0) {
-              ctx.beginPath();
-              ctx.moveTo(graph.points[i].x, graph.points[i].y);
-            } else if (i < graph.points.length - 2) {
-              c = (graph.points[i].x + graph.points[i + 1].x) / 2,
-              d = (graph.points[i].y + graph.points[i + 1].y) / 2;
-              ctx.quadraticCurveTo(graph.points[i].x, graph.points[i].y, c, d);
-            } else {
-              ctx.quadraticCurveTo(graph.points[i].x, graph.points[i].y, graph.points[i + 1].x, graph.points[i + 1].y);
-              ctx.stroke();
-            }
-          }
-        } else {
+        if (!drawing) {
           ctx.closePath();
           //toCtx.drawImage(cvs, 0, 0);
           //ctx.clearRect(0, 0, cvs.width, cvs.height);
+          return;
         }
+        //ctx.canvas.width = ctx.parentNode.clientWidth;
+        //ctx.canvas.height = ctx.parentNode.clientHeight;
+        var erase = graph.input.selected === graph.input.pen && graph.input.pen.el && !graph.input.pen.el.checked;
+        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
+        var sdwClr = ctx.shadowColor, sdwBlr = ctx.shadowBlur;
+        ctx.shadowColor = ctx.strokeStyle = ctx.fillStyle = color;
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.lineWidth = (graph.input.pen.ctrl.ctrlSizeSel && parseInt(graph.input.pen.ctrl.ctrlSizeSel.value)) || 10;
+        ctx.shadowBlur = graph.shadowBlur = ctx.lineWidth >= 3 ? 2 : 0;
+        if (graph.points.length && graph.points.length < 3) {
+          ctx.beginPath();
+          ctx.arc(graph.points[0].x, graph.points[0].y, ctx.lineWidth / 2.0, 0, Math.PI * 2.0, false);
+          ctx.fill();
+          ctx.closePath();
+          return;
+        }
+        for (var i = 0, c, d; i < graph.points.length - 1; i++) {
+          if (i === 0) {
+            ctx.beginPath();
+            ctx.moveTo(graph.points[i].x, graph.points[i].y);
+          } else if (i < graph.points.length - 2) {
+            c = (graph.points[i].x + graph.points[i + 1].x) / 2,
+            d = (graph.points[i].y + graph.points[i + 1].y) / 2;
+            ctx.quadraticCurveTo(graph.points[i].x, graph.points[i].y, c, d);
+          } else {
+            ctx.quadraticCurveTo(graph.points[i].x, graph.points[i].y, graph.points[i + 1].x, graph.points[i + 1].y);
+            ctx.stroke();
+          }
+        }
+        ctx.shadowColor = sdwClr;
+        ctx.shadowBlur = sdwBlr;
+      },
+      bucket: function(graph, drawing, copy, tolerance) {
+        if (!drawing) return;
+        tolerance = tolerance || 0;
+        var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
+        var erase = graph.input.selected === graph.input.fill && graph.input.fill.el && !graph.input.fill.el.checked;
+        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
+        var rgba = MM.Color.propertyToRGB(color);
+        rgba.a = (rgba.a < 0 ? 1 : rgba.a || 0) * 255;
+        var image = ctx.getImageData(0, 0, cvs.width, cvs.height), data = copy ? image.data.slice(0) : image.data;
+        var length = data.length, que = [], i = (graph.x + graph.y * image.width) * 4;
+        var leftIdx = i, rightIdx = i, leftBoundry, rightBoundry, wx4 = image.height * 4;
+        var srcColor = [data[i], data[i + 1], data[i + 2], data[i + 3]], cnt = 0, cntMax = 1000000;
+        if (!MM.Color.compare(i, srcColor, rgba, data, length, tolerance)) return false;
+        que.push(i);
+        while (++cnt && cnt <= cntMax && que.length) {
+          i = que.pop();
+          if (MM.Color.match(i, srcColor, rgba, data, length, tolerance)) {
+            leftIdx = i;
+            rightIdx = i;
+            leftBoundry = parseInt(i / wx4) * wx4;
+            rightBoundry = leftBoundry + wx4;
+            while (++cnt && cnt <= cntMax && leftBoundry < leftIdx && leftBoundry < (leftIdx -= 4) && MM.Color.match(leftIdx, srcColor, rgba, data, length, tolerance));
+            while (++cnt && cnt <= cntMax && rightBoundry > rightIdx && rightBoundry > (rightIdx += 4) && MM.Color.match(rightIdx, srcColor, rgba, data, length, tolerance));
+            for (var j = leftIdx; j < rightIdx; j += 4) {
+              if (j - wx4 >= 0 && MM.Color.compare(j - wx4, srcColor, rgba, data, length, tolerance)) que.push(j - wx4);
+              if (j + wx4 < length && MM.Color.compare(j + wx4, srcColor, rgba, data, length, tolerance)) que.push(j + wx4);
+            }
+          }
+        }
+        var imageNew = copy ? new ImageData(data, image.width, image.height) : image;
+        graph.buffer.save(image, imageNew);
+        toCtx.putImageData(imageNew, 0, 0);
       },
       zoom: function(graph, zoom, width, height) {
         zoom = Math.min(Math.max(graph.zoomMin, zoom), graph.zoomMax);
@@ -1253,155 +1374,15 @@
           visibleHeight: height /scale
         };
       },
-      resize: function(graph, rows, cols, blockSize) {
-        var oldw, oldh, oldb, csv = graph.canvas, ctx = graph.ctx;
-        if (!graph.blockSize || !blockSize || blockSize !== graph.blockSize) {
-          oldb = graph.blockSize || 20;
-          if (graph.input.blocks.el) graph.input.blocks.el.value = blockSize || oldb;
-          graph.blockSize = (graph.input.blocks.el && parseInt(graph.input.blocks.el.value)) || blockSize || oldb;
-        }
-        if (!graph.gridColCount || !cols || cols !== graph.gridColCount || graph.blockSize !== oldb) {
-          oldw = graph.gridColCount || 16;
-          if (graph.input.cols.el) graph.input.cols.el.value = cols || oldw;
-          graph.gridColCount = (graph.input.cols.el && parseInt(graph.input.cols.el.value)) || cols || oldw;
-          graph.memCanvasWidth = (graph.gridColCount * graph.blockSize) + 1;
-          graph.mem.canvas.width = graph.memCanvasWidth;
-          csv.width = graph.mem.canvas.width + (graph.ox * 2);
-        }
-        if (!graph.gridRowCount || !rows || rows !== graph.gridRowCount || graph.blockSize !== oldb) {
-          oldh = graph.gridRowCount || 16;
-          if (graph.input.rows.el) graph.input.rows.el.value = rows || oldh;
-          graph.gridRowCount = (graph.input.rows.el && parseInt(graph.input.rows.el.value)) || rows || oldh;
-          graph.memCanvasHeight = (graph.gridRowCount * graph.blockSize) + 1;
-          graph.mem.canvas.height = graph.memCanvasHeight;
-          csv.height = graph.mem.canvas.height + (graph.oy * 2);
-        }
-        graph.mem.ctx.fillStyle = graph.eraseColor;
-        graph.mem.ctx.fillRect(0, 0, graph.memCanvasWidth, graph.memCanvasHeight);
-        graph.grid = graph.mem.ctx.getImageData(0, 0, graph.memCanvasWidth, graph.memCanvasHeight);
-        MM.Canvas.paint(graph);
-      },
-      pixel: function(graph, row, col, val) {
-        var id = 'pixel_col' + col + '_row' + row;
-        if (val === true) val = graph.pixels[id] || {
-          id: id,
-          on: false,
-          color: graph.eraseColor,
-          col: col,
-          row: row,
-          x: (col - 1) * graph.blockSize,
-          y: (row - 1) * graph.blockSize,
-          history: []
-        };
-        if (val) graph.pixels[id] = val;
-        else if (val === false) return graph.pixels[id] && delete graph.pixels[id];
-        return graph.pixels[id];
-      },
-      inRange: function(graph) {
-        return graph.x > 0 && graph.y > 0 && graph.x <= graph.ox + graph.memCanvasWidth && graph.y <= graph.oy + graph.memCanvasHeight;
-      },
-      inPoint: function(graph, pix) {
-        return graph.x >= (graph.ox + pix.x) && graph.x <= (graph.ox + pix.x + graph.blockSize - 1)
-          && graph.y >= (graph.oy + pix.y) && graph.y <= (graph.oy + pix.y + graph.blockSize - 1);
-      },
       paint: function(graph, setPix, highlight, onlyGet) {
         MM.Canvas.cursor(graph);
-        var sel = graph.input.selected, chlds = sel && sel.el && sel.el.parentNode.childNodes;
+        var sel = graph.input.selected;
         var forPen = sel && sel === graph.input.pen;
         var forFill = !forPen && sel && sel === graph.input.fill;
         var forDrop = !forFill && sel && sel === graph.input.sprayOrEyedrop;
-        return MM.Canvas.pen(graph, setPix, highlight);
-        
-        var inRange = MM.Canvas.inRange(graph);
-        if (!inRange && onlyGet) return;
-        var forFill = !forDrop && graph.input.selected && graph.input.selected === graph.input.fill;
-        var forDrop = !forFill && graph.input.selected && graph.input.selected === graph.input.sprayOrEyedrop;
-        var usePix = forFill && !onlyGet && inRange;
-        var tpix = usePix && MM.Canvas.paint(graph, false, false, true);
-        tpix = tpix ? { on: tpix.on, color: tpix.color, pix: tpix } : tpix;
-        for (var col = 1, pix, fx, fy, fw, fh, hlt, chg, ids = forDrop && graph.input.selected.el.checked && []; col <= graph.gridColCount; col++) {
-          for (var row = 1; row <= graph.gridRowCount; row++) {
-            pix = MM.Canvas.pixel(graph, row, col, true);
-            if (onlyGet) {
-              if (MM.Canvas.inPoint(graph, pix)) return pix;
-              continue;
-            }
-            hlt = false;
-            fx = graph.ox + pix.x + 1;
-            fy = graph.oy + pix.y + 1;
-            fw = graph.blockSize - 1;
-            fh = graph.blockSize - 1;
-            if (forFill && usePix) { // fill
-              hlt = highlight && tpix && tpix.color === pix.color;
-              if (setPix && tpix && tpix.color === pix.color) {
-                pix.on = graph.input.selected.el.checked;
-                pix.color = (pix.on && graph.input.color.el.value) || graph.eraseColor;
-              }
-            } else if (forDrop) {
-              if (graph.input.selected.el.checked) { // sprayer
-                if ((highlight || setPix) && MM.Canvas.inPoint(graph, pix)) {
-                  hlt = highlight;
-                  MM.Canvas.perimeter(graph, pix, setPix, graph.input.color.el.value || graph.eraseColor, ids);
-                  if (setPix) {
-                    pix.on = true;
-                    pix.color = graph.input.color.el.value || graph.eraseColor;
-                  }
-                }
-              } else if (setPix && MM.Canvas.inPoint(graph, pix)) { // dropper
-                hlt = highlight;
-                chg = graph.input.color.el.value !== pix.color;
-                graph.input.color.el.value = pix.color;
-                graph.input.color.el.dispatchEvent(new Event('input'));
-                if (chg) graph.input.color.el.dispatchEvent(new Event('change'));
-              }
-            } else if ((!forFill && !forDrop) && inRange && MM.Canvas.inPoint(graph, pix)) { // pen/eraser
-              hlt = highlight;
-              if (setPix) {
-                pix.on = graph.input.pen.el ? graph.input.pen.el.checked : pix.color;
-                pix.color = (pix.on && graph.input.color.el.value) || graph.eraseColor;
-              }
-            }
-            if (!ids || ids.indexOf(pix.id) < 0) {
-              graph.ctx.fillStyle = graph.eraseColor;
-              graph.ctx.fillRect(fx, fy, fw, fh);
-              if (pix.on) {
-                graph.ctx.fillStyle = pix.color;
-                graph.ctx.fillRect(fx, fy, fw, fh);
-              }
-            }
-            if (hlt) {
-              graph.ctx.fillStyle = graph.input.selected && !graph.input.selected.el.checked ? graph.eraseColor : graph.input.color.el.value;
-              graph.ctx.fillRect(fx, fy, fw, fh);
-            }
-          }
-        }
-      },
-      perimeter: function(graph, pix, setPix, altColor, ids, reach) {
-        reach = reach || 1;
-        var fw = graph.blockWidth - 1, fh = graph.blockSize - 1;
-        for (var r = pix.row - reach, pixc, prcnt, hsl, hex; r <= pix.row + reach; r++) {
-          if (r < 1) continue;
-          else if (r > graph.gridRowCount) break;
-          for (var c = pix.col - reach; c <= pix.col + reach; c++) {
-            if (c < 1) continue;
-            else if (c > graph.gridColCount) break;
-            if (r === pix.row && c === pix.col) continue;
-            if (pixc = MM.Canvas.pixel(graph, r, c)) {
-              prcnt = pix.row === pixc.row || pix.col === pixc.col ? 50 : 80;
-              hsl = MM.Color.brightness(MM.Color.rgbToHSL(MM.Color.hexToRGB(altColor || pix.color)), prcnt);
-              hex = '#' + MM.Color.hslToHex(hsl[0], hsl[1], hsl[2]);
-              fx = graph.ox + pixc.x + 1;
-              fy = graph.oy + pixc.y + 1;
-              graph.ctx.fillStyle = hex;
-              graph.ctx.fillRect(fx, fy, fw, fh);
-              if (setPix) {
-                pixc.on = true;
-                pixc.color = hex;
-              }
-              if (ids) ids.push(pixc.id);
-            }
-          }
-        }
+        if (forPen) return MM.Canvas.pen(graph, setPix, highlight);
+        if (forFill) return MM.Canvas.bucket(graph, setPix, true);
+        return;
       },
       export: function(graph, transparent) {
         var canvas = document.createElement('canvas'), context = canvas.getContext('2d');
@@ -1455,7 +1436,7 @@
             
           } else evp = evt.changedTouches && evt.changedTouches[0] || evt;
           graph.drawing = up ? false : (primary && (move || exit || enter) && graph.drawing) || primary;
-          if (typ === 'touchend' || up || down || !graph.drawing) {
+          if (typ === 'touchend' || up || !graph.drawing) {
             graph.x = 0;
             graph.y = 0;
             graph.points.length = 0;
@@ -1483,20 +1464,13 @@
         graph.canvas.addEventListener('wheel', listener);
         if (graph.input.cols.el && graph.input.rows.el) {
           var resizeListener = function resizeWidth(evt) {
-            var rows = parseInt((graph.input.rows.el && graph.input.rows.el.value) || 0);
             var cols = parseInt((graph.input.cols.el && graph.input.cols.el.value) || 0);
-            var blks = parseInt((graph.input.blocks.el && graph.input.blocks.el.value) || 0);
-            MM.Canvas.resize(graph, rows, cols, blks);
+            var rows = parseInt((graph.input.rows.el && graph.input.rows.el.value) || 0);
+            MM.Canvas.resize(graph, cols, rows);
           };
           graph.input.cols.el.addEventListener('change', resizeListener); 
           graph.input.rows.el.addEventListener('change', resizeListener);
         }
-        if (graph.input.blocks.el) graph.input.blocks.el.addEventListener('change', function blockSize(evt) {
-          var rows = parseInt((graph.input.rows.el && graph.input.rows.el.value) || 0);
-          var cols = parseInt((graph.input.cols.el && graph.input.cols.el.value) || 0);
-          var blks = parseInt((graph.input.blocks.el && graph.input.blocks.el.value) || 0);
-          MM.Canvas.resize(graph, rows, cols, blks);
-        });
         var toolbarListener = function(evt) {
           if (graph.input.selected) MM.clazzList(graph.input.selected.el).remove('active');
           graph.input.selected = graph.input.getInputByElement(evt.currentTarget);
