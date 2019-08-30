@@ -1135,7 +1135,7 @@
           eraseColor: opts.eraseColor || '#000000',
           oulineColor: opts.outlineColor || '#BBBBBB',
           zoomIntensity: parseFloat(opts.zoomIntensity) || .2,
-          zoomMin: .125, zoomMax: 4,
+          zoomMin: .125, zoomMax: 4, resizeFromRight: opts.resizeFromRight, resizeFromBottom: opts.resizeFromBottom || true,
           x: 0, y: 0, ox: opts.offsetX || 0, oy: opts.offsetY || 0, scale: opts.scale || 1, points: []
         };
         var inpts = ['cols', 'rows', 'pen', 'fill', 'spray-or-eyedrop', 'download', 'upload'];
@@ -1168,11 +1168,10 @@
         graph.ctx.fillStyle = graph.eraseColor;
         graph.ctx.fillRect(0, 0, graph.canvas.width, graph.canvas.height);
         MM.Canvas.buffered(graph);
-        //MM.Canvas.resize(graph, );
         return graph;
       },
       buffered: function(graph) {
-        var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
+        var cvs = graph.canvas, ctx = graph.ctx;
         var buffer = {
           undos: [],
           redos: [],
@@ -1185,7 +1184,7 @@
             to.push(buffer.image);
             buffer.image = restore;
             if (cvs.width != buffer.image.width || cvs.height != buffer.image.height) {
-              MM.Canvas.resize(graph, buffer.image.width, buffer.image.height)
+              MM.Canvas.resize(graph, buffer.image.width, buffer.image.height);
             }
             ctx.putImageData(restore.data, 0, 0);
           }
@@ -1201,29 +1200,29 @@
           redo: function() {
             return restore(buffer.redos, buffer.undos);
           },
-          save: function(oldImg, newImg) {
-            buffer.undos.push(oldImg);
-            buffer.redos.length = 0;
-            buffer.image = newImg;
-          },
-          state: function(state) {
-            var frm = state ? {} : graph.ctx, to = state ? graph.ctx : {};
-            for (var i = 0; i < buffer.state.length; i++) {
-              to[buffer.state[i]] = frm[buffer.state[i]];
+          save: function() {
+            if (buffer.image && (!buffer.undos.length || buffer.undos[buffer.undos.length - 1] !== buffer.image)) {
+              buffer.undos.push(buffer.image);
             }
-            return state ? true : to;
+            buffer.redos.length = 0;
+            buffer.image = ctx.getImageData(0, 0, cvs.width, cvs.height);
+          },
+          image: function() {
+            return buffer.image;
           }
         };
       },
       resize: function(graph, width, height) {
-        var state = graph.buffer.state();
-        width = parseInt(width);
-        height = parseInt(height);
-        graph.canvas.width = width;
-        graph.canvas.height = height;
-        graph.buffer.state(state);
-        if (graph.input.cols.el) graph.input.cols.el.value = width;
-        if (graph.input.rows.el) graph.input.rows.el.value = height;
+        var cvs = graph.canvas, ctx = graph.ctx, img = graph.buffer.image(), wdth = parseInt(width), hght = parseInt(height), owdth = cvs.width, ohght = cvs.height;
+        ctx.save();
+        graph.buffer.save();
+        cvs.width = wdth;
+        cvs.height = hght;
+        if (graph.input.cols.el) graph.input.cols.el.value = cvs.width;
+        if (graph.input.rows.el) graph.input.rows.el.value = cvs.height;
+        ctx.fillRect(0, 0, cvs.width, cvs.height);console.log(owdth, wdth, ohght, hght)
+        if (img) ctx.putImageData(img, graph.resizeFromRight && wdth > owdth ? wdth - owdth : 0, graph.resizeFromBottom && hght > ohght ? hght - ohght : 0);
+        ctx.restore();
       },
       inputCtrl: function(graph) {
         for (var nm in graph.input) {
@@ -1286,18 +1285,16 @@
       },
       pen: function(graph, drawing, highlight) {
         var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
-        ctx.moveTo(graph.x, graph.y);
         if (!drawing) {
           ctx.closePath();
           //toCtx.drawImage(cvs, 0, 0);
           //ctx.clearRect(0, 0, cvs.width, cvs.height);
           return;
         }
-        //ctx.canvas.width = ctx.parentNode.clientWidth;
-        //ctx.canvas.height = ctx.parentNode.clientHeight;
+        ctx.save();
+        ctx.moveTo(graph.x, graph.y);
         var erase = graph.input.selected === graph.input.pen && graph.input.pen.el && !graph.input.pen.el.checked;
         var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
-        var sdwClr = ctx.shadowColor, sdwBlr = ctx.shadowBlur;
         ctx.shadowColor = ctx.strokeStyle = ctx.fillStyle = color;
         ctx.lineJoin = ctx.lineCap = 'round';
         ctx.lineWidth = (graph.input.pen.ctrl.ctrlSizeSel && parseInt(graph.input.pen.ctrl.ctrlSizeSel.value)) || 10;
@@ -1322,8 +1319,8 @@
             ctx.stroke();
           }
         }
-        ctx.shadowColor = sdwClr;
-        ctx.shadowBlur = sdwBlr;
+        graph.buffer.save();
+        ctx.restore();
       },
       bucket: function(graph, drawing, copy, tolerance) {
         if (!drawing) return;
@@ -1338,6 +1335,7 @@
         var leftIdx = i, rightIdx = i, leftBoundry, rightBoundry, wx4 = image.height * 4;
         var srcColor = [data[i], data[i + 1], data[i + 2], data[i + 3]], cnt = 0, cntMax = 1000000;
         if (!MM.Color.compare(i, srcColor, rgba, data, length, tolerance)) return false;
+        ctx.save();
         que.push(i);
         while (++cnt && cnt <= cntMax && que.length) {
           i = que.pop();
@@ -1355,8 +1353,9 @@
           }
         }
         var imageNew = copy ? new ImageData(data, image.width, image.height) : image;
-        graph.buffer.save(image, imageNew);
+        graph.buffer.save();
         toCtx.putImageData(imageNew, 0, 0);
+        ctx.restore();
       },
       zoom: function(graph, zoom, width, height) {
         zoom = Math.min(Math.max(graph.zoomMin, zoom), graph.zoomMax);
