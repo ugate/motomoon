@@ -329,13 +329,13 @@
                   </label>
                 </div>
                 <div class="btn button-toggle">
-                  <input class="canvas-editor-spray-or-eyedrop" type="checkbox" checked="checked" id="pixSprayOrEydrop" />
-                  <label for="pixSprayOrEydrop" class="hex-value-bg">
+                  <input class="canvas-editor-line-or-eyedrop" type="checkbox" checked="checked" id="pixLineOrEydrop" data-cursor-on="crosshair" />
+                  <label for="pixLineOrEydrop" class="hex-value-bg">
                     <svg height="24" width="24" viewBox="0 0 24 24" title="Eyedrop Select Color">
                       <path d="M6.92,19L5,17.08L13.06,9L15,10.94M20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L13.84,6.41L11.91,4.5L10.5,5.91L11.92,7.33L3,16.25V21H7.75L16.67,12.08L18.09,13.5L19.5,12.09L17.58,10.17L20.7,7.05C21.1,6.65 21.1,6 20.71,5.63Z" />
                     </svg>
-                    <svg height="24" width="24" viewBox="0 0 24 24" data-cursor-x="0" data-cursor-y="0" title="Spray Color">
-                      <path d="M10,4H12V6H10V4M7,3H9V5H7V3M7,6H9V8H7V6M6,8V10H4V8H6M6,5V7H4V5H6M6,2V4H4V2H6M13,22A2,2 0 0,1 11,20V10A2,2 0 0,1 13,8V7H14V4H17V7H18V8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H13M13,10V20H18V10H13Z" />
+                    <svg height="24" width="24" viewBox="0 0 24 24" data-cursor-x="0" data-cursor-y="0" title="Line Color">
+                      <path fill="#000000" d="M15,3V7.59L7.59,15H3V21H9V16.42L16.42,9H21V3M17,5H19V7H17M5,17H7V19H5" />
                     </svg>
                   </label>
                 </div>
@@ -1138,7 +1138,7 @@
           zoomMin: .125, zoomMax: 4, resizeFromRight: opts.resizeFromRight, resizeFromBottom: opts.resizeFromBottom || true,
           x: 0, y: 0, ox: opts.offsetX || 0, oy: opts.offsetY || 0, scale: opts.scale || 1, points: []
         };
-        var inpts = ['cols', 'rows', 'pen', 'fill', 'spray-or-eyedrop', 'download', 'upload'];
+        var inpts = ['cols', 'rows', 'pen', 'fill', 'line-or-eyedrop', 'download', 'upload'];
         var rpl = function(m) {
           return m.slice(1).toUpperCase();
         };
@@ -1146,6 +1146,7 @@
           sel = '.canvas-editor-' + inpts[i];
           nm = inpts[i].replace(/-\w/g, rpl);
           graph.input[nm] = {
+            name: nm,
             el: opts.parent.querySelector(sel),
             svg: {
               unchecked: opts.parent.querySelector(sel + ' ~ label > svg:first-of-type'),
@@ -1212,16 +1213,54 @@
           }
         };
       },
+      temp: function(graph, start, end) {
+        if (!graph.temps) graph.temps = {};
+        if (end) return graph.temps[graph.input.selected.name] = null;
+        var tmp = graph.temps[graph.input.selected.name];
+        var cvs = start ? document.createElement('canvas') : tmp && tmp.cvs, ctx = start ? cvs.getContext('2d') : tmp && tmp.ctx;
+        if (start) {
+          tmp = graph.temps[graph.input.selected.name] = { cvs: cvs, ctx: ctx };
+          cvs.width = graph.canvas.width;
+          cvs.height = graph.canvas.height;
+          MM.Canvas.color(graph, null, true, ctx);
+          ctx.fillRect(0, 0, graph.canvas.width, graph.canvas.height);
+          ctx.drawImage(graph.canvas, 0, 0);
+        } else if (cvs) {
+          graph.ctx.clearRect(0, 0, graph.canvas.width, graph.canvas.height);
+          var ga = graph.ctx.globalAlpha;
+          graph.ctx.globalAlpha = 1;
+          graph.ctx.drawImage(cvs, 0, 0);
+          graph.ctx.globalAlpha = ga;
+        }
+        return tmp;
+      },
+      color: function(graph, inputErase, setColor, ctx) {
+        var inpt = graph.input.selected;
+        var erase = inpt === inputErase && inpt.el && !inpt.el.checked;
+        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
+        if (setColor) {
+          ctx = ctx || graph.ctx;
+          ctx.shadowColor = ctx.strokeStyle = ctx.fillStyle = color;
+          ctx.lineJoin = ctx.lineCap = 'round';
+          ctx.lineWidth = (inpt.ctrl.ctrlSizeSel && parseInt(inpt.ctrl.ctrlSizeSel.value)) || 10;
+          ctx.shadowBlur = graph.shadowBlur = ctx.lineWidth >= 3 ? 2 : 0;
+        }
+        return color;
+      },
       resize: function(graph, width, height) {
-        var cvs = graph.canvas, ctx = graph.ctx, img = graph.buffer.image(), wdth = parseInt(width), hght = parseInt(height), owdth = cvs.width, ohght = cvs.height;
+        var cvs = graph.canvas, ctx = graph.ctx, img = graph.buffer.image(), wdth = parseInt(width), hght = parseInt(height);
         ctx.save();
         graph.buffer.save();
         cvs.width = wdth;
         cvs.height = hght;
         if (graph.input.cols.el) graph.input.cols.el.value = cvs.width;
         if (graph.input.rows.el) graph.input.rows.el.value = cvs.height;
-        ctx.fillRect(0, 0, cvs.width, cvs.height);console.log(owdth, wdth, ohght, hght)
-        if (img) ctx.putImageData(img, graph.resizeFromRight && wdth > owdth ? wdth - owdth : 0, graph.resizeFromBottom && hght > ohght ? hght - ohght : 0);
+        ctx.fillRect(0, 0, cvs.width, cvs.height);
+        if (img) {
+          var x = graph.resizeFromRight && wdth > img.width ? Math.min(wdth - img.width, cvs.width) : 0;
+          var y = graph.resizeFromBottom && hght > img.height ? Math.min(hght - img.height, cvs.height) : 0;
+          ctx.putImageData(img, x, y);
+        }
         ctx.restore();
       },
       inputCtrl: function(graph) {
@@ -1234,9 +1273,7 @@
         }
       },
       cursor: function(graph) {
-        var inpt = graph.input.selected, svg, opt, style;
-        var erase = graph.input.pen.el && !graph.input.pen.el.checked;
-        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
+        var inpt = graph.input.selected, svg, opt, style, color = MM.Canvas.color(graph, graph.input.pen);
         if (inpt === graph.input.pen) {
           var lw = ((graph.input.pen.ctrl.ctrlSizeSel && parseInt(graph.input.pen.ctrl.ctrlSizeSel.value)) || 10) + (graph.shadowBlur || 0);
           opt = { x: 0, y: 0, w: lw, h: lw, s: '', sw: 0, r: 0 };
@@ -1254,8 +1291,8 @@
           svg += ' fill="' + color + '"' + (opt.s ? ' stroke="' + opt.s + '" stroke-width="' + opt.sw + '" stroke-linecap="round"' : '') + '/></svg>';
           opt.px = opt.r + (opt.sw * 2.0);
           opt.py = opt.r + (opt.sw * 2.0);
-        } else if (inpt === graph.input.zoom) {
-          graph.canvas.style.cursor = inpt.el.checked ? 'zoom-out' : 'zoom-in';
+        } else if (inpt && inpt.el && (inpt.el.checked ? inpt.el.dataset.cursorOn : inpt.el.dataset.cursorOff)) {
+          graph.canvas.style.cursor = inpt.el.checked ? inpt.el.dataset.cursorOn : inpt.el.dataset.cursorOff;
         } else if (inpt && inpt.el) {
           svg = inpt.svg[inpt.el.checked ? 'checked' : 'unchecked'];
           for (var i = 0; i < svg.children.length; i++) {
@@ -1283,22 +1320,16 @@
           graph.canvas.style.cursor = 'url(data:image/svg+xml;base64,' + btoa(svg) + ') ' + ((opt && opt.px) || 0) + ' ' + ((opt && opt.py) || 0) + ', auto';
         } else if (graph.canvas.style.cursor) graph.canvas.style.cursor = '';
       },
-      pen: function(graph, drawing, highlight) {
-        var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
+      pen: function(graph, drawing, done) {
+        var cvs = graph.canvas, ctx = graph.ctx;
         if (!drawing) {
           ctx.closePath();
-          //toCtx.drawImage(cvs, 0, 0);
-          //ctx.clearRect(0, 0, cvs.width, cvs.height);
+          if (done) graph.buffer.save();
           return;
         }
         ctx.save();
         ctx.moveTo(graph.x, graph.y);
-        var erase = graph.input.selected === graph.input.pen && graph.input.pen.el && !graph.input.pen.el.checked;
-        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
-        ctx.shadowColor = ctx.strokeStyle = ctx.fillStyle = color;
-        ctx.lineJoin = ctx.lineCap = 'round';
-        ctx.lineWidth = (graph.input.pen.ctrl.ctrlSizeSel && parseInt(graph.input.pen.ctrl.ctrlSizeSel.value)) || 10;
-        ctx.shadowBlur = graph.shadowBlur = ctx.lineWidth >= 3 ? 2 : 0;
+        MM.Canvas.color(graph, graph.input.pen, true);
         if (graph.points.length && graph.points.length < 3) {
           ctx.beginPath();
           ctx.arc(graph.points[0].x, graph.points[0].y, ctx.lineWidth / 2.0, 0, Math.PI * 2.0, false);
@@ -1319,15 +1350,12 @@
             ctx.stroke();
           }
         }
-        graph.buffer.save();
         ctx.restore();
       },
       bucket: function(graph, drawing, copy, tolerance) {
         if (!drawing) return;
         tolerance = tolerance || 0;
-        var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx;
-        var erase = graph.input.selected === graph.input.fill && graph.input.fill.el && !graph.input.fill.el.checked;
-        var color = (erase && graph.eraseColor) || (graph.input.color.el && graph.input.color.el.value) || graph.eraseColor;
+        var cvs = graph.canvas, ctx = graph.ctx, toCtx = graph.ctx, color = MM.Canvas.color(graph, graph.input.fill);
         var rgba = MM.Color.propertyToRGB(color);
         rgba.a = (rgba.a < 0 ? 1 : rgba.a || 0) * 255;
         var image = ctx.getImageData(0, 0, cvs.width, cvs.height), data = copy ? image.data.slice(0) : image.data;
@@ -1357,6 +1385,33 @@
         toCtx.putImageData(imageNew, 0, 0);
         ctx.restore();
       },
+      line: function (graph, drawing, start, end, constrain) {
+        var tmp = MM.Canvas.temp(graph, start, end);
+        if (!tmp) return;
+        var cvs = tmp.cvs, ctx = tmp.ctx, x = graph.x, y = graph.y;
+        if (!drawing) {
+          ctx.closePath();
+          if (end) {
+            graph.buffer.save();
+            MM.Canvas.temp(graph, end);
+          }
+          return;
+        }
+        ctx.beginPath();
+        if (constrain) {
+          var deg = Math.atan((graph.xInit - x) / (y - graph.yInit)) * 8 / Math.PI;
+          if (Math.abs(deg) < 1) x = graph.xInit;
+          else if (Math.abs(deg) > 3) y = graph.yInit;
+          else {
+            var base = (Math.abs(x - graph.xInit) + Math.abs(y - graph.yInit, 2)) / 2;
+            x = graph.xInit + base * (graph.xInit < x ? 1 : -1);
+            y = graph.yInit + base * (graph.yInit < y ? 1 : -1);
+          }
+        }
+        ctx.moveTo(graph.xInit, graph.yInit);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      },
       zoom: function(graph, zoom, width, height) {
         zoom = Math.min(Math.max(graph.zoomMin, zoom), graph.zoomMax);
         var cvs = graph.canvas, ctx = graph.ctx;
@@ -1373,14 +1428,15 @@
           visibleHeight: height /scale
         };
       },
-      paint: function(graph, setPix, highlight, onlyGet) {
+      paint: function(graph, drawing, start, end, enter, exit, highlight, constrain) {
         MM.Canvas.cursor(graph);
         var sel = graph.input.selected;
         var forPen = sel && sel === graph.input.pen;
         var forFill = !forPen && sel && sel === graph.input.fill;
-        var forDrop = !forFill && sel && sel === graph.input.sprayOrEyedrop;
-        if (forPen) return MM.Canvas.pen(graph, setPix, highlight);
-        if (forFill) return MM.Canvas.bucket(graph, setPix, true);
+        var forLineOrDrop = !forFill && sel && sel === graph.input.lineOrEyedrop;
+        if (forPen) return MM.Canvas.pen(graph, drawing, end);
+        if (forFill) return MM.Canvas.bucket(graph, drawing, true);
+        if (forLineOrDrop) return sel.el.checked ? MM.Canvas.line(graph, drawing, start, end, constrain) : null;
         return;
       },
       export: function(graph, transparent) {
@@ -1425,8 +1481,8 @@
           var tch = evt.type.indexOf('touch') === 0;
           if (tch && evt.type !== 'touchstart') evt.preventDefault();
           var el = this, canvasFill, typ = evt.type, evp;
-          var move = typ === 'touchmove' || typ === 'mousemove', up = typ === 'touchend' || typ === 'mouseup';
-          var down = typ === 'touchstart' || (typ === 'mousedown' && evt.button === 0), wheel = typ === 'wheel';
+          var move = typ === 'touchmove' || typ === 'mousemove', end = typ === 'touchend' || typ === 'mouseup';
+          var start = typ === 'touchstart' || (typ === 'mousedown' && evt.button === 0), wheel = typ === 'wheel';
           var exit = typ === 'mouseleave', enter = typ === 'mouseenter', primary = evt.buttons === 1;
           if (wheel) {
             setXY(el, evt);
@@ -1434,8 +1490,9 @@
           } else if (evt.changedTouches && evt.changedTouches.length > 1) {
             
           } else evp = evt.changedTouches && evt.changedTouches[0] || evt;
-          graph.drawing = up ? false : (primary && (move || exit || enter) && graph.drawing) || primary;
-          if (typ === 'touchend' || up || !graph.drawing) {
+          graph.drawing = end ? false : (primary && (move || exit || enter) && graph.drawing) || primary;
+          var constrain = evp.shiftKey;
+          if (end || !graph.drawing) {
             graph.x = 0;
             graph.y = 0;
             graph.points.length = 0;
@@ -1443,12 +1500,16 @@
             setXY(el, evp);
             graph.points.push({ x: graph.x, y: graph.y });
           }
+          if (start) {
+            graph.xInit = graph.x;
+            graph.yInit = graph.y;
+          }
           canvasFill = function(ts) {
             var lts = graph.timestamps[typ];
             if (!lts) lts = graph.timestamps[typ] = ts;
             if (!typ !== 'init' && ts - lts < graph.threshold) return requestAnimationFrame(canvasFill);
             //if (typ === 'init') graph.ctx.putImageData(graph.grid, graph.ox + graph.x, graph.oy + graph.y);
-            MM.Canvas.paint(graph, graph.drawing, move || enter, exit);
+            MM.Canvas.paint(graph, graph.drawing, start, end, enter, exit, move || enter, constrain);
           };
           requestAnimationFrame(canvasFill);
         };
@@ -1478,7 +1539,7 @@
         };
         if (graph.input.pen.el) graph.input.pen.el.addEventListener('click', toolbarListener);
         if (graph.input.fill.el) graph.input.fill.el.addEventListener('click', toolbarListener);
-        if (graph.input.sprayOrEyedrop.el) graph.input.sprayOrEyedrop.el.addEventListener('click', toolbarListener);
+        if (graph.input.lineOrEyedrop.el) graph.input.lineOrEyedrop.el.addEventListener('click', toolbarListener);
         if (graph.input.download.el) graph.input.download.el.addEventListener('click', function download() {
           MM.Canvas.download(graph);
         });
