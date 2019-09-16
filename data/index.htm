@@ -1192,19 +1192,18 @@
         var buffer = {
           undos: [],
           redos: [],
-          state: ['lineWidth', 'strokeStyle', 'globalAlpha', 'lineJoin', 'lineCap', 'globalCompositeOperation'],
-          image: ctx.getImageData(0, 0, cvs.width, cvs.height)
+          state: { type: 'init', img: ctx.getImageData(0, 0, cvs.width, cvs.height) }
         };
-        var restore = function(from, to) {
+        var restore = function(type, from, to) {
           if (!from.length) return;
-          var restore = from.pop();
+          var restore = (!type || from[from.length - 1].type === type) && from.pop();
           if (restore) {
-            to.push(buffer.image);
-            buffer.image = restore;
-            if (cvs.width != buffer.image.width || cvs.height != buffer.image.height) {
-              MM.Canvas.resize(graph, buffer.image.width, buffer.image.height);
+            to.push(buffer.state);
+            buffer.state = restore;
+            if (cvs.width != buffer.state.img.width || cvs.height != buffer.state.img.height) {
+              MM.Canvas.resize(graph, buffer.state.img.width, buffer.state.img.height);
             }
-            ctx.putImageData(restore, 0, 0);
+            ctx.putImageData(restore.img, 0, 0);
           }
         };
         graph.buffer = {
@@ -1212,21 +1211,23 @@
             buffer.undos.length = 0;
             buffer.redos.length = 0;
           },
-          undo: function() {
-            return restore(buffer.undos, buffer.redos);
+          undo: function(type) {
+            restore(type, buffer.undos, buffer.redos);
           },
-          redo: function() {
-            return restore(buffer.redos, buffer.undos);
+          redo: function(type) {
+            restore(type, buffer.redos, buffer.undos);
           },
-          save: function() {
-            if (buffer.image && (!buffer.undos.length || buffer.undos[buffer.undos.length - 1] !== buffer.image)) {
-              buffer.undos.push(buffer.image);
+          save: function(type, whenNotLastType) {
+            var lastState = buffer.undos[buffer.undos.length - 1];
+            if (whenNotLastType && lastState && buffer.state && lastState.type === buffer.state.type) return;
+            if (buffer.state && (!buffer.undos.length || lastState !== buffer.state)) {
+              buffer.undos.push(buffer.state);
             }
             buffer.redos.length = 0;
-            buffer.image = ctx.getImageData(0, 0, cvs.width, cvs.height);
+            buffer.state = { type: type, img: ctx.getImageData(0, 0, cvs.width, cvs.height) };
           },
           image: function() {
-            return buffer.image;
+            return buffer.state && buffer.state.img;
           }
         };
       },
@@ -1246,7 +1247,7 @@
       resize: function(graph, width, height) {
         var cvs = graph.canvas, ctx = graph.ctx, img = graph.buffer.image(), wdth = parseInt(width), hght = parseInt(height);
         ctx.save();
-        graph.buffer.save();
+        graph.buffer.save('resize');
         cvs.width = wdth;
         cvs.height = hght;
         if (graph.input.cols.el) graph.input.cols.el.value = cvs.width;
@@ -1320,7 +1321,7 @@
         var cvs = graph.canvas, ctx = graph.ctx;
         if (!drawing) {
           ctx.closePath();
-          if (done) graph.buffer.save();
+          if (done) graph.buffer.save('pen');
           return;
         }
         ctx.save();
@@ -1377,7 +1378,7 @@
           }
         }
         var imageNew = copy ? new ImageData(data, image.width, image.height) : image;
-        graph.buffer.save();
+        graph.buffer.save('bucket');
         toCtx.putImageData(imageNew, 0, 0);
         ctx.restore();
       },
@@ -1385,7 +1386,8 @@
         if (!drawing && !start && !end) return;
         var cvs = graph.canvas, ctx = graph.ctx, xs = graph.xInit, ys = graph.yInit, x = graph.x, y = graph.y;
         if (!drawing) return ctx.closePath();
-        if (!start) graph.buffer.undo();
+        if (!start) graph.buffer.undo(type);
+        graph.buffer.save(type, true);
         ctx.save();
         MM.Canvas.color(graph, null, true);
         if (type === 'line') {
@@ -1415,15 +1417,14 @@
             ctx.bezierCurveTo(xm + ox, ys, xe, ym - oy, xe, ym);
             ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
             ctx.bezierCurveTo(xm - ox, ye, xs, ym + oy, xs, ym);
-            ctx.closePath();
           } else {
             ctx.beginPath();
             ctx.rect(xs, ys, w, h);
           }
           ctx.fill();
-          ctx.stroke();
+          //ctx.stroke();
         }
-        graph.buffer.save();
+        graph.buffer.save(type);
         ctx.restore();
       },
       zoom: function(graph, zoom, width, height) {
